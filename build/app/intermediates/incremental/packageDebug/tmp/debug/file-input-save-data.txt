@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Jul 04 13:09:34 EDT 2019
+#Tue Jul 16 19:24:45 EDT 2019
 4.path=flutter_assets/FontManifest.json
 13.baseType=DIRECTORY
 8.set=ASSET
@@ -11,6 +11,7 @@
 8.path=flutter_assets/vm_snapshot_data
 12.path=flutter_assets/fonts/MaterialIcons-Regular.ttf
 3.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\transforms\\dexMerger\\debug\\0
+14.path=flutter_assets/assets/ticketdatasimplified.json
 4.set=ASSET
 5.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\transforms\\mergeJniLibs\\debug\\0
 7.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
@@ -20,8 +21,10 @@
 1.baseType=DIRECTORY
 11.set=ASSET
 0.set=NATIVE_RESOURCE
+14.baseType=DIRECTORY
 6.baseType=DIRECTORY
 7.set=ASSET
+14.set=ASSET
 3.set=DEX
 2.baseType=DIRECTORY
 10.baseType=DIRECTORY
@@ -47,8 +50,9 @@
 2.set=ASSET
 8.baseType=DIRECTORY
 12.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
+14.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
 9.set=NATIVE_RESOURCE
-count=14
+count=15
 12.baseType=DIRECTORY
 4.baseType=DIRECTORY
 5.set=NATIVE_RESOURCE
