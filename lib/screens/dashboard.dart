@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:st_two/data/tickets.dart';
 
 class DashboardPage extends StatefulWidget {
   DashboardPage({Key key, this.title}) : super(key: key);
@@ -15,18 +16,35 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List jsondata;
 
-  Future<List> loadTickets() async {
+  Future<Ticket> loadTickets() async {
     String jsonString =
-    await DefaultAssetBundle.of(context).loadString("assets/ticketdata.json");
-    var jsondata = json.decode(jsonString);
-    return jsondata["ticket"];
+    await DefaultAssetBundle.of(context).loadString("assets/ticketdata-simplified.json");
+    final jsonResponse = json.decode(jsonString);
+    Ticket ticket = new Ticket.fromJson(jsonResponse);
+    print(ticket.ticketname);
+    print("it should have ran");
+    return ticket;
+  }
+
+  String _whosAssigned(List resourcelist){
+    String resources="";
+    for(var i = 0; i < resourcelist.length; i++){
+      print(i);
+      if(i == resourcelist.length-1){
+        resources = resources + resourcelist[i].resourcename.toString();
+      }else{
+        resources = resources + resourcelist[i].resourcename.toString() + ", ";
+      }
+
+    }
+    return resources;
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.loadTickets();
+    //this.loadTickets();
   }
 
   @override
@@ -43,32 +61,41 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           )
         ),
-
       ),
-      body: FutureBuilder<List>(
+      body: FutureBuilder(
         future: loadTickets(),
         builder: (context, snapshot){
-          if(snapshot.hasError){
-            print(snapshot.error);
-          }
-          return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index){
-                  return GestureDetector(
-                    onTap: (){
-                      print(snapshot.data[index]["ticketid"].toString());
-                    },
-                    child: Card(
+          if(snapshot.connectionState == ConnectionState.done){
+            return Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Card(
+                        child: Container(
+                          padding: EdgeInsets.all(15),
+                          child: Center(
+                            child: Text(snapshot.data.priority.toString()),
+                          ),
+                        )
+                    ),
+                    Card(
                       child: Container(
-                        padding: EdgeInsets.all(25),
-                        child: Text("Ticket " + snapshot.data[index]["ticketid"].toString() + " - " + snapshot.data[index]["ticketname"].toString()),
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: <Widget>[
+                            Text('Ticket ' + snapshot.data.ticketid.toString() + ' - ' + snapshot.data.ticketname.toString()),
+                            Text('Assigned: ' + _whosAssigned(snapshot.data.resources)),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                },
-              )
-            : Center(child: CircularProgressIndicator(),);
+                  ],
+                ),
+              ],
+            );
+          } else {
+            return CircularProgressIndicator();
+          }
         },
       ),
     );

@@ -1,30 +1,9 @@
-class TicketsList {
-
-  final List<Ticket> tickets;
-  TicketsList({
-
-    this.tickets,
-  });
-
-  factory TicketsList.fromJson(List<dynamic> parsedJson) {
-
-    List<Ticket> ticketsList = new List<Ticket>();
-    ticketsList = parsedJson.map((i)=>Ticket.fromJson(i)).toList();
-
-    return new TicketsList(
-        tickets: ticketsList
-    );
-  }
-
-}
-
 class Ticket {
-  final String ticketname, customername, priority, status, developerlog, entrydate, enteredby, folderpath, specialinstructrions, stopbilling, deadlinedate, erpsystem;
-  final int ticketid, customerid, priorityid, statusid, min, max, projected, totalbilled;
-  final bool quoterequired, premium;
-  //final List<Resource> resource;
-  //final List<POC> poc;
-  //final List<Skill> skill;
+  final String quoterequired, premium, ticketname, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructrions, stopbilling, deadlinedate, erpsystem;
+  final int ticketid, customerid, priorityid, priority, statusid, min, max, projected, totalbilled;
+  final List<Resource> resources;
+  final List<POC> pocs;
+  final List<Skill> skills;
 
   Ticket({
     this.ticketid,
@@ -33,15 +12,15 @@ class Ticket {
     this.customername,
     this.priorityid,
     this.priority,
-    this.status,
     this.statusid,
-    //this.resource,
+    this.status,
+    this.resources,
     this.quoterequired,
     this.min,
     this.max,
     this.projected,
     this.developerlog,
-    //this.poc,
+    this.pocs,
     this.premium,
     this.entrydate,
     this.enteredby,
@@ -51,61 +30,58 @@ class Ticket {
     this.totalbilled,
     this.deadlinedate,
     this.erpsystem,
-    //this.skill,
+    this.skills,
   });
 
   factory Ticket.fromJson(Map<String, dynamic> parsedJson){
 
-/*    var rlist = parsedJson['resource'] as List;
-    print(rlist.runtimeType); //returns List<dynamic>
+    var rlist = parsedJson['resources'] as List;
+    //print(list.runtimeType);
     List<Resource> resourceList = rlist.map((i) => Resource.fromJson(i)).toList();
 
-    var plist = parsedJson['poc'] as List;
-    print(plist.runtimeType); //returns List<dynamic>
+    var plist = parsedJson['pocs'] as List;
+    //print(list.runtimeType);
     List<POC> pocList = plist.map((i) => POC.fromJson(i)).toList();
 
-    var slist = parsedJson['skill'] as List;
-    print(slist.runtimeType); //returns List<dynamic>
-    List<Skill> skillList = slist.map((i) => Skill.fromJson(i)).toList();*/
+    var slist = parsedJson['skills'] as List;
+    //print(list.runtimeType);
+    List<Skill> skillList = slist.map((i) => Skill.fromJson(i)).toList();
 
-    return new Ticket(
-        ticketid: int.parse(parsedJson['ticketid']),
-        ticketname: parsedJson['ticketname'],
-        //customerid: int.parse(parsedJson['customerid']),
-        //customername: parsedJson['customername'],
-        //priorityid: int.parse(parsedJson['priorityid']),
-        //priority: parsedJson['priority'],
-        //statusid: int.parse(parsedJson['statusid']),
-        //status: parsedJson['status'],
-        //this one needs changed
-        //resource: resourceList,
-        //quoterequired: parsedJson['quoterequired'],
-        //min: int.parse(parsedJson['min']),
-        //max: int.parse(parsedJson['max']),
-        //projected: int.parse(parsedJson['projected']),
-        //developerlog: parsedJson['developerlog'],
-        //This one needs changed
-        //poc: pocList,
-        //premium: parsedJson['premium'],
-        //entrydate: parsedJson['entrydate'],
-        //enteredby: parsedJson['enteredby'],
-        //folderpath: parsedJson['folderpath'],
-        //specialinstructrions: parsedJson['specialinstructrions'],
-        //stopbilling: parsedJson['stopbilling'],
-        //totalbilled: int.parse(parsedJson['totalbilled']),
-        //deadlinedate: parsedJson['deadlinedate'],
-        //erpsystem: parsedJson['erpsystem'],
-        //this one needs changed
-        //skill: skillList,
+    return Ticket(
+      ticketid: int.parse(parsedJson['ticketid']),
+      ticketname: parsedJson['ticketname'],
+      customerid: int.parse(parsedJson['customerid']),
+      customername: parsedJson['customername'],
+      priorityid: int.parse(parsedJson['priorityid']),
+      priority: int.parse(parsedJson['priority']),
+      statusid: int.parse(parsedJson['statusid']),
+      status: parsedJson['status'],
+      resources: resourceList,
+      quoterequired: parsedJson['quoterequired'],
+      min: int.parse(parsedJson['min']),
+      max: int.parse(parsedJson['max']),
+      projected: int.parse(parsedJson['projected']),
+      developerlog: parsedJson['developerlog'],
+      //This one needs changed
+      pocs: pocList,
+      premium: parsedJson['premium'],
+      entrydate: parsedJson['entrydate'],
+      enteredby: parsedJson['enteredby'],
+      folderpath: parsedJson['folderpath'],
+      specialinstructrions: parsedJson['specialinstructrions'],
+      stopbilling: parsedJson['stopbilling'],
+      totalbilled: int.parse(parsedJson['totalbilled']),
+      deadlinedate: parsedJson['deadlinedate'],
+      erpsystem: parsedJson['erpsystem'],
+      //this one needs changed
+      skills: skillList,
     );
   }
 
 }
-/*
 
 class Resource {
-  final String resourceid, resourcename, email, extension;
-  final bool inactive;
+  final String resourceid, resourcename, email, extension, inactive;
 
   Resource({
     this.resourceid,
@@ -117,7 +93,7 @@ class Resource {
 
   factory Resource.fromJson(Map<String, dynamic> parsedJson){
 
-    return new Resource(
+    return Resource(
         resourceid: parsedJson['resourceid'],
         inactive: parsedJson['inactive'],
         resourcename: parsedJson['resourcename'],
@@ -142,10 +118,10 @@ class POC {
   factory POC.fromJson(Map<String, dynamic> parsedJson){
 
     return new POC(
-        pocid:parsedJson['pocid'],
-        pocname:parsedJson['pocname'],
-        phone:parsedJson['phone'],
-        email:parsedJson['email']
+        pocid: int.parse(parsedJson['pocid']),
+        pocname: parsedJson['pocname'],
+        phone: parsedJson['phone'],
+        email: parsedJson['email']
     );
   }
 
@@ -163,8 +139,8 @@ class Skill {
   factory Skill.fromJson(Map<String, dynamic> parsedJson){
 
     return new Skill(
-        skillid:parsedJson['skillid'],
-        skill:parsedJson['skill']
+        skillid: int.parse(parsedJson['skillid']),
+        skill: parsedJson['skill']
     );
   }
-}*/
+}

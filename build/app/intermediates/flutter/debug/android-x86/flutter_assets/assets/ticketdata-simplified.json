@@ -1,0 +1,26 @@
+{
+  "ticketid": "4321",
+  "ticketname": "Purchase Order Entry Customization",
+  "customerid": "808",
+  "customername": "Bob's Machine Shop",
+  "priorityid": "12",
+  "priority": "50",
+  "statusid": "2",
+  "status": "In Process",
+  "resources": [
+    {
+      "resourceid": "8",
+      "inactive": "false",
+      "resourcename": "Chance",
+      "email": "chance.finley@practicaltek.com",
+      "extension": "110"
+    },
+    {
+      "resourceid": "9",
+      "inactive": "false",
+      "resourcename": "Josh",
+      "email": "josh.scheffler@practicaltek.com",
+      "extension": "109"
+    }
+  ]
+}

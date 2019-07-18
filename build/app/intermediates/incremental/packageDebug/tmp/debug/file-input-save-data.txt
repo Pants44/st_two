@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Tue Jul 16 19:24:45 EDT 2019
+#Wed Jul 17 15:16:45 EDT 2019
 4.path=flutter_assets/FontManifest.json
 13.baseType=DIRECTORY
 8.set=ASSET
@@ -11,7 +11,7 @@
 8.path=flutter_assets/vm_snapshot_data
 12.path=flutter_assets/fonts/MaterialIcons-Regular.ttf
 3.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\transforms\\dexMerger\\debug\\0
-14.path=flutter_assets/assets/ticketdatasimplified.json
+14.path=flutter_assets/kernel_blob.bin
 4.set=ASSET
 5.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\transforms\\mergeJniLibs\\debug\\0
 7.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
@@ -39,7 +39,7 @@
 9.path=lib/armeabi-v7a/libflutter.so
 6.set=ASSET
 2.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
-13.path=flutter_assets/kernel_blob.bin
+13.path=flutter_assets/assets/ticketdata-simplified.json
 11.baseType=DIRECTORY
 4.base=C\:\\Users\\Chance\\AndroidStudioProjects\\st_two\\build\\app\\intermediates\\merged_assets\\debug\\mergeDebugAssets\\out
 3.baseType=DIRECTORY
