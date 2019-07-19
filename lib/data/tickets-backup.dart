@@ -1,13 +1,11 @@
-/*class TicketsList {
-
+class TicketsList {
   final List<Ticket> tickets;
-  TicketsList({
 
+  TicketsList({
     this.tickets,
   });
 
   factory TicketsList.fromJson(List<dynamic> parsedJson) {
-
     List<Ticket> ticketsList = new List<Ticket>();
     ticketsList = parsedJson.map((i)=>Ticket.fromJson(i)).toList();
 
@@ -15,16 +13,15 @@
         tickets: ticketsList
     );
   }
-
-}*/
+}
 
 class Ticket {
 
-  //final int ticketid;
-  //final String ticketname;
-  final String ticketname, customername, priority, status, developerlog, entrydate, enteredby, folderpath, specialinstructrions, stopbilling, deadlinedate, erpsystem;
-  final int ticketid, customerid, priorityid, statusid, min, max, projected, totalbilled;
-  final bool quoterequired, premium;
+  final int ticketid;
+  final String ticketname;
+  //final String ticketname, customername, priority, status, developerlog, entrydate, enteredby, folderpath, specialinstructrions, stopbilling, deadlinedate, erpsystem;
+  //final int ticketid, customerid, priorityid, statusid, min, max, projected, totalbilled;
+  //final bool quoterequired, premium;
 
   //final List<Resource> resource;
   //final List<POC> poc;
@@ -32,7 +29,7 @@ class Ticket {
 
   Ticket({
     this.ticketid,
-    this.ticketname,
+    this.ticketname
     //this.customerid,
     //this.customername,
     //this.priorityid,
@@ -74,7 +71,7 @@ class Ticket {
 
     return new Ticket(
       ticketid: int.parse(parsedJson['ticketid']),
-      ticketname: parsedJson['ticketname'],
+      ticketname: parsedJson['ticketname']
       //customerid: int.parse(parsedJson['customerid']),
       //customername: parsedJson['customername'],
       //priorityid: int.parse(parsedJson['priorityid']),
@@ -129,6 +126,5 @@ class Resource {
         extension: parsedJson['extension']
     );
   }
-
 }
-
+*/

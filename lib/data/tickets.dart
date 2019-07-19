@@ -1,3 +1,20 @@
+class TicketsList {
+  final List<Ticket> tickets;
+
+  TicketsList({
+    this.tickets,
+  });
+
+  factory TicketsList.fromJson(List<dynamic> parsedJson) {
+    List<Ticket> tickets = new List<Ticket>();
+    tickets = parsedJson.map((i)=>Ticket.fromJson(i)).toList();
+
+    return new TicketsList(
+        tickets: tickets
+    );
+  }
+}
+
 class Ticket {
   final String quoterequired, premium, ticketname, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructrions, stopbilling, deadlinedate, erpsystem;
   final int ticketid, customerid, priorityid, priority, statusid, min, max, projected, totalbilled;

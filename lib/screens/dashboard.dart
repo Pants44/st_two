@@ -26,6 +26,16 @@ class _DashboardPageState extends State<DashboardPage> {
     return ticket;
   }
 
+  Future<TicketsList> loadTicketsList() async{
+    String jsonString =
+    await DefaultAssetBundle.of(context).loadString("assets/ticketdata-simplified.json");
+    final jsonResponse = json.decode(jsonString);
+    TicketsList ticketlist = new TicketsList.fromJson(jsonResponse);
+    print(ticketlist.tickets[0].ticketid.toString());
+    print("it should have ran");
+    return ticketlist;
+  }
+
   String _whosAssigned(List resourcelist){
     String resources="";
     for(var i = 0; i < resourcelist.length; i++){
@@ -63,36 +73,49 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
       ),
       body: FutureBuilder(
-        future: loadTickets(),
+        future: loadTicketsList(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done){
-            return Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Card(
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          child: Center(
-                            child: Text(snapshot.data.priority.toString()),
-                          ),
-                        )
-                    ),
-                    Card(
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: <Widget>[
-                            Text('Ticket ' + snapshot.data.ticketid.toString() + ' - ' + snapshot.data.ticketname.toString()),
-                            Text('Assigned: ' + _whosAssigned(snapshot.data.resources)),
-                          ],
+            if(snapshot.hasError){
+              print(snapshot.error);
+            }
+            return snapshot.hasData
+                ? ListView.builder(
+              itemCount: snapshot.data.tickets.length,
+              itemBuilder: (context, index){
+                return GestureDetector(
+                  onTap: (){
+                    print(snapshot.data.tickets[index].ticketid.toString());
+                  },
+                  child: Container(
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 1,
+                          child: Card(
+                            child: Center(
+                              child: Text(snapshot.data.tickets[index].priority.toString()),
+                            ),
+                          )
                         ),
-                      ),
+                        Flexible(
+                          flex: 6,
+                          child:
+                            Card(
+                              child: ListTile(
+                                leading: Text(snapshot.data.tickets[index].priority.toString()),
+                                title: Text("Ticket " + snapshot.data.tickets[index].ticketid.toString() + " - " + snapshot.data.tickets[index].ticketname.toString()),
+                              ),
+                            )
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ],
-            );
+
+                  ),
+                );
+              },
+            )
+                : Center(child: CircularProgressIndicator(),);
           } else {
             return CircularProgressIndicator();
           }
