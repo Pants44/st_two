@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:st_two/screens/home.dart';
 import 'package:st_two/theme/colors.dart';
+import 'package:st_two/size_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,10 +20,8 @@ class MyApp extends StatelessWidget {
         canvasColor: colorSTbg,
         primaryColor: colorSTother,
         bottomAppBarColor: colorSTother,
-
       ),
       home: MyLoginPage(title: 'Solution Tracker Two'),
-
     );
   }
 }
@@ -37,79 +36,200 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  TextEditingController tecLogin = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    var orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        body: Form(
+            child: (orientation == Orientation.portrait)
+                ? Center(
+                    child: ListView(
+                      children: <Widget>[
+                        Container(
+                            height: SizeConfig.safeBlockVertical * 50,
+                            width: SizeConfig.safeBlockHorizontal * 80,
+                            child: Center(
+                              child: Image(
+                                image: AssetImage('assets/st22000.png'),
+                              ),
+                            )),
+                        Container(
+                          height: SizeConfig.safeBlockVertical * 50,
+                          width: SizeConfig.safeBlockHorizontal * 80,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width: SizeConfig.safeBlockHorizontal * 80,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[800]),
+                                        hintText: "Username",
+                                        fillColor: Colors.white),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                                ),
+                                Container(
+                                  width: SizeConfig.safeBlockHorizontal * 80,
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[800]),
+                                        hintText: "Password",
+                                        fillColor: Colors.white),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    'Login',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage(
+                                                title: 'Solution Tracker Two',
+                                              )),
+                                    );
+                                  },
+                                  color: colorSTBlue,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  padding: EdgeInsets.only(
+                                      top: 16, bottom: 16, left: 32, right: 32),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : Center(
+              child: ListView(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 96, right: 96),
-                    child: Image(
-                      image: AssetImage('assets/st22000.png'),
-
-                    )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 16, left: 32, right: 32),
-                    child: TextField(
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: SizeConfig.safeBlockVertical * 80,
+                        width: SizeConfig.safeBlockHorizontal * 50,
+                        child: Center(
+                          child: Container(
+                            width: SizeConfig.safeBlockHorizontal * 40,
+                            child: Image(
+                              image: AssetImage('assets/st22000.png'),
                             ),
-                          ),
-                          filled: true,
-                          hintStyle: TextStyle(color: Colors.grey[800]),
-                          hintText: "Username",
-                          fillColor: Colors.white),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 16, left: 32, right: 32),
-                    child: TextField(
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                          filled: true,
-                          hintStyle: TextStyle(color: Colors.grey[800]),
-                          hintText: "Password",
-                          fillColor: Colors.white),
-                    ),
-
-                  ),
-                  RaisedButton(
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 18
+                          )
+                        )
                       ),
-                    ),
-                    onPressed: (){
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyHomePage(title: 'Solution Tracker Two',)),
-                      );
-                    },
-                    color: colorSTBlue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    padding: EdgeInsets.only(top: 16, bottom: 16, left: 32, right: 32),
+                      Container(
+                        height: SizeConfig.safeBlockVertical * 80,
+                        width: SizeConfig.safeBlockHorizontal * 50,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: SizeConfig.safeBlockHorizontal * 40,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey[800]),
+                                      hintText: "Username",
+                                      fillColor: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.only(top: 16, bottom: 16),
+                              ),
+                              Container(
+                                width: SizeConfig.safeBlockHorizontal * 40,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      filled: true,
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey[800]),
+                                      hintText: "Password",
+                                      fillColor: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.only(top: 16, bottom: 16),
+                              ),
+                              RaisedButton(
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyHomePage(
+                                          title: 'Solution Tracker Two',
+                                        )),
+                                  );
+                                },
+                                color: colorSTBlue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(10.0)),
+                                padding: EdgeInsets.only(
+                                    top: 16,
+                                    bottom: 16,
+                                    left: 32,
+                                    right: 32),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      //Literally only exists to make sure the previous two containers are truely center. Without this the row only centers after using 80 percent of the screen
+                      Container(
+                        height: SizeConfig.safeBlockVertical * 100,
+                      )
+                    ],
                   )
                 ],
               ),
-            ),
-          ],
-        ),
-      )
-    );
+            )));
   }
 }

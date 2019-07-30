@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:st_two/data/tickets.dart';
+import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/screens/ticket.dart';
 
 class DashboardPage extends StatefulWidget {
   DashboardPage({Key key, this.title}) : super(key: key);
@@ -15,40 +16,6 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
 
   List jsondata;
-
-  Future<Ticket> loadTickets() async {
-    String jsonString =
-    await DefaultAssetBundle.of(context).loadString("assets/ticketdata-simplified.json");
-    final jsonResponse = json.decode(jsonString);
-    Ticket ticket = new Ticket.fromJson(jsonResponse);
-    print(ticket.ticketname);
-    print("it should have ran");
-    return ticket;
-  }
-
-  Future<TicketsList> loadTicketsList() async{
-    String jsonString =
-    await DefaultAssetBundle.of(context).loadString("assets/ticketdata-simplified.json");
-    final jsonResponse = json.decode(jsonString);
-    TicketsList ticketlist = new TicketsList.fromJson(jsonResponse);
-    print(ticketlist.tickets[0].ticketid.toString());
-    print("it should have ran");
-    return ticketlist;
-  }
-
-  String _whosAssigned(List resourcelist){
-    String resources="";
-    for(var i = 0; i < resourcelist.length; i++){
-      print(i);
-      if(i == resourcelist.length-1){
-        resources = resources + resourcelist[i].resourcename.toString();
-      }else{
-        resources = resources + resourcelist[i].resourcename.toString() + ", ";
-      }
-
-    }
-    return resources;
-  }
 
   @override
   void initState() {
@@ -71,6 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           )
         ),
+        title: Text(widget.title),
       ),
       body: FutureBuilder(
         future: loadTicketsList(),
@@ -85,42 +53,53 @@ class _DashboardPageState extends State<DashboardPage> {
               itemBuilder: (context, index){
                 return GestureDetector(
                   onTap: (){
-                    print(snapshot.data.tickets[index].ticketid.toString());
+                    print('Open Ticket ' + snapshot.data.tickets[index].ticketid.toString());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TicketPage(title: 'Ticket ' + snapshot.data.tickets[index].ticketid.toString() + ' - ' + snapshot.data.tickets[index].ticketname.toString(), ticket: snapshot.data.tickets[index])),
+                      );
                   },
-                  child: Container(
-                    child: Row(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 1,
-                          child: Card(
-                            child: Center(
-                              child: Text(snapshot.data.tickets[index].priority.toString()),
-                            ),
-                          )
-                        ),
-                        Flexible(
-                          flex: 6,
-                          child:
-                            Card(
-                              child: ListTile(
-                                leading: Text(snapshot.data.tickets[index].priority.toString()),
-                                title: Text("Ticket " + snapshot.data.tickets[index].ticketid.toString() + " - " + snapshot.data.tickets[index].ticketname.toString()),
-                              ),
-                            )
-                        )
-                      ],
-                    ),
+                  child: Card(
+                    child: ListTile(
+                      leading: Text(snapshot.data.tickets[index].priority.toString()),
+                      title: Text('Ticket ' + snapshot.data.tickets[index].ticketid.toString() + ' - ' + snapshot.data.tickets[index].ticketname.toString()),
+                      subtitle: Text('Assigned to: ' + _whosAssigned(snapshot.data.tickets[index].resources)),
+                      trailing: Text(snapshot.data.tickets[index].status.toString()),
 
-                  ),
+                    ),
+                  )
                 );
               },
             )
-                : Center(child: CircularProgressIndicator(),);
+                : Center(child: CircularProgressIndicator());
           } else {
             return CircularProgressIndicator();
           }
         },
       ),
     );
+  }
+
+
+  Future<TicketsList> loadTicketsList() async{
+    String jsonString =
+    await DefaultAssetBundle.of(context).loadString("assets/ticketdata.json");
+    final jsonResponse = json.decode(jsonString);
+    TicketsList ticketlist = new TicketsList.fromJson(jsonResponse);
+    print('Ticket''s list loaded for Dashboard Screen');
+    return ticketlist;
+  }
+
+  String _whosAssigned(List resourcelist){
+    String resources="";
+    for(var i = 0; i < resourcelist.length; i++){
+      if(i == resourcelist.length-1){
+        resources = resources + resourcelist[i].resourcename.toString();
+      }else{
+        resources = resources + resourcelist[i].resourcename.toString() + ", ";
+      }
+
+    }
+    return resources;
   }
 }
