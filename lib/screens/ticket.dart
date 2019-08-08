@@ -51,15 +51,16 @@ class _TicketPageState extends State<TicketPage> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
+          leading: BackButton(),
           title: Text(widget.title),
-          leading: Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Image(
-                  image: AssetImage('assets/st22000.png'),
-                ),
-              )),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
+              child: Image(
+                image: AssetImage('assets/st22000.png'),
+              ),
+            )
+          ],
         ),
         body: ListView(
           padding: EdgeInsets.all(16),

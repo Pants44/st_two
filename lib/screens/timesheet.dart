@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TimesheetPage extends StatefulWidget {
-  TimesheetPage({Key key}) : super(key: key);
+  TimesheetPage({Key key, this.title}) : super(key: key);
 
+  final title;
 
   @override
   _TimesheetPageState createState() => _TimesheetPageState();

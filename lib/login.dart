@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:st_two/size_config.dart';
 
 import 'package:st_two/screens/home.dart';
 import 'package:st_two/theme/colors.dart';
-import 'package:st_two/size_config.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         accentColor: colorSTBlue,
@@ -21,21 +22,21 @@ class MyApp extends StatelessWidget {
         primaryColor: colorSTother,
         bottomAppBarColor: colorSTother,
       ),
-      home: MyLoginPage(title: 'Solution Tracker Two'),
+      home: LoginPage(title: 'Solution Tracker Two'),
     );
   }
 }
 
-class MyLoginPage extends StatefulWidget {
-  MyLoginPage({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyLoginPageState createState() => _MyLoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyLoginPageState extends State<MyLoginPage> {
+class _LoginPageState extends State<LoginPage> {
   TextEditingController tecLogin = TextEditingController();
 
   @override
@@ -111,8 +112,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => MyHomePage(
-                                                title: 'Solution Tracker Two',
-                                              )),
+                                            title: 'Solution Tracker Two',
+                                          )),
                                     );
                                   },
                                   color: colorSTBlue,
@@ -148,7 +149,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                         )
                       ),
                       Container(
-                        height: SizeConfig.safeBlockVertical * 80,
+                        height: SizeConfig.safeBlockVertical * 100,
                         width: SizeConfig.safeBlockHorizontal * 50,
                         child: Center(
                           child: Column(
@@ -222,10 +223,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
                           ),
                         ),
                       ),
-                      //Literally only exists to make sure the previous two containers are truely center. Without this the row only centers after using 80 percent of the screen
-                      Container(
-                        height: SizeConfig.safeBlockVertical * 100,
-                      )
                     ],
                   )
                 ],

@@ -29,22 +29,22 @@ class _DashboardPageState extends State<DashboardPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.only(left: 5),
-          child: Padding(
-            padding: EdgeInsets.all(5),
+        leading: BackButton(),
+        title: Text(widget.title),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
             child: Image(
               image: AssetImage('assets/st22000.png'),
             ),
           )
-        ),
-        title: Text(widget.title),
+        ],
       ),
       body: FutureBuilder(
         future: loadTicketsList(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.done){
-            if(snapshot.hasError){
+          if(snapshot.hasError){
               print(snapshot.error);
             }
             return snapshot.hasData

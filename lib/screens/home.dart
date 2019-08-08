@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:st_two/login.dart';
 import 'package:st_two/screens/dashboard.dart';
 import 'package:st_two/screens/customers.dart';
-import 'package:st_two/screens/connection.dart';
+import 'package:st_two/screens/customerconnectionlist.dart';
 import 'package:st_two/screens/analytics.dart';
 import 'package:st_two/screens/tools.dart';
 import 'package:st_two/screens/timesheet.dart';
@@ -23,176 +24,207 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Image(
-                  image: AssetImage('assets/st22000.png'),
-                ),
-              ))),
+        title: Center(
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Image(
+              image: AssetImage('assets/st22000.png'),
+            ),
+          )
+        )
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.assignment, size: 48),
-                        Text('Dashboard', style: TextStyle(fontSize: 20)),
-                      ],
+            Flexible(
+              flex: 1,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.assignment, size: 48),
+                          Text('Dashboard', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DashboardPage(title: 'Dashboard')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                DashboardPage(title: 'Dashboard')),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.contacts, size: 48),
-                        Text('Customer', style: TextStyle(fontSize: 20)),
-                      ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.contacts, size: 48),
+                          Text('Customer', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CustomersPage(title: 'Customers')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CustomersPage()),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.import_contacts, size: 48),
-                        Text('Connection', style: TextStyle(fontSize: 20)),
-                      ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.import_contacts, size: 48),
+                          Text('Connect', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  CustomerConnectionList(title: 'Client Connections')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ConnectionPage()),
-                      );
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.insert_chart, size: 48),
-                        Text('Analytics', style: TextStyle(fontSize: 20)),
-                      ],
+            Flexible(
+              flex: 1,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.insert_chart, size: 48),
+                          Text('Analytics', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AnalyticsPage(title: 'Analytics')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AnalyticsPage()),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.apps, size: 48),
-                        Text('Tools', style: TextStyle(fontSize: 20)),
-                      ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.apps, size: 48),
+                          Text('Tools', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ToolsPage(title: 'Tools')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ToolsPage()),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.access_time, size: 48),
-                        Text('Timesheet', style: TextStyle(fontSize: 20)),
-                      ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.access_time, size: 48),
+                          Text('Timesheet', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TimesheetPage(title: 'Billing')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TimesheetPage()),
-                      );
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.message, size: 48),
-                        Text('Chat', style: TextStyle(fontSize: 20)),
-                      ],
+            Flexible(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.message, size: 48),
+                          Text('Chat', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatPage(title: 'Chat')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatPage()),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.only(top: 24, bottom: 24),
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.search, size: 48),
-                        Text('Search', style: TextStyle(fontSize: 20)),
-                      ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.search, size: 48),
+                          Text('Search', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchPage(title: 'Search')),
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SearchPage()),
-                      );
-                    },
                   ),
-                ),
-                Expanded(
-                  child: Container(),
-                )
-              ],
+                  Expanded(
+                    child: FlatButton(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.arrow_back, size: 48),
+                          Text('Logout', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  LoginPage(title: 'Solution Tracker Two')),
+                        );
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ],
         ),

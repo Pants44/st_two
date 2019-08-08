@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AnalyticsPage extends StatefulWidget {
-  AnalyticsPage({Key key}) : super(key: key);
+  AnalyticsPage({Key key, this.title}) : super(key: key);
 
+  final title;
 
   @override
   _AnalyticsPageState createState() => _AnalyticsPageState();

@@ -16,9 +16,9 @@ class TicketsList {
 }
 
 class Ticket {
-  final String quoterequired, premium, ticketname, ticketdescription, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructions, stopbilling, deadlinedate, erpsystem;
+  final String ticketname, ticketdescription, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructions, deadlinedate, erpsystem;
   final int ticketid, customerid, priorityid, priority, statusid, min, max, projected, totalbilled;
-
+  final bool quoterequired, premium, stopbilling;
   final List<Resource> resources;
   final List<POC> pocs;
   final List<Skill> skills;
@@ -55,16 +55,17 @@ class Ticket {
   factory Ticket.fromJson(Map<String, dynamic> parsedJson){
 
     var rlist = parsedJson['resources'] as List;
-    //print(list.runtimeType);
-    List<Resource> resourceList = rlist.map((i) => Resource.fromJson(i)).toList();
-
     var plist = parsedJson['pocs'] as List;
-    //print(list.runtimeType);
-    List<POC> pocList = plist.map((i) => POC.fromJson(i)).toList();
-
     var slist = parsedJson['skills'] as List;
-    //print(list.runtimeType);
+    List<Resource> resourceList = rlist.map((i) => Resource.fromJson(i)).toList();
+    List<POC> pocList = plist.map((i) => POC.fromJson(i)).toList();
     List<Skill> skillList = slist.map((i) => Skill.fromJson(i)).toList();
+
+    var qrbool, prbool, sbbool;
+    if(parsedJson['quoterequired'] == 'true'){qrbool = true;}else{qrbool = false;}
+    if(parsedJson['premium'] == 'true'){prbool = true;}else{prbool = false;}
+    if(parsedJson['stopbilling'] == 'true'){sbbool = true;}else{sbbool = false;}
+
 
     return Ticket(
       ticketid: int.parse(parsedJson['ticketid']),
@@ -77,19 +78,19 @@ class Ticket {
       statusid: int.parse(parsedJson['statusid']),
       status: parsedJson['status'],
       resources: resourceList,
-      quoterequired: parsedJson['quoterequired'],
+      quoterequired: qrbool,
       min: int.parse(parsedJson['min']),
       max: int.parse(parsedJson['max']),
       projected: int.parse(parsedJson['projected']),
       developerlog: parsedJson['developerlog'],
       //This one needs changed
       pocs: pocList,
-      premium: parsedJson['premium'],
+      premium: prbool,
       entrydate: parsedJson['entrydate'],
       enteredby: parsedJson['enteredby'],
       folderpath: parsedJson['folderpath'],
       specialinstructions: parsedJson['specialinstructions'],
-      stopbilling: parsedJson['stopbilling'],
+      stopbilling: sbbool,
       totalbilled: int.parse(parsedJson['totalbilled']),
       deadlinedate: parsedJson['deadlinedate'],
       erpsystem: parsedJson['erpsystem'],
@@ -101,7 +102,9 @@ class Ticket {
 }
 
 class Resource {
-  final String resourceid, resourcename, email, extension, inactive;
+  final String resourcename, email, extension;
+  final int resourceid;
+  final bool inactive;
 
   Resource({
     this.resourceid,
@@ -113,9 +116,12 @@ class Resource {
 
   factory Resource.fromJson(Map<String, dynamic> parsedJson){
 
+    var inbool;
+    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+
     return Resource(
-        resourceid: parsedJson['resourceid'],
-        inactive: parsedJson['inactive'],
+        resourceid: int.parse(parsedJson['resourceid']),
+        inactive: inbool,
         resourcename: parsedJson['resourcename'],
         email: parsedJson['email'],
         extension: parsedJson['extension']
@@ -125,8 +131,8 @@ class Resource {
 }
 
 class POC {
-  final int pocid;
   final String pocname, phone, email;
+  final int pocid;
 
   POC({
     this.pocid,
@@ -148,8 +154,8 @@ class POC {
 }
 
 class Skill {
-  final int skillid;
   final String skill;
+  final int skillid;
 
   Skill({
     this.skillid,

@@ -40,6 +40,8 @@ flutter:
   assets:
     - assets/st22000.png
     - assets/ticketdata.json
+    - assets/customerdata.json
+    - assets/customerconnectiondata.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

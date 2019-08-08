@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ToolsPage extends StatefulWidget {
-  ToolsPage({Key key}) : super(key: key);
+  ToolsPage({Key key, this.title}) : super(key: key);
 
+  final title;
 
   @override
   _ToolsPageState createState() => _ToolsPageState();
