@@ -24,14 +24,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Image(
-              image: AssetImage('assets/st22000.png'),
-            ),
+        title: Hero(
+          tag: 'logoappbar',
+          child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Image(
+                  image: AssetImage('assets/st22000.png'),
+                ),
+              )
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top:5, right:10, bottom:5),
+            child: Icon(Icons.settings),
           )
-        )
+        ],
       ),
       body: Center(
         child: Column(

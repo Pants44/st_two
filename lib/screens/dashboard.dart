@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:st_two/screens/home.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/screens/ticket.dart';
 
@@ -32,10 +33,24 @@ class _DashboardPageState extends State<DashboardPage> {
         leading: BackButton(),
         title: Text(widget.title),
         actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
-            child: Image(
-              image: AssetImage('assets/st22000.png'),
+          Hero(
+            tag: 'logoappbar',
+            child: Padding(
+              padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.pop(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyHomePage(
+                          title: 'Solution Tracker Two',
+                        )),
+                  );
+                },
+                child: Image(
+                  image: AssetImage('assets/st22000.png'),
+                ),
+              )
             ),
           )
         ],

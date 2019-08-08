@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:st_two/size_config.dart';
 
 import 'package:st_two/screens/home.dart';
+import 'package:st_two/screens/dashboard.dart';
+import 'package:st_two/screens/ticket.dart';
+import 'package:st_two/screens/customers.dart';
+import 'package:st_two/screens/customerentry.dart';
+import 'package:st_two/screens/customerconnectionlist.dart';
+import 'package:st_two/screens/connection.dart';
+import 'package:st_two/screens/analytics.dart';
+import 'package:st_two/screens/tools.dart';
+import 'package:st_two/screens/timesheet.dart';
+import 'package:st_two/screens/chat.dart';
+import 'package:st_two/screens/search.dart';
 import 'package:st_two/theme/colors.dart';
 
 void main() => runApp(MyApp());
@@ -12,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Solution Tracker 2',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -22,6 +33,22 @@ class MyApp extends StatelessWidget {
         primaryColor: colorSTother,
         bottomAppBarColor: colorSTother,
       ),
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext context) => new MyHomePage(),
+        '/dashboard': (BuildContext context) => new DashboardPage(),
+        '/ticket': (BuildContext context) => new TicketPage(),
+        '/customers': (BuildContext context) => new CustomersPage(),
+        '/customerentry': (BuildContext context) => new CustomerEntry(),
+        '/connectionlist': (BuildContext context) => new CustomerConnectionList(),
+        '/connect': (BuildContext context) => new ConnectionPage(),
+        '/analytics': (BuildContext context) => new AnalyticsPage(),
+        '/tools': (BuildContext context) => new ToolsPage(),
+        '/timesheet': (BuildContext context) => new TimesheetPage(),
+        '/chat': (BuildContext context) => new ChatPage(),
+        '/search': (BuildContext context) => new SearchPage(),
+
+
+      },
       home: LoginPage(title: 'Solution Tracker Two'),
     );
   }
@@ -52,9 +79,12 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                             height: SizeConfig.safeBlockVertical * 50,
                             width: SizeConfig.safeBlockHorizontal * 80,
-                            child: Center(
-                              child: Image(
-                                image: AssetImage('assets/st22000.png'),
+                            child: Hero(
+                              tag: 'logoappbar',
+                              child: Center(
+                                child: Image(
+                                  image: AssetImage('assets/st22000.png'),
+                                ),
                               ),
                             )),
                         Container(
@@ -139,13 +169,16 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         height: SizeConfig.safeBlockVertical * 80,
                         width: SizeConfig.safeBlockHorizontal * 50,
-                        child: Center(
-                          child: Container(
-                            width: SizeConfig.safeBlockHorizontal * 40,
-                            child: Image(
-                              image: AssetImage('assets/st22000.png'),
-                            ),
-                          )
+                        child: Hero(
+                          tag: 'logoappbar',
+                          child: Center(
+                              child: Container(
+                                width: SizeConfig.safeBlockHorizontal * 40,
+                                child: Image(
+                                  image: AssetImage('assets/st22000.png'),
+                                ),
+                              )
+                          ),
                         )
                       ),
                       Container(

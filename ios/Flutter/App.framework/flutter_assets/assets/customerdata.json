@@ -1,0 +1,42 @@
+[
+	{
+		"customerid": "808",
+		"industryid": "1",
+		"discoverymethodid": "1",
+		"referredbyid": "909",
+		"customername": "Bob's Machine Shop",
+		"portallogin": "bob",
+		"portalpassword": "bob123",
+		"specialinstructions": "true",
+		"specialinstructionsdescription": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"discoverydescription": "",
+		"inactive": "false",
+		"engagementreceived": "true",
+		"quotesrequired": "false",
+		"connectionsetup": "true",
+		"onhold": "false",
+		"blacklisted": "false",
+		"autoemail": "true",
+		"monthlysupport": "false"
+	},
+	{
+		"customerid": "909",
+		"industryid": "1",
+		"discoverymethodid": "1",
+		"referredbyid": "909",
+		"customername": "Franklin Manufacturing",
+		"portallogin": "frank",
+		"portalpassword": "frank123",
+		"specialinstructions": "true",
+		"specialinstructionsdescription": "",
+		"discoverydescription": "",
+		"inactive": "false",
+		"engagementreceived": "true",
+		"quotesrequired": "false",
+		"connectionsetup": "true",
+		"onhold": "false",
+		"blacklisted": "false",
+		"autoemail": "true",
+		"monthlysupport": "false"
+	}
+]

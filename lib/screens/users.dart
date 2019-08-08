@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class UsersPage extends StatefulWidget {
-  UsersPage({Key key}) : super(key: key);
+  UsersPage({Key key, this.title}) : super(key: key);
+
+  final title;
 
 
   @override
@@ -15,15 +17,19 @@ class _UsersPageState extends State<UsersPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-          leading: Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Image(
-                  image: AssetImage('assets/st22000.png'),
-                ),
-              )
+        leading: BackButton(),
+        title: Text(widget.title),
+        actions: <Widget>[
+          Hero(
+            tag: 'logoappbar',
+            child: Padding(
+              padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
+              child: Image(
+                image: AssetImage('assets/st22000.png'),
+              ),
+            ),
           )
+        ],
       ),
       body: Center(
         child: Text("blank slate"),
