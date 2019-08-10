@@ -129,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           MaterialPageRoute(
                               builder: (context) =>
                                   AnalyticsPage(title: 'Analytics')),
+
                         );
                       },
                     ),
