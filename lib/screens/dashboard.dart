@@ -5,6 +5,12 @@ import 'package:st_two/screens/home.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/screens/ticket.dart';
 import 'package:st_two/screens/dashboardfilter.dart';
+import 'package:st_two/data/dropdownresources.dart';
+
+enum ConfirmAction { CANCEL, ACCEPT }
+
+String _resourceSelection='0';
+List<DropdownMenuItem<String>> resourcedropdown = [];
 
 class DashboardPage extends StatefulWidget {
   DashboardPage({Key key, this.title}) : super(key: key);
@@ -27,6 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    loadResourceDropdown();
     tecSearch.addListener(() {
       setState(() {
         filter = tecSearch.text;
@@ -56,13 +63,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: GestureDetector(
                   child: Icon(Icons.filter_list),
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              DashboardFilter(title: 'Filter'),
-                          fullscreenDialog: true,),
-                    );
+                    _asyncConfirmDialog(context);
                   },
                 )),
           )
@@ -77,98 +78,100 @@ class _DashboardPageState extends State<DashboardPage> {
             }
             return snapshot.hasData
                 ? ListView.builder(
-                    itemCount: snapshot.data.tickets.length,
-                    itemBuilder: (context, index) {
-                      return filter == null || filter == ""
-                          ? GestureDetector(
-                              onTap: () {
-                                print('Open Ticket ' +
-                                    snapshot.data.tickets[index].ticketid
-                                        .toString());
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TicketPage(
-                                          title: 'Ticket ' +
-                                              snapshot
-                                                  .data.tickets[index].ticketid
-                                                  .toString() +
-                                              ' - ' +
-                                              snapshot.data.tickets[index]
-                                                  .ticketname
-                                                  .toString(),
-                                          ticket:
-                                              snapshot.data.tickets[index])),
-                                );
-                              },
-                              child: Card(
-                                child: ListTile(
-                                  leading: Text(snapshot
-                                      .data.tickets[index].priority
-                                      .toString()),
-                                  title: Text('Ticket ' +
-                                      snapshot.data.tickets[index].ticketid
-                                          .toString() +
-                                      ' - ' +
-                                      snapshot.data.tickets[index].ticketname
-                                          .toString()),
-                                  subtitle: Text('Assigned to: ' +
-                                      _whosAssigned(snapshot
-                                          .data.tickets[index].resources)),
-                                  trailing: Text(snapshot
-                                      .data.tickets[index].status
-                                      .toString()),
-                                ),
-                              ))
-                          : snapshot.data.tickets[index].ticketname
-                                      .contains(filter) ||
-                                  snapshot.data.tickets[index].ticketid
-                                      .toString()
-                                      .contains(filter)
-                              ? GestureDetector(
-                                  onTap: () {
-                                    print('Open Ticket ' +
-                                        snapshot.data.tickets[index].ticketid
-                                            .toString());
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => TicketPage(
-                                              title: 'Ticket ' +
-                                                  snapshot.data.tickets[index]
-                                                      .ticketid
-                                                      .toString() +
-                                                  ' - ' +
-                                                  snapshot.data.tickets[index]
-                                                      .ticketname
-                                                      .toString(),
-                                              ticket: snapshot
-                                                  .data.tickets[index])),
-                                    );
-                                  },
-                                  child: Card(
-                                    child: ListTile(
-                                      leading: Text(snapshot
-                                          .data.tickets[index].priority
-                                          .toString()),
-                                      title: Text('Ticket ' +
-                                          snapshot.data.tickets[index].ticketid
-                                              .toString() +
-                                          ' - ' +
-                                          snapshot
-                                              .data.tickets[index].ticketname
-                                              .toString()),
-                                      subtitle: Text('Assigned to: ' +
-                                          _whosAssigned(snapshot
-                                              .data.tickets[index].resources)),
-                                      trailing: Text(snapshot
-                                          .data.tickets[index].status
-                                          .toString()),
-                                    ),
-                                  ))
-                              : Container();
+              itemCount: snapshot.data.tickets.length,
+              itemBuilder: (context, index) {
+                return filter == null || filter == ""
+                    ? GestureDetector(
+                    onTap: () {
+                      print('Open Ticket ' +
+                          snapshot.data.tickets[index].ticketid
+                              .toString());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                TicketPage(
+                                    title: 'Ticket ' +
+                                        snapshot
+                                            .data.tickets[index].ticketid
+                                            .toString() +
+                                        ' - ' +
+                                        snapshot.data.tickets[index]
+                                            .ticketname
+                                            .toString(),
+                                    ticket:
+                                    snapshot.data.tickets[index])),
+                      );
                     },
-                  )
+                    child: Card(
+                      child: ListTile(
+                        leading: Text(snapshot
+                            .data.tickets[index].priority
+                            .toString()),
+                        title: Text('Ticket ' +
+                            snapshot.data.tickets[index].ticketid
+                                .toString() +
+                            ' - ' +
+                            snapshot.data.tickets[index].ticketname
+                                .toString()),
+                        subtitle: Text('Assigned to: ' +
+                            _whosAssigned(snapshot
+                                .data.tickets[index].resources)),
+                        trailing: Text(snapshot
+                            .data.tickets[index].status
+                            .toString()),
+                      ),
+                    ))
+                    : snapshot.data.tickets[index].ticketname
+                    .contains(filter) ||
+                    snapshot.data.tickets[index].ticketid
+                        .toString()
+                        .contains(filter)
+                    ? GestureDetector(
+                    onTap: () {
+                      print('Open Ticket ' +
+                          snapshot.data.tickets[index].ticketid
+                              .toString());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                TicketPage(
+                                    title: 'Ticket ' +
+                                        snapshot.data.tickets[index]
+                                            .ticketid
+                                            .toString() +
+                                        ' - ' +
+                                        snapshot.data.tickets[index]
+                                            .ticketname
+                                            .toString(),
+                                    ticket: snapshot
+                                        .data.tickets[index])),
+                      );
+                    },
+                    child: Card(
+                      child: ListTile(
+                        leading: Text(snapshot
+                            .data.tickets[index].priority
+                            .toString()),
+                        title: Text('Ticket ' +
+                            snapshot.data.tickets[index].ticketid
+                                .toString() +
+                            ' - ' +
+                            snapshot
+                                .data.tickets[index].ticketname
+                                .toString()),
+                        subtitle: Text('Assigned to: ' +
+                            _whosAssigned(snapshot
+                                .data.tickets[index].resources)),
+                        trailing: Text(snapshot
+                            .data.tickets[index].status
+                            .toString()),
+                      ),
+                    ))
+                    : Container();
+              },
+            )
                 : Center(child: CircularProgressIndicator());
           } else {
             return Center(child: CircularProgressIndicator());
@@ -176,7 +179,9 @@ class _DashboardPageState extends State<DashboardPage> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
         items: [
@@ -219,6 +224,64 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {});
   }
 
+  Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
+    return showDialog<ConfirmAction>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Filters'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              DropdownButton<String>(
+                  isDense: true,
+                  value: _resourceSelection,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _resourceSelection = newValue;
+                    });
+
+                    print(_resourceSelection);
+                  },
+                  items: resourcedropdown,
+              )
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.CANCEL);
+              },
+            ),
+            FlatButton(
+              child: const Text('ACCEPT'),
+              onPressed: () {
+                Navigator.of(context).pop(ConfirmAction.ACCEPT);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  void loadResourceDropdown() async {
+    String jsonString = await DefaultAssetBundle.of(context)
+        .loadString("assets/resourcedropdowndata.json");
+    final jsonResponse = json.decode(jsonString);
+    ResourcesList resourceslist = new ResourcesList.fromJson(jsonResponse);
+
+    for (var i = 0; i < resourceslist.resources.length; i++) {
+      resourcedropdown.add(DropdownMenuItem(
+        value: resourceslist.resources[i].resourceid,
+        child: Text(resourceslist.resources[i].resourcename.toString()),
+      ));
+    }
+
+  }
+
   Future<TicketsList> loadTicketsList() async {
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString("assets/ticketdata.json");
@@ -240,3 +303,5 @@ class _DashboardPageState extends State<DashboardPage> {
     return resources;
   }
 }
+
+

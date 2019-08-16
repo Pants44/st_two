@@ -22,6 +22,9 @@ class _DashboardFilterState extends State<DashboardFilter> {
     super.initState();
   }
 
+  List<Map> _myJson = [{"id":0,"name":"<New>"},{"id":1,"name":"Test Practice"}];
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
