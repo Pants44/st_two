@@ -1,0 +1,30 @@
+[
+  {
+    "id": "0",
+    "selection": "Select All"
+  },
+  {
+    "id": "1",
+    "selection": "Not Started"
+  },
+  {
+    "id": "2",
+    "selection": "In Process"
+  },
+  {
+    "id": "3",
+    "selection": "User Testing"
+  },
+  {
+    "id": "4",
+    "selection": "Complete"
+  },
+  {
+    "id": "5",
+    "selection": "Dormant"
+  },
+  {
+    "id": "6",
+    "selection": "Consultant to Spec"
+  }
+]

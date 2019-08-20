@@ -1,0 +1,29 @@
+[
+  {
+    "id": "Select All"
+  },
+  {
+    "id": "On Hold"
+  },
+  {
+    "id": "Inactive"
+  },
+  {
+    "id": "Engagement Received"
+  },
+  {
+    "id": "Blacklisted"
+  },
+  {
+    "id": "AutoEmail"
+  },
+  {
+    "id": "Quotes Required"
+  },
+  {
+    "id": "Monthly Support"
+  },
+  {
+    "id": "Connection Setup"
+  }
+]

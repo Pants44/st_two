@@ -1,5 +1,5 @@
 name: st_two
-description: A new Flutter application.
+description: Solution Tracker Two
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,6 +19,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+
+  charts_flutter: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -43,6 +45,11 @@ flutter:
     - assets/customerdata.json
     - assets/customerconnectiondata.json
     - assets/resourcedropdowndata.json
+    - assets/statusdropdowndata.json
+    - assets/customerdropdowndata.json
+    - assets/customerstatusdropdowndata.json
+    - assets/versiondropdowndata.json
+    - assets/analyticsdata.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

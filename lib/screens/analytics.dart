@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:st_two/size_config.dart';
+import 'package:st_two/charts/piechart.dart';
 
 class AnalyticsPage extends StatefulWidget {
   AnalyticsPage({Key key, this.title}) : super(key: key);
@@ -10,10 +12,11 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    SizeConfig().init(context);
+    var orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -31,8 +34,26 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         ],
       ),
       body: Center(
-        child: Text("Coming in V2"),
-      ),
+          child: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top:32),
+            child: Center(child: Text('Total Yield Breakdown', style: TextStyle(fontSize: 24),)),
+          ),
+          Container(
+              width: SizeConfig.safeBlockHorizontal * 100,
+              height: SizeConfig.safeBlockVertical * 80,
+              child: DonutAutoLabelChartTotalYieldBreakdown.withSampleData()),
+          Container(
+            padding: EdgeInsets.only(top:32),
+            child: Center(child: Text('Total Workload Breakdon', style: TextStyle(fontSize: 24),)),
+          ),
+          Container(
+              width: SizeConfig.safeBlockHorizontal * 100,
+              height: SizeConfig.safeBlockVertical * 80,
+              child: DonutAutoLabelChartWorkloadBreakdown.withSampleData())
+        ],
+      )),
     );
   }
 }
