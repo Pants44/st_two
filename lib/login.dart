@@ -137,15 +137,11 @@ class _LoginPageState extends State<LoginPage> {
                                     'Login',
                                     style: TextStyle(fontSize: 18),
                                   ),
-                                  onPressed: () {
-                                    Navigator.pushReplacement(
+                                  onPressed: () => Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyHomePage(
-                                            title: 'Solution Tracker Two',
-                                          )),
-                                    );
-                                  },
+                                      PageRouteBuilder(
+                                          transitionDuration: Duration(milliseconds: 500),
+                                          pageBuilder: (_, __, ___) => MyHomePage(title: 'Solution Tracker Two',))),
                                   color: colorSTBlue,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:

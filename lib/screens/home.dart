@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:st_two/login.dart';
 import 'package:st_two/screens/dashboard.dart';
 import 'package:st_two/screens/customers.dart';
@@ -26,14 +25,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Hero(
           tag: 'logoappbar',
-          child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: Image(
-                  image: AssetImage('assets/st22000.png'),
-                ),
-              )
-          ),
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Image(
+              image: AssetImage('assets/st22000.png'),
+            ),
+          )
         ),
         actions: <Widget>[
           Padding(
@@ -41,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Icon(Icons.settings),
           )
         ],
+        centerTitle: true,
       ),
       body: Center(
         child: Column(

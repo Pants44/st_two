@@ -5,7 +5,7 @@ import 'package:st_two/screens/home.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/screens/ticket.dart';
 import 'package:st_two/screens/dashboardfilter.dart';
-import 'package:st_two/data/dropdowns.dart';
+import 'package:st_two/data/processdropdowns.dart';
 
 enum ConfirmAction { CANCEL, ACCEPT }
 
@@ -135,10 +135,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                 ),
                               ))
                           : snapshot.data.tickets[index].ticketname
-                                      .contains(filter) ||
+                                      .contains(filter.toLowerCase()) ||
                                   snapshot.data.tickets[index].ticketid
                                       .toString()
-                                      .contains(filter)
+                                      .contains(filter.toLowerCase())
                               ? GestureDetector(
                                   onTap: () {
                                     print('Open Ticket ' +
