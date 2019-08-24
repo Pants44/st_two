@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:st_two/screens/home.dart';
 import 'package:st_two/data/processtickets.dart';
 
 class TicketPage extends StatefulWidget {

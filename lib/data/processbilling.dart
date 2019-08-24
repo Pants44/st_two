@@ -19,12 +19,13 @@ class BillingWeek {
 
 class BillingDayList{
   final int billingweekid;
-  final String billdate, billingtotalday;
+  final String billdate, billdayofweek, billingtotalday;
   final List<BillingEntry> billingentries;
 
   BillingDayList({
     this.billingweekid,
     this.billdate,
+    this.billdayofweek,
     this.billingtotalday,
     this.billingentries,
   });
@@ -36,6 +37,7 @@ class BillingDayList{
     return new BillingDayList(
       billingweekid: int.parse(parsedJson['billingweekid']),
       billdate: parsedJson['billdate'],
+      billdayofweek: parsedJson['billdayofweek'],
       billingtotalday: parsedJson['billingtotalday'],
       billingentries: billingentries
     );

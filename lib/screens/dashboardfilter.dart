@@ -1,9 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:st_two/screens/home.dart';
-import 'package:st_two/data/processtickets.dart';
-import 'package:st_two/screens/ticket.dart';
 
 class DashboardFilter extends StatefulWidget {
   DashboardFilter({Key key, this.title}) : super(key: key);
@@ -22,8 +17,6 @@ class _DashboardFilterState extends State<DashboardFilter> {
     super.initState();
   }
 
-  List<Map> _myJson = [{"id":0,"name":"<New>"},{"id":1,"name":"Test Practice"}];
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +31,7 @@ class _DashboardFilterState extends State<DashboardFilter> {
             children: <Widget>[
               DropdownButton(
                 hint: Text('Customer'),
+
                 items: [
                   DropdownMenuItem(
                     child: Text('Option 1'),
@@ -48,6 +42,9 @@ class _DashboardFilterState extends State<DashboardFilter> {
                     value: 'Option2',
                   )
                 ],
+                onChanged: (value){
+                  //TODO use the values
+                },
               ),
               DropdownButton(
                 hint: Text('Resource'),
@@ -61,6 +58,9 @@ class _DashboardFilterState extends State<DashboardFilter> {
                     value: 'Option2',
                   )
                 ],
+                onChanged: (value){
+                  //TODO use the values
+                },
               ),
               DropdownButton(
                 onChanged: (value){

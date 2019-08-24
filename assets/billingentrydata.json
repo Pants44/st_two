@@ -2,6 +2,7 @@
 	{
 	"billingweekid": "1",
 	"billdate": "8/19/2019",
+	"billdayofweek": "Monday",
 	"billingtotalday": "5 hrs",
 	"billingentries": [
 		{
@@ -53,8 +54,9 @@
 	]
 	},
 	{
-	"billingweekid": "2",
+	"billingweekid": "1",
 	"billdate": "8/20/2019",
+	"billdayofweek": "Tuesday",
 	"billingtotalday": "5 hrs",
 	"billingentries": [
 		{
@@ -104,5 +106,221 @@
 			"internalnotes": "Everyone will complain that I billed him for this"
 		}
 	]
-}
+	},
+	{
+		"billingweekid": "1",
+		"billdate": "8/21/2019",
+		"billdayofweek": "Wednesday",
+		"billingtotalday": "5 hrs",
+		"billingentries": [
+			{
+				"ticket": "Ticket 4321 - Purchase Order Entry Customization",
+				"customer": "Bob's Machine Shop",
+				"poc": "Bob Smith",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Investigation / BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "This guy is probably going to complain that I went over the min hours"
+			},
+			{
+				"ticket": "4322",
+				"customer": "Franklin Manufacturing",
+				"poc": "Frank Tolly",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Nothing / Not much BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "Everyone will complain that I billed him for this"
+			}
+		]
+	},
+	{
+		"billingweekid": "1",
+		"billdate": "8/22/2019",
+		"billdayofweek": "Thursday",
+		"billingtotalday": "5 hrs",
+		"billingentries": [
+			{
+				"ticket": "Ticket 4321 - Purchase Order Entry Customization",
+				"customer": "Bob's Machine Shop",
+				"poc": "Bob Smith",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Investigation / BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "This guy is probably going to complain that I went over the min hours"
+			},
+			{
+				"ticket": "4322",
+				"customer": "Franklin Manufacturing",
+				"poc": "Frank Tolly",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Nothing / Not much BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "Everyone will complain that I billed him for this"
+			}
+		]
+	},
+	{
+		"billingweekid": "1",
+		"billdate": "8/23/2019",
+		"billdayofweek": "Friday",
+		"billingtotalday": "5 hrs",
+		"billingentries": [
+			{
+				"ticket": "Ticket 4321 - Purchase Order Entry Customization",
+				"customer": "Bob's Machine Shop",
+				"poc": "Bob Smith",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Investigation / BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "This guy is probably going to complain that I went over the min hours"
+			},
+			{
+				"ticket": "4322",
+				"customer": "Franklin Manufacturing",
+				"poc": "Frank Tolly",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Nothing / Not much BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "Everyone will complain that I billed him for this"
+			}
+		]
+	},
+	{
+		"billingweekid": "1",
+		"billdate": "8/24/2019",
+		"billdayofweek": "Saturday",
+		"billingtotalday": "5 hrs",
+		"billingentries": [
+			{
+				"ticket": "Ticket 4321 - Purchase Order Entry Customization",
+				"customer": "Bob's Machine Shop",
+				"poc": "Bob Smith",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Investigation / BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "This guy is probably going to complain that I went over the min hours"
+			},
+			{
+				"ticket": "4322",
+				"customer": "Franklin Manufacturing",
+				"poc": "Frank Tolly",
+				"resource": "Chance",
+				"billingservicelevel": "Premium Services",
+				"billedtime": "2.5 hrs",
+				"timeperiods": [
+					{
+						"periodid": "1",
+						"startime": "10:30 AM",
+						"endtime": "11:45 AM"
+					},
+					{
+						"periodid": "2",
+						"startime": "2:30 PM",
+						"endtime": "3:45 PM"
+					}
+				],
+				"extratime": "1:00",
+				"notes": "Nothing / Not much BAQ Development / Testing / Send Off for User Testing",
+				"internalnotes": "Everyone will complain that I billed him for this"
+			}
+		]
+	}
 ]

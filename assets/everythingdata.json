@@ -1,0 +1,55 @@
+[
+	{
+		"everythinglistid": "1",
+		"tickets":[
+			{
+				"ticketid": "4321",
+				"ticketname": "Purchase Order Entry Customization",
+				"ticketdescription": "POC will have more details into this request. Spec needs to be created before you begin. Customer has request a quote"
+			},
+			{
+				"ticketid": "4322",
+				"ticketname": "AP Aging Report",
+				"ticketdescription": "SSRS Report. Customer has created there own AP Aging Report and they would like some changes to it. Version 9 so beware"
+			},
+			{
+				"ticketid": "4323",
+				"ticketname": "Customer Shipment Entry",
+				"ticketdescription": "Customer wants to integrate the Epicor Screens better with a third party program they use for shipping. Should be just some simple ud field additions"
+			}
+		],
+		"customers": [
+			{
+				"customerid": "808",
+				"customername": "Bob's Machine Shop"
+			},
+			{
+				"customerid": "909",
+				"customername": "Franklin Manufacturing"
+			}
+		],
+		"pocs": [
+			{
+				"pocid": "300",
+				"customerid": "808",
+				"pocname": "Bob Smith",
+				"pocphone": "419-557-2225",
+				"pocemail": "bsmith@machineshop.com"
+			},
+			{
+				"pocid": "301",
+				"customerid": "808",
+				"pocname": "Laura Smith",
+				"pocphone": "419-557-2225",
+				"pocemail": "lsmith@machineshop.com"
+			},
+			{
+				"pocid": "302",
+				"customerid": "909",
+				"pocname": "Frank Tolly",
+				"pocphone": "419-557-2225",
+				"pocemail": "ftolly@franklinmfg.com"
+			}
+		]
+	}
+]

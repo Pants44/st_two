@@ -1,11 +1,14 @@
 [
   {
-    "id": "Yield"
+    "id": "Select Graph"
   },
   {
-    "id": "Workload"
+    "id": "Yield Breakdown"
   },
   {
-    "id": "Start/Comple Metrics"
+    "id": "PTS Workload"
+  },
+  {
+    "id": "Completed Metrics"
   }
 ]

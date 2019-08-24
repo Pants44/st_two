@@ -13,6 +13,7 @@ import 'package:st_two/screens/tools.dart';
 import 'package:st_two/screens/timesheet.dart';
 import 'package:st_two/screens/chat.dart';
 import 'package:st_two/screens/search.dart';
+import 'package:st_two/screens/billingentry.dart';
 import 'package:st_two/theme/colors.dart';
 
 void main() => runApp(MyApp());
@@ -27,11 +28,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
+        buttonColor: colorSTBlue,
         accentColor: colorSTBlue,
         backgroundColor: colorSTbg,
         canvasColor: colorSTbg,
         primaryColor: colorSTother,
         bottomAppBarColor: colorSTother,
+
       ),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => new MyHomePage(),
@@ -46,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/timesheet': (BuildContext context) => new TimesheetPage(),
         '/chat': (BuildContext context) => new ChatPage(),
         '/search': (BuildContext context) => new SearchPage(),
+        '/billingentry': (BuildContext context) => new BillingEntryPage(),
 
 
       },
