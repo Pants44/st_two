@@ -17,7 +17,6 @@ class PieOutsideLabelChart extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
@@ -42,7 +41,7 @@ class PieOutsideLabelChart extends StatelessWidget {
   static List<charts.Series<YieldResource, int>> _createSampleData() {
     final data = [
       new YieldResource(2, 'Jim', 5),
-      new YieldResource(3, 'Dena',5),
+      new YieldResource(3, 'Dena', 5),
       new YieldResource(4, 'Jeremy', 20),
       new YieldResource(5, 'Jarrad', 15),
       new YieldResource(6, 'Brandon', 1),
@@ -59,8 +58,8 @@ class PieOutsideLabelChart extends StatelessWidget {
         measureFn: (YieldResource yres, _) => yres.percentoftotal,
         data: data,
         // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (YieldResource row, _) => '${row.resourcename}: ${row.percentoftotal}',
-
+        labelAccessorFn: (YieldResource row, _) =>
+            '${row.resourcename}: ${row.percentoftotal}',
       )
     ];
   }
@@ -81,7 +80,6 @@ class DonutAutoLabelChartTotalYieldBreakdown extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return new charts.PieChart(seriesList,
@@ -101,16 +99,16 @@ class DonutAutoLabelChartTotalYieldBreakdown extends StatelessWidget {
         //       new charts.ArcLabelDecorator(
         //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
         //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: new charts.ArcRendererConfig(
+        defaultRenderer: charts.ArcRendererConfig(
             arcWidth: 200,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
+            arcRendererDecorators: [charts.ArcLabelDecorator()]));
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<YieldResource, int>> _createSampleData() {
     final data = [
       new YieldResource(2, 'Jim', 5),
-      new YieldResource(3, 'Dena',5),
+      new YieldResource(3, 'Dena', 5),
       new YieldResource(4, 'Jeremy', 20),
       new YieldResource(5, 'Jarrad', 15),
       new YieldResource(6, 'Brandon', 1),
@@ -127,14 +125,14 @@ class DonutAutoLabelChartTotalYieldBreakdown extends StatelessWidget {
         measureFn: (YieldResource yres, _) => yres.percentoftotal,
         data: data,
         // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (YieldResource row, _) => '${row.resourcename}: ${row.percentoftotal}',
-
+        labelAccessorFn: (YieldResource row, _) =>
+            '${row.resourcename}: ${row.percentoftotal}',
       )
     ];
   }
 }
 
-class YieldResource{
+class YieldResource {
   final int resourceid;
   final String resourcename;
   final double percentoftotal;
@@ -144,7 +142,6 @@ class YieldResource{
     this.resourcename,
     this.percentoftotal,
   );
-
 }
 
 class DonutAutoLabelChartWorkloadBreakdown extends StatelessWidget {
@@ -162,36 +159,84 @@ class DonutAutoLabelChartWorkloadBreakdown extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
-        animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: new charts.ArcRendererConfig(
-            arcWidth: 200,
-            arcRendererDecorators: [new charts.ArcLabelDecorator()]));
+    return new charts.PieChart(
+      seriesList,
+      animate: animate,
+      behaviors: [
+
+        charts.ChartTitle('Total: 2005 hrs',
+            titleStyleSpec: charts.TextStyleSpec(
+                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 24),
+            subTitle: '2005 / 100 = 4.98%',
+            subTitleStyleSpec: charts.TextStyleSpec(
+                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16)),
+        charts.DatumLegend(
+          // Positions for "start" and "end" will be left and right respectively
+          // for widgets with a build context that has directionality ltr.
+          // For rtl, "start" and "end" will be right and left respectively.
+          // Since this example has directionality of ltr, the legend is
+          // positioned on the right side of the chart.
+          position: charts.BehaviorPosition.top,
+          // For a legend that is positioned on the left or right of the chart,
+          // setting the justification for [endDrawArea] is aligned to the
+          // bottom of the chart draw area.
+          outsideJustification: charts.OutsideJustification.middleDrawArea,
+
+          // By default, if the position of the chart is on the left or right of
+          // the chart, [horizontalFirst] is set to false. This means that the
+          // legend entries will grow as new rows first instead of a new column.
+          horizontalFirst: false,
+          // By setting this value to 2, the legend entries will grow up to two
+          // rows before adding a new column.
+          desiredMaxRows: 3,
+          // This defines the padding around each legend entry.
+          cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+          // Render the legend entry text with custom styles.
+          entryTextStyle: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16),
+        )
+      ],
+      // Configure the width of the pie slices to 60px. The remaining space in
+      // the chart will be left as a hole in the center.
+      //
+      // [ArcLabelDecorator] will automatically position the label inside the
+      // arc if the label will fit. If the label will not fit, it will draw
+      // outside of the arc with a leader line. Labels can always display
+      // inside or outside using [LabelPosition].
+      //
+      // Text style for inside / outside can be controlled independently by
+      // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
+      //
+      // Example configuring different styles for inside/outside:
+      //       new charts.ArcLabelDecorator(
+      //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+      //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+      defaultRenderer: charts.ArcRendererConfig(
+        arcWidth: 200,
+        arcRendererDecorators: [
+          charts.ArcLabelDecorator(
+            labelPosition: charts.ArcLabelPosition.auto,
+            outsideLabelStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255, a: 255),
+              fontSize: 16,
+            ),
+            insideLabelStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 0, g: 0, b: 0, a: 255),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<WorkloadResource, int>> _createSampleData() {
+  static List<charts.Series<WorkloadResource, String>> _createSampleData() {
     final data = [
       new WorkloadResource(2, 'Jim', 5, 100),
-      new WorkloadResource(3, 'Dena',5, 100),
+      new WorkloadResource(3, 'Dena', 5, 100),
       new WorkloadResource(4, 'Jeremy', 20, 400),
       new WorkloadResource(5, 'Jarrad', 15, 300),
       new WorkloadResource(6, 'Brandon', 1, 10),
@@ -202,29 +247,24 @@ class DonutAutoLabelChartWorkloadBreakdown extends StatelessWidget {
     ];
 
     return [
-      new charts.Series<WorkloadResource, int>(
+      new charts.Series<WorkloadResource, String>(
         id: 'Yields',
-        domainFn: (WorkloadResource yres, _) => yres.resourceid,
+        domainFn: (WorkloadResource yres, _) => yres.resourcename,
         measureFn: (WorkloadResource yres, _) => yres.percentoftotal,
         data: data,
         // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (WorkloadResource row, _) => '${row.resourcename}: ${row.hrs}',
 
+        labelAccessorFn: (WorkloadResource row, _) => '${row.hrs}',
       )
     ];
   }
 }
 
-class WorkloadResource{
+class WorkloadResource {
   final int resourceid;
   final String resourcename;
   final double percentoftotal, hrs;
 
   WorkloadResource(
-      this.resourceid,
-      this.resourcename,
-      this.percentoftotal,
-      this.hrs
-      );
-
+      this.resourceid, this.resourcename, this.percentoftotal, this.hrs);
 }
