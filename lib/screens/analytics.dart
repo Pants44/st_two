@@ -107,11 +107,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       padding: EdgeInsets.all(16),
                       child: RaisedButton(
                         onPressed: () => _selectDate(context, 'start'),
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          enabled: false,
-                          controller: _tecStartDate,
-                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 4,
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                                controller: _tecStartDate,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Icon(Icons.keyboard_arrow_down),
+                            )
+                          ],
+                        )
                       ),
                     ),
                   ),
@@ -121,11 +132,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       padding: EdgeInsets.all(16),
                       child: RaisedButton(
                         onPressed: () => _selectDate(context, 'end'),
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          enabled: false,
-                          controller: _tecEndDate,
-                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 4,
+                              child: TextField(
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                                controller: _tecEndDate,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Icon(Icons.keyboard_arrow_down),
+                            )
+                          ],
+                        )
                       ),
                     ),
                   ),
