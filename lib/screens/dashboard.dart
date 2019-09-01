@@ -76,7 +76,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   onTap: () {
                     _asyncConfirmDialog(context);
                   },
-                )),
+                ),),
           )
         ],
       ),
@@ -101,16 +101,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => TicketPage(
-                                          title: 'Ticket ' +
-                                              snapshot
-                                                  .data.tickets[index].ticketid
-                                                  .toString() +
-                                              ' - ' +
-                                              snapshot.data.tickets[index]
-                                                  .ticketname
-                                                  .toString(),
-                                          ticket:
-                                              snapshot.data.tickets[index])),
+                                          title: 'View Ticket',
+                                          ticket: snapshot.data.tickets[index],
+                                          readonly: true,),),
                                 );
                               },
                               child: Card(

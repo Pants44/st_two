@@ -113,7 +113,7 @@ class _BillingEntryPageState extends State<BillingEntryPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 64),
+                  padding: EdgeInsets.only(bottom: 72),
                   child: RaisedButton(
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
@@ -122,7 +122,7 @@ class _BillingEntryPageState extends State<BillingEntryPage> {
                       if (_formKey.currentState.validate()) {
                         // If the form is valid, display a Snackbar.
                         Scaffold.of(context)
-                            .showSnackBar(SnackBar(content: Text('Processing Data')));
+                            .showSnackBar(SnackBar(content: Text('Processing Data'),),);
                       }
                     },
                     child: Text('Submit'),
@@ -145,7 +145,7 @@ class _BillingEntryPageState extends State<BillingEntryPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => BillingEntryPage(
-                    title: "Add Entry")),);
+                    title: "Add Entry"),),);
         },
       ),
     );

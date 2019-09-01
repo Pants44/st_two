@@ -45,5 +45,3 @@ Map<int, Color> stothercolor =
 MaterialColor colorSTBlue = MaterialColor(0xFF2cc8c8, stbluecolor);
 MaterialColor colorSTbg = MaterialColor(0xFF292F36, stbgcolor);
 MaterialColor colorSTother = MaterialColor(0xFF02111B, stothercolor);
-
-

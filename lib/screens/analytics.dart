@@ -20,9 +20,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   TextEditingController _tecStartDate = TextEditingController();
 
   TextEditingController _tecEndDate = TextEditingController();
-  bool g = false,
-      s = false,
-      e = false;
+  bool g = false, s = false, e = false;
   String gtype;
 
   String _graphSelection = 'Select Graph';
@@ -65,40 +63,38 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Container(
-          child: DropdownButton<String>(
-            isExpanded: true,
-            isDense: true,
-            value: _graphSelection,
-            onChanged: (String newValue) {
-              setState(() {
-                _graphSelection = newValue;
-                newValue == 'Select Graph' ? g = false : g = true;
-              });
+          padding: EdgeInsets.all(10),
+          color: Theme.of(context).accentColor,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              style: TextStyle(fontSize: 20),
+              isExpanded: true,
+              isDense: true,
+              value: _graphSelection,
+              onChanged: (String newValue) {
+                setState(() {
+                  _graphSelection = newValue;
+                  newValue == 'Select Graph' ? g = false : g = true;
+                });
 
-              print(_graphSelection);
-            },
-            items: graphdropdown,
+                print(_graphSelection);
+              },
+              items: graphdropdown,
+            ),
           ),
         ),
         actions: <Widget>[
-          Hero(
-            tag: 'logoappbar',
-            child: Padding(
-              padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
-              child: Image(
-                image: AssetImage('assets/st22000.png'),
-              ),
-            ),
-          ),
+          Padding(
+              padding: EdgeInsets.only(right:4),
+              child: IconButton(icon: Icon(Icons.share), onPressed: (){}),
+            )
         ],
       ),
       body: Center(
         child: Column(
           children: <Widget>[
             Container(
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               child: Row(
                 children: <Widget>[
                   Expanded(
@@ -106,24 +102,23 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     child: Padding(
                       padding: EdgeInsets.all(16),
                       child: RaisedButton(
-                        onPressed: () => _selectDate(context, 'start'),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                enabled: false,
-                                controller: _tecStartDate,
+                          onPressed: () => _selectDate(context, 'start'),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 4,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  enabled: false,
+                                  controller: _tecStartDate,
+                                ),
                               ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Icon(Icons.keyboard_arrow_down),
-                            )
-                          ],
-                        )
-                      ),
+                              Flexible(
+                                flex: 1,
+                                child: Icon(Icons.keyboard_arrow_down),
+                              )
+                            ],
+                          )),
                     ),
                   ),
                   Expanded(
@@ -131,24 +126,23 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     child: Padding(
                       padding: EdgeInsets.all(16),
                       child: RaisedButton(
-                        onPressed: () => _selectDate(context, 'end'),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 4,
-                              child: TextField(
-                                textAlign: TextAlign.center,
-                                enabled: false,
-                                controller: _tecEndDate,
+                          onPressed: () => _selectDate(context, 'end'),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 4,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  enabled: false,
+                                  controller: _tecEndDate,
+                                ),
                               ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Icon(Icons.keyboard_arrow_down),
-                            )
-                          ],
-                        )
-                      ),
+                              Flexible(
+                                flex: 1,
+                                child: Icon(Icons.keyboard_arrow_down),
+                              )
+                            ],
+                          )),
                     ),
                   ),
                 ],
@@ -156,9 +150,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
             ),
             Expanded(
               child: Container(
-                color: Theme
-                    .of(context)
-                    .backgroundColor,
+                color: Theme.of(context).backgroundColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -171,30 +163,30 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           }
                           return snapshot.hasData
                               ? snapshot.data
-                              ? Container(
-                            width:
-                            SizeConfig.safeBlockHorizontal * 100,
-                            height: SizeConfig.safeBlockVertical * 80,
-                            child: whichgraph(),
-                          )
+                                  ? Container(
+                                      width:
+                                          SizeConfig.safeBlockHorizontal * 100,
+                                      height: SizeConfig.safeBlockVertical * 80,
+                                      child: whichgraph(),
+                                    )
+                                  : Center(
+                                      child: Container(
+                                        child: Text(
+                                            'Please select a graph and some dates'),
+                                      ),
+                                    )
                               : Center(
-                            child: Container(
-                              child: Text(
-                                  'Please select a graph and some dates'),
-                            ),
-                          )
-                              : Center(
-                            child: Container(
-                              child: Text(
-                                  'Please select a graph and some dates'),
-                            ),
-                          );
+                                  child: Container(
+                                    child: Text(
+                                        'Please select a graph and some dates'),
+                                  ),
+                                );
                         } else {
                           print('no future connection for graph');
                           return Center(
                             child: Container(
                               child:
-                              Text('Please select a graph and some dates'),
+                                  Text('Please select a graph and some dates'),
                             ),
                           );
                         }
@@ -233,17 +225,29 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   Widget whichgraph() {
     if (_graphSelection == 'Yield Breakdown') {
-      return DonutAutoLabelChartTotalYieldBreakdown
-          .withSampleData();
+      return DonutAutoLabelChartTotalYieldBreakdown.withSampleData();
     } else if (_graphSelection == 'PTS Workload') {
       return DonutAutoLabelChartWorkloadBreakdown.withSampleData();
+    } else if (_graphSelection == 'Completed Metrics') {
+      return Container(
+        child: Center(
+          child: Text(
+            'Developer is lazy',
+            style: TextStyle(fontSize: 69),
+          ),
+        ),
+      );
     } else {
       return Container();
     }
   }
 
   Future<bool> _completeGraphSelections() async {
-    print('graph:' + g.toString() + '  start:' + s.toString() + '  end:' +
+    print('graph:' +
+        g.toString() +
+        '  start:' +
+        s.toString() +
+        '  end:' +
         e.toString());
     return g & s & e ? true : false;
   }
@@ -258,9 +262,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       setState(() {
         btn == 'start'
             ? _tecStartDate.text =
-            DateFormat("MM-dd-yyyy").format(picked).toString()
+                DateFormat("MM-dd-yyyy").format(picked).toString()
             : _tecEndDate.text =
-            DateFormat("MM-dd-yyyy").format(picked).toString();
+                DateFormat("MM-dd-yyyy").format(picked).toString();
       });
   }
 
@@ -269,13 +273,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         .loadString("assets/graphdropdowndata.json");
     final jsonResponse = json.decode(jsonString);
     GraphSelectionListdd graphslist =
-    new GraphSelectionListdd.fromJson(jsonResponse);
+        new GraphSelectionListdd.fromJson(jsonResponse);
 
     String jsonString2 = await DefaultAssetBundle.of(context)
         .loadString("assets/graphrangedropdowndata.json");
     final jsonResponse2 = json.decode(jsonString2);
     GraphRangeSelectionListdd graphrangelist =
-    new GraphRangeSelectionListdd.fromJson(jsonResponse2);
+        new GraphRangeSelectionListdd.fromJson(jsonResponse2);
 
     for (var i = 0; i < graphslist.graphs.length; i++) {
       graphdropdown.add(

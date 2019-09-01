@@ -82,30 +82,83 @@ class DonutAutoLabelChartTotalYieldBreakdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList,
-        animate: animate,
-        // Configure the width of the pie slices to 60px. The remaining space in
-        // the chart will be left as a hole in the center.
-        //
-        // [ArcLabelDecorator] will automatically position the label inside the
-        // arc if the label will fit. If the label will not fit, it will draw
-        // outside of the arc with a leader line. Labels can always display
-        // inside or outside using [LabelPosition].
-        //
-        // Text style for inside / outside can be controlled independently by
-        // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
-        //
-        // Example configuring different styles for inside/outside:
-        //       new charts.ArcLabelDecorator(
-        //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
-        //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
-        defaultRenderer: charts.ArcRendererConfig(
-            arcWidth: 200,
-            arcRendererDecorators: [charts.ArcLabelDecorator()]));
+    return new charts.PieChart(
+      seriesList,
+      animate: animate,
+      // Configure the width of the pie slices to 60px. The remaining space in
+      // the chart will be left as a hole in the center.
+      //
+      // [ArcLabelDecorator] will automatically position the label inside the
+      // arc if the label will fit. If the label will not fit, it will draw
+      // outside of the arc with a leader line. Labels can always display
+      // inside or outside using [LabelPosition].
+      //
+      // Text style for inside / outside can be controlled independently by
+      // setting [insideLabelStyleSpec] and [outsideLabelStyleSpec].
+      //
+      // Example configuring different styles for inside/outside:
+      //       new charts.ArcLabelDecorator(
+      //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+      //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+
+      behaviors: [
+        charts.ChartTitle(
+            'Billing Performance',
+            titleStyleSpec: charts.TextStyleSpec(
+                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 24),
+            //subTitle: '2005 / 100 = 4.98%',
+            subTitleStyleSpec: charts.TextStyleSpec(
+                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16),
+            behaviorPosition: charts.BehaviorPosition.bottom
+        ),
+        charts.DatumLegend(
+          // Positions for "start" and "end" will be left and right respectively
+          // for widgets with a build context that has directionality ltr.
+          // For rtl, "start" and "end" will be right and left respectively.
+          // Since this example has directionality of ltr, the legend is
+          // positioned on the right side of the chart.
+          position: charts.BehaviorPosition.top,
+          // For a legend that is positioned on the left or right of the chart,
+          // setting the justification for [endDrawArea] is aligned to the
+          // bottom of the chart draw area.
+          outsideJustification: charts.OutsideJustification.middleDrawArea,
+
+          // By default, if the position of the chart is on the left or right of
+          // the chart, [horizontalFirst] is set to false. This means that the
+          // legend entries will grow as new rows first instead of a new column.
+          horizontalFirst: false,
+          // By setting this value to 2, the legend entries will grow up to two
+          // rows before adding a new column.
+          desiredMaxRows: 3,
+          // This defines the padding around each legend entry.
+          cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+          // Render the legend entry text with custom styles.
+          entryTextStyle: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16),
+        )
+      ],
+
+      defaultRenderer: charts.ArcRendererConfig(
+        arcWidth: 200,
+        arcRendererDecorators: [
+          charts.ArcLabelDecorator(
+            labelPosition: charts.ArcLabelPosition.auto,
+            outsideLabelStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255, a: 255),
+              fontSize: 16,
+            ),
+            insideLabelStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 0, g: 0, b: 0, a: 255),
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<YieldResource, int>> _createSampleData() {
+  static List<charts.Series<YieldResource, String>> _createSampleData() {
     final data = [
       new YieldResource(2, 'Jim', 5),
       new YieldResource(3, 'Dena', 5),
@@ -119,14 +172,13 @@ class DonutAutoLabelChartTotalYieldBreakdown extends StatelessWidget {
     ];
 
     return [
-      new charts.Series<YieldResource, int>(
+      new charts.Series<YieldResource, String>(
         id: 'Yields',
-        domainFn: (YieldResource yres, _) => yres.resourceid,
+        domainFn: (YieldResource yres, _) => yres.resourcename,
         measureFn: (YieldResource yres, _) => yres.percentoftotal,
         data: data,
         // Set a label accessor to control the text of the arc label.
-        labelAccessorFn: (YieldResource row, _) =>
-            '${row.resourcename}: ${row.percentoftotal}',
+        labelAccessorFn: (YieldResource row, _) => '${row.percentoftotal}%',
       )
     ];
   }
@@ -165,13 +217,15 @@ class DonutAutoLabelChartWorkloadBreakdown extends StatelessWidget {
       seriesList,
       animate: animate,
       behaviors: [
-
-        charts.ChartTitle('Total: 2005 hrs',
-            titleStyleSpec: charts.TextStyleSpec(
-                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 24),
-            subTitle: '2005 / 100 = 4.98%',
-            subTitleStyleSpec: charts.TextStyleSpec(
-                color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16)),
+        charts.ChartTitle(
+          'Total: 2005 hrs',
+          titleStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255), fontSize: 24),
+          //subTitle: '2005 / 100 = 4.98%',
+          subTitleStyleSpec: charts.TextStyleSpec(
+              color: charts.Color(r: 255, g: 255, b: 255), fontSize: 16),
+          behaviorPosition: charts.BehaviorPosition.bottom
+        ),
         charts.DatumLegend(
           // Positions for "start" and "end" will be left and right respectively
           // for widgets with a build context that has directionality ltr.

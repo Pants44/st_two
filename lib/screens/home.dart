@@ -8,6 +8,7 @@ import 'package:st_two/screens/tools.dart';
 import 'package:st_two/screens/timesheet.dart';
 import 'package:st_two/screens/chat.dart';
 import 'package:st_two/screens/search.dart';
+import 'package:st_two/screens/settings.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -30,12 +31,22 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Image(
               image: AssetImage('assets/st22000.png'),
             ),
-          )
+          ),
         ),
         actions: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top:5, right:10, bottom:5),
-            child: Icon(Icons.settings),
+            padding: EdgeInsets.only(top: 5, right: 10, bottom: 5),
+            child: IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(title: 'User Settings'),
+                  ),
+                );
+              },
+            ),
           )
         ],
         centerTitle: true,
@@ -54,15 +65,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.assignment, size: 48),
-                          Text('Dashboard', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Dashboard',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  DashboardPage(title: 'Dashboard')),
+                            builder: (context) =>
+                                DashboardPage(title: 'Dashboard'),
+                          ),
                         );
                       },
                     ),
@@ -73,15 +88,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.contacts, size: 48),
-                          Text('Customer', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Customer',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomersPage(title: 'Customers')),
+                            builder: (context) =>
+                                CustomersPage(title: 'Customers'),
+                          ),
                         );
                       },
                     ),
@@ -92,15 +111,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.import_contacts, size: 48),
-                          Text('Connect', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Connect',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  CustomerConnectionList(title: 'Client Connections')),
+                            builder: (context) => CustomerConnectionList(
+                                title: 'Client Connections'),
+                          ),
                         );
                       },
                     ),
@@ -118,16 +141,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.insert_chart, size: 48),
-                          Text('Analytics', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Analytics',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  AnalyticsPage(title: 'Analytics')),
-
+                            builder: (context) =>
+                                AnalyticsPage(title: 'Analytics'),
+                          ),
                         );
                       },
                     ),
@@ -145,7 +171,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ToolsPage(title: 'Tools')),
+                            builder: (context) => ToolsPage(title: 'Tools'),
+                          ),
                         );
                       },
                     ),
@@ -156,15 +183,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.access_time, size: 48),
-                          Text('Timesheet', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Timesheet',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  TimesheetPage(title: 'Billing')),
+                            builder: (context) =>
+                                TimesheetPage(title: 'Billing'),
+                          ),
                         );
                       },
                     ),
@@ -181,14 +212,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.message, size: 48),
-                          Text('Chat', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Chat',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ChatPage(title: 'Chat')),
+                            builder: (context) => ChatPage(title: 'Chat'),
+                          ),
                         );
                       },
                     ),
@@ -199,17 +234,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.search, size: 48),
-                          Text('Search', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Search',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
-                      onPressed: () {
+                      /*onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   SearchPage(title: 'Search')),
                         );
-                      },
+                      },*/
                     ),
                   ),
                   Expanded(
@@ -218,15 +256,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Icon(Icons.arrow_back, size: 48),
-                          Text('Logout', style: TextStyle(fontSize: 20)),
+                          Text(
+                            'Logout',
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginPage(title: 'Solution Tracker Two')),
+                            builder: (context) =>
+                                LoginPage(title: 'Solution Tracker Two'),
+                          ),
                         );
                       },
                     ),

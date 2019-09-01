@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         primaryColor: colorSTother,
         bottomAppBarColor: colorSTother,
 
+
       ),
       routes: <String, WidgetBuilder> {
         '/home': (BuildContext context) => new MyHomePage(),
