@@ -1,14 +1,17 @@
 [
 	{
 		"customerid": "808",
+		"mainpocname": "Bob Smith",
+		"mainpocemail": "bsmith@machineshop.com",
 		"industryid": "1",
 		"discoverymethodid": "1",
 		"referredbyid": "909",
+		"referredby": "Franklin Manufacturing",
 		"customername": "Bob's Machine Shop",
 		"portallogin": "bob",
 		"portalpassword": "bob123",
 		"specialinstructions": "true",
-		"specialinstructionsdescription": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructionsdesc": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
 		"discoverydescription": "",
 		"inactive": "false",
 		"engagementreceived": "true",
@@ -17,19 +20,24 @@
 		"onhold": "false",
 		"blacklisted": "false",
 		"autoemail": "true",
-		"monthlysupport": "false"
+		"monthlysupport": "false",
+		"enteredby": "Mel",
+		"entereddate": "06/01/2018"
 	},
 	{
 		"customerid": "909",
+		"mainpocname": "Franklin Tolly",
+		"mainpocemail": "ftolly@franklinmfg.com",
 		"industryid": "1",
 		"discoverymethodid": "1",
-		"referredbyid": "909",
+		"referredbyid": "",
+		"referredby": "",
 		"customername": "Franklin Manufacturing",
 		"portallogin": "frank",
 		"portalpassword": "frank123",
-		"specialinstructions": "true",
-		"specialinstructionsdescription": "",
-		"discoverydescription": "",
+		"specialinstructions": "false",
+		"specialinstructionsdesc": "",
+		"discoverydescription": "Google",
 		"inactive": "false",
 		"engagementreceived": "true",
 		"quotesrequired": "false",
@@ -37,6 +45,8 @@
 		"onhold": "false",
 		"blacklisted": "false",
 		"autoemail": "true",
-		"monthlysupport": "false"
+		"monthlysupport": "false",
+		"enteredby": "Mel",
+		"entereddate": "06/01/2018"
 	}
 ]

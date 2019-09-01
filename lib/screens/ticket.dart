@@ -297,7 +297,7 @@ class _TicketPageState extends State<TicketPage> {
                             child: IconButton(
                               icon: Icon(Icons.add),
                               onPressed: () {
-                                
+
                               },
                             ),
                           )

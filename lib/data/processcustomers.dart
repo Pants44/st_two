@@ -16,20 +16,23 @@ class CustomerList{
 }
 
 class Customer {
-  final String customername, portallogin, portalpassword, specialinstructionsdescription, discoverydescription;
-  final int customerid, industryid, discoverymethodid, referredbyid;
+  final String customername, mainpocname, mainpocemail, portallogin, portalpassword, specialinstructionsdesc, discoverydescription, referredby, referredbyid, enteredby, entereddate;
+  final int customerid, industryid, discoverymethodid;
   final bool inactive, specialinstructions, engagementreceived, quotesrequired, connectionsetup, onhold, blacklisted, autoemail, monthlysupport;
 
   Customer({
     this.customerid,
+    this.mainpocname,
+    this.mainpocemail,
     this.industryid,
     this.discoverymethodid,
     this.referredbyid,
+    this.referredby,
     this.customername,
     this.portallogin,
     this.portalpassword,
+    this.specialinstructionsdesc,
     this.specialinstructions,
-    this.specialinstructionsdescription,
     this.discoverydescription,
     this.inactive,
     this.engagementreceived,
@@ -39,6 +42,8 @@ class Customer {
     this.blacklisted,
     this.autoemail,
     this.monthlysupport,
+    this.enteredby,
+    this.entereddate,
   });
 
   factory Customer.fromJson(Map<String, dynamic> parsedJson){
@@ -56,13 +61,17 @@ class Customer {
 
     return Customer(
       customerid: int.parse(parsedJson['customerid']),
+      mainpocname: parsedJson['mainpocname'],
+      mainpocemail: parsedJson['mainpocemail'],
       industryid: int.parse(parsedJson['industryid']),
       discoverymethodid: int.parse(parsedJson['discoverymethodid']),
-      referredbyid: int.parse(parsedJson['referredbyid']),
+      referredbyid: parsedJson['referredbyid'],
+      referredby: parsedJson['referredby'],
       customername: parsedJson['customername'],
       portallogin: parsedJson['portallogin'],
       portalpassword: parsedJson['portalpassword'],
       specialinstructions: sibool,
+      specialinstructionsdesc: parsedJson['specialinstructionsdesc'],
       discoverydescription: parsedJson['discoverydescription'],
       inactive: inbool,
       engagementreceived: erbool,
@@ -72,6 +81,8 @@ class Customer {
       blacklisted: blbool,
       autoemail: aebool,
       monthlysupport: msbool,
+      enteredby: parsedJson['enteredby'],
+      entereddate: parsedJson['entereddate'],
     );
   }
 }

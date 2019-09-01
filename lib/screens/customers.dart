@@ -24,7 +24,6 @@ class _CustomersPageState extends State<CustomersPage> {
   String filter;
   int _selectedIndex = 0;
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -36,7 +35,6 @@ class _CustomersPageState extends State<CustomersPage> {
     });
     loadFilterDropdowns();
   }
-
 
   @override
   void dispose() {
@@ -51,95 +49,102 @@ class _CustomersPageState extends State<CustomersPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          leading: BackButton(),
-          title: TextField(
-            controller: tecSearch,
-            focusNode: searchFocusNode,
-            decoration: InputDecoration(
-              icon: Icon(Icons.search),
-              hintText: 'Search Customers',
-            ),
+      appBar: AppBar(
+        leading: BackButton(),
+        title: TextField(
+          controller: tecSearch,
+          focusNode: searchFocusNode,
+          decoration: InputDecoration(
+            icon: Icon(Icons.search),
+            hintText: 'Search Customers',
           ),
-          actions: <Widget>[
-            Hero(
-              tag: 'logoappbar',
-              child: Padding(
-                  padding: EdgeInsets.only(left: 5, top: 5, right: 20, bottom: 5),
-                  child: GestureDetector(
-                    child: Icon(Icons.filter_list),
-                    onTap: () {
-                      _asyncConfirmDialog(context);
-                    },
-                  )),
-            )
-          ],
         ),
-        body: FutureBuilder(
-          future: loadCustomerList(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                print(snapshot.error);
-              }
-              return snapshot.hasData
-                  ? ListView.builder(
-                      itemCount: snapshot.data.customers.length,
-                      itemBuilder: (context, index) {
-                        return filter == null || filter == ""
-                            ? GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CustomerEntry(
-                                        title: snapshot
-                                            .data.customers[index].customername,
-                                        customer:
-                                            snapshot.data.customers[index])),
-                              );
-                            },
-                            child: Card(
-                              child: ListTile(
-                                title: Text(snapshot
-                                        .data.customers[index].customerid
-                                        .toString() +
-                                    " - " +
-                                    snapshot.data.customers[index].customername
-                                        .toString()),
-                              ),
-                            ))
-                            : snapshot.data.customers[index].customername.contains(filter) ?
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CustomerEntry(
-                                        title: snapshot
-                                            .data.customers[index].customername,
-                                        customer:
-                                        snapshot.data.customers[index])),
-                              );
-                            },
-                            child: Card(
-                              child: ListTile(
-                                title: Text(snapshot
-                                    .data.customers[index].customerid
-                                    .toString() +
-                                    " - " +
-                                    snapshot.data.customers[index].customername
-                                        .toString()),
-                              ),
-                            )) : Container();
-                      },
-                    )
-                  : Center(child: CircularProgressIndicator());
-            } else {
-              return CircularProgressIndicator();
+        actions: <Widget>[
+          Hero(
+            tag: 'logoappbar',
+            child: Padding(
+                padding: EdgeInsets.only(left: 5, top: 5, right: 20, bottom: 5),
+                child: GestureDetector(
+                  child: Icon(Icons.filter_list),
+                  onTap: () {
+                    _asyncConfirmDialog(context);
+                  },
+                )),
+          )
+        ],
+      ),
+      body: FutureBuilder(
+        future: loadCustomerList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
             }
-          },
-        ),
+            return snapshot.hasData
+                ? ListView.builder(
+                    itemCount: snapshot.data.customers.length,
+                    itemBuilder: (context, index) {
+                      return filter == null || filter == ""
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CustomerEntry(
+                                      title: 'View Customer',
+                                      customer: snapshot.data.customers[index],
+                                      readonly: true,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                child: ListTile(
+                                  title: Text(snapshot
+                                          .data.customers[index].customerid
+                                          .toString() +
+                                      " - " +
+                                      snapshot
+                                          .data.customers[index].customername
+                                          .toString()),
+                                ),
+                              ))
+                          : snapshot.data.customers[index].customername
+                                  .contains(filter)
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CustomerEntry(
+                                              title: snapshot
+                                                  .data
+                                                  .customers[index]
+                                                  .customername,
+                                              customer: snapshot
+                                                  .data.customers[index])),
+                                    );
+                                  },
+                                  child: Card(
+                                    child: ListTile(
+                                      title: Text(snapshot
+                                              .data.customers[index].customerid
+                                              .toString() +
+                                          " - " +
+                                          snapshot.data.customers[index]
+                                              .customername
+                                              .toString()),
+                                    ),
+                                  ))
+                              : Container();
+                    },
+                  )
+                : Center(child: CircularProgressIndicator());
+          } else {
+            return CircularProgressIndicator();
+          }
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
         onTap: _onItemTapped,
@@ -154,7 +159,8 @@ class _CustomersPageState extends State<CustomersPage> {
             title: Text('Reset'),
           ),
         ],
-      ),);
+      ),
+    );
   }
 
   void _onItemTapped(int index) {
@@ -182,7 +188,6 @@ class _CustomersPageState extends State<CustomersPage> {
 
     setState(() {});
   }
-
 
   Future<ConfirmAction> _asyncConfirmDialog(BuildContext context) async {
     return showDialog<ConfirmAction>(
@@ -231,7 +236,8 @@ class _CustomersPageState extends State<CustomersPage> {
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString("assets/customerstatusdropdowndata.json");
     final jsonResponse = json.decode(jsonString);
-    CustomerStatusListdd customerstatus = new CustomerStatusListdd.fromJson(jsonResponse);
+    CustomerStatusListdd customerstatus =
+        new CustomerStatusListdd.fromJson(jsonResponse);
 
     for (var i = 0; i < customerstatus.customerstatusi.length; i++) {
       statusdropdown.add(DropdownMenuItem(
