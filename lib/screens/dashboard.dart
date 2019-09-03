@@ -107,6 +107,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 );
                               },
                               child: Card(
+                                elevation: 5,
                                 child: ListTile(
                                   leading: Text(snapshot
                                       .data.tickets[index].priority
@@ -152,6 +153,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     );
                                   },
                                   child: Card(
+                                    elevation: 5,
                                     child: ListTile(
                                       leading: Text(snapshot
                                           .data.tickets[index].priority

@@ -41,7 +41,6 @@ class _CustomersPageState extends State<CustomersPage> {
     // TODO: implement dispose
     tecSearch.dispose();
     searchFocusNode.dispose();
-
     super.dispose();
   }
 
@@ -99,6 +98,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                 );
                               },
                               child: Card(
+                                elevation: 5,
                                 child: ListTile(
                                   title: Text(snapshot
                                           .data.customers[index].customerid
@@ -126,6 +126,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                     );
                                   },
                                   child: Card(
+                                    elevation: 5,
                                     child: ListTile(
                                       title: Text(snapshot
                                               .data.customers[index].customerid

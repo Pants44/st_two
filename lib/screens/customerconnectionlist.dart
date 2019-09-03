@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:st_two/data/processcustomerconnections.dart';
 import 'package:st_two/data/processdropdowns.dart';
+import 'package:st_two/screens/connection.dart';
 
 enum ConfirmAction { CANCEL, ACCEPT }
 
@@ -85,31 +86,51 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
                     itemBuilder: (context, index) {
                       return filter == null || filter == ""
                           ? GestureDetector(
-                              onTap: () {},
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ConnectionPage(
+                                    title: 'View Connection',
+                                    cc: snapshot.data.ccon[index],
+                                    readonly: true,
+                                  ),
+                                ),
+                              ),
                               child: Card(
+                                elevation: 5,
                                 child: ListTile(
                                   title: Text(snapshot
                                       .data.ccon[index].customername
                                       .toString()),
                                   subtitle: Text('Version: ' +
-                                      snapshot.data.ccon[index].version
+                                      snapshot.data.ccon[index].erpversion
                                           .toString()),
                                 ),
                               ))
                           : snapshot.data.ccon[index].customername
                                       .contains(filter) ||
-                                  snapshot.data.ccon[index].version
+                                  snapshot.data.ccon[index].erpversion
                                       .toString()
                                       .contains(filter)
                               ? GestureDetector(
-                                  onTap: () {},
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ConnectionPage(
+                                        title: 'View Connection',
+                                        cc: snapshot.data.ccon[index],
+                                        readonly: true,
+                                      ),
+                                    ),
+                                  ),
                                   child: Card(
+                                    elevation: 5,
                                     child: ListTile(
                                       title: Text(snapshot
                                           .data.ccon[index].customername
                                           .toString()),
                                       subtitle: Text('Version: ' +
-                                          snapshot.data.ccon[index].version
+                                          snapshot.data.ccon[index].erpversion
                                               .toString()),
                                     ),
                                   ),

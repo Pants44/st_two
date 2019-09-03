@@ -109,7 +109,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
           child: ListView(
             children: <Widget>[
               Card(
-                elevation: 10,
+                elevation: 5,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Column(
@@ -163,6 +163,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                 ),
               ),
               Card(
+                elevation: 5,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Column(
@@ -221,6 +222,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                 ),
               ),
               Card(
+                elevation: 5,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Column(
@@ -259,6 +261,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                 ),
               ),
               Card(
+                elevation: 5,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Column(
@@ -291,6 +294,7 @@ class _CustomerEntryState extends State<CustomerEntry> {
                 ),
               ),
               Card(
+                elevation: 5,
                 child: Container(
                   padding: EdgeInsets.all(8),
                   child: Column(
