@@ -160,7 +160,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         child: Container(
           padding: EdgeInsets.all(8),
           height: SizeConfig.safeBlockVertical * 100,
-          width: SizeConfig.safeBlockVertical * 100,
+          width: SizeConfig.safeBlockHorizontal * 100,
           child: ListView(
             children: <Widget>[
               Card(

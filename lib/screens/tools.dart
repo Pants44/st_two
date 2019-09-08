@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:st_two/size_config.dart';
 
 class ToolsPage extends StatefulWidget {
   ToolsPage({Key key, this.title}) : super(key: key);
@@ -13,7 +14,7 @@ class _ToolsPageState extends State<ToolsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -31,8 +32,76 @@ class _ToolsPageState extends State<ToolsPage> {
         ],
       ),
       body: Center(
-        child: Text("blank slate"),
-      ),
+        child: Container(
+          height: SizeConfig.safeBlockVertical * 100,
+          width: SizeConfig.safeBlockHorizontal * 100,
+          child: ListView(
+            children: <Widget>[
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('User Accounts'),
+                    subtitle: Text('Information and Security settings related to User Accounts'),
+                    isThreeLine: true,
+                    onTap: (){},
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Resources'),
+                    subtitle: Text('Settings and attributes for developers, consultants, etc'),
+                    onTap: (){},
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Statuses'),
+                    subtitle: Text('Information related to each ticket status'),
+                    onTap: (){},
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Skills'),
+                    subtitle: Text('These identify what resources can handle which tickets'),
+                    onTap: (){},
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Priorities'),
+                    subtitle: Text('Manages how tickets are prioritized'),
+                    onTap: (){},
+                  ),
+                ),
+              ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Discovery Methods'),
+                    subtitle: Text('How our customers discovery us'),
+                    onTap: (){},
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      )
     );
   }
 }

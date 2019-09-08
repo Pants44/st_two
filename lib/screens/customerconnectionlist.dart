@@ -17,7 +17,7 @@ class CustomerConnectionList extends StatefulWidget {
 }
 
 class _CustomerConnectionListState extends State<CustomerConnectionList> {
-  String _versionSelection = 'Select All';
+  String _versionSelection = 'All Versions';
   List<DropdownMenuItem<String>> versiondropdown = [];
 
   TextEditingController tecSearch = TextEditingController();
@@ -104,7 +104,8 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
                                       .toString()),
                                   subtitle: Text('Version: ' +
                                       snapshot.data.ccon[index].erpversion
-                                          .toString()),
+                                          .toString(),),
+                                  trailing: Text(snapshot.data.ccon[index].customerinactive.toString(),),
                                 ),
                               ))
                           : snapshot.data.ccon[index].customername
@@ -131,7 +132,8 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
                                           .toString()),
                                       subtitle: Text('Version: ' +
                                           snapshot.data.ccon[index].erpversion
-                                              .toString()),
+                                              .toString(),),
+                                      trailing: Text(snapshot.data.ccon[index].customerinactive.toString(),),
                                     ),
                                   ),
                                 )
@@ -199,7 +201,7 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               DropdownButton<String>(
-                isDense: true,
+                isExpanded: true,
                 value: _versionSelection,
                 onChanged: (String newValue) {
                   setState(() {

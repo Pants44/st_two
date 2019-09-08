@@ -1,6 +1,7 @@
 [
 	{
 		"customerid": "808",
+		"customerinactive": "Active",
 		"customername": "Bob's Machine Shop",
 		"notes": "Bob doesn't know anything about the connection. He just uses the setup configured by the previous guy",
 		"vpnname": "Cisco AnyConnect",
@@ -59,6 +60,7 @@
 	},
 	{
 		"customerid": "808",
+		"customerinactive": "Active",
 		"customername": "Bob's Machine Shop",
 		"notes": "Bob doesn't know anything about the connection. He just uses the setup configured by the previous guy",
 		"vpnname": "Cisco AnyConnect",
@@ -117,6 +119,7 @@
 	},
 	{
 		"customerid": "909",
+		"customerinactive": "Active",
 		"customername": "Franklin Manufacturing",
 		"notes": "Bob doesn't know anything about the connection. He just uses the setup configured by the previous guy",
 		"vpnname": "Cisco AnyConnect",

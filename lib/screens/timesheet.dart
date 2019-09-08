@@ -70,85 +70,91 @@ class _TimesheetPageState extends State<TimesheetPage> {
                               return (index == snapshot.data.billingdayslist.length-1) ?
                               Column(
                                 children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 3,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Text(
-                                              item.billdayofweek.toString(),
-                                              style: TextStyle(fontSize: 36),
+                                  Container(
+                                    color: _colorCoordinate(item.billdayofweek.toString()),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 3,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Text(
+                                                item.billdayofweek.toString(),
+                                                style: TextStyle(fontSize: 36),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                              alignment: Alignment.topRight,
-                                              child: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text(
-                                                    item.billingtotalday
-                                                        .toString(),
-                                                    style:
-                                                    TextStyle(fontSize: 36),
-                                                  ))))
-                                    ],
+                                        Expanded(
+                                            flex: 1,
+                                            child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Padding(
+                                                    padding: EdgeInsets.all(8),
+                                                    child: Text(
+                                                      item.billingtotalday
+                                                          .toString(),
+                                                      style:
+                                                      TextStyle(fontSize: 36),
+                                                    ))))
+                                      ],
+                                    ),
                                   ),
-                                  ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: item.billingentries.length,
-                                    itemBuilder: (_, int index2) {
-                                      var item2 = item.billingentries[index2];
-                                      return detailview
-                                          ? Card(
-                                        child: ListTile(
-                                            title: Text(item.billdate
-                                                .toString() +
-                                                ', ' +
-                                                item2.customer.toString() +
-                                                ', ' +
-                                                item2.resource.toString() +
-                                                ', ' +
-                                                item2.poc.toString() +
-                                                ', ' +
-                                                'ID#' +
-                                                item2.ticket.toString() +
-                                                ', ' +
-                                                '( ' +
-                                                item2.notes.toString() +
-                                                ' )')),
-                                      )
-                                          : Card(
+                                  Container(
+                                    color: _colorCoordinate(item.billdayofweek.toString()),
+                                    child: ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: item.billingentries.length,
+                                      itemBuilder: (_, int index2) {
+                                        var item2 = item.billingentries[index2];
+                                        return detailview
+                                            ? Card(
                                           child: ListTile(
-                                            title: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 3,
-                                                    child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(item2.ticket
-                                                            .toString()))),
-                                                Expanded(
-                                                    flex: 1,
-                                                    child: Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Text(item2
-                                                            .billedtime
-                                                            .toString())))
-                                              ],
-                                            ),
-                                            subtitle:
-                                            Text(item2.customer.toString()),
-                                          ));
-                                    },
+                                              title: Text(item.billdate
+                                                  .toString() +
+                                                  ', ' +
+                                                  item2.customer.toString() +
+                                                  ', ' +
+                                                  item2.resource.toString() +
+                                                  ', ' +
+                                                  item2.poc.toString() +
+                                                  ', ' +
+                                                  'ID#' +
+                                                  item2.ticket.toString() +
+                                                  ', ' +
+                                                  '( ' +
+                                                  item2.notes.toString() +
+                                                  ' )')),
+                                        )
+                                            : Card(
+                                            child: ListTile(
+                                              title: Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                      flex: 3,
+                                                      child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(item2.ticket
+                                                              .toString()))),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Align(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child: Text(item2
+                                                              .billedtime
+                                                              .toString())))
+                                                ],
+                                              ),
+                                              subtitle:
+                                              Text(item2.customer.toString()),
+                                            ));
+                                      },
+                                    ),
                                   ),
                                   Container(height:96)
                                 ],
@@ -156,85 +162,91 @@ class _TimesheetPageState extends State<TimesheetPage> {
                                   :
                               Column(
                                 children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 3,
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Text(
-                                              item.billdayofweek.toString(),
-                                              style: TextStyle(fontSize: 36),
+                                  Container(
+                                    color: _colorCoordinate(item.billdayofweek.toString()),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 3,
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Text(
+                                                item.billdayofweek.toString(),
+                                                style: TextStyle(fontSize: 36),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Align(
-                                              alignment: Alignment.topRight,
-                                              child: Padding(
-                                                  padding: EdgeInsets.all(8),
-                                                  child: Text(
-                                                    item.billingtotalday
-                                                        .toString(),
-                                                    style:
-                                                    TextStyle(fontSize: 36),
-                                                  ))))
-                                    ],
+                                        Expanded(
+                                            flex: 1,
+                                            child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Padding(
+                                                    padding: EdgeInsets.all(8),
+                                                    child: Text(
+                                                      item.billingtotalday
+                                                          .toString(),
+                                                      style:
+                                                      TextStyle(fontSize: 36),
+                                                    ))))
+                                      ],
+                                    ),
                                   ),
-                                  ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: item.billingentries.length,
-                                    itemBuilder: (_, int index2) {
-                                      var item2 = item.billingentries[index2];
-                                      return detailview
-                                          ? Card(
-                                        child: ListTile(
-                                            title: Text(item.billdate
-                                                .toString() +
-                                                ', ' +
-                                                item2.customer.toString() +
-                                                ', ' +
-                                                item2.resource.toString() +
-                                                ', ' +
-                                                item2.poc.toString() +
-                                                ', ' +
-                                                'ID#' +
-                                                item2.ticket.toString() +
-                                                ', ' +
-                                                '( ' +
-                                                item2.notes.toString() +
-                                                ' )')),
-                                      )
-                                          : Card(
+                                  Container(
+                                    color: _colorCoordinate(item.billdayofweek.toString()),
+                                    child: ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: item.billingentries.length,
+                                      itemBuilder: (_, int index2) {
+                                        var item2 = item.billingentries[index2];
+                                        return detailview
+                                            ? Card(
                                           child: ListTile(
-                                            title: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                    flex: 3,
-                                                    child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(item2.ticket
-                                                            .toString()))),
-                                                Expanded(
-                                                    flex: 1,
-                                                    child: Align(
-                                                        alignment: Alignment
-                                                            .centerRight,
-                                                        child: Text(item2
-                                                            .billedtime
-                                                            .toString())))
-                                              ],
-                                            ),
-                                            subtitle:
-                                            Text(item2.customer.toString()),
-                                          ));
-                                    },
+                                              title: Text(item.billdate
+                                                  .toString() +
+                                                  ', ' +
+                                                  item2.customer.toString() +
+                                                  ', ' +
+                                                  item2.resource.toString() +
+                                                  ', ' +
+                                                  item2.poc.toString() +
+                                                  ', ' +
+                                                  'ID#' +
+                                                  item2.ticket.toString() +
+                                                  ', ' +
+                                                  '( ' +
+                                                  item2.notes.toString() +
+                                                  ' )')),
+                                        )
+                                            : Card(
+                                            child: ListTile(
+                                              title: Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                      flex: 3,
+                                                      child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(item2.ticket
+                                                              .toString()))),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Align(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child: Text(item2
+                                                              .billedtime
+                                                              .toString())))
+                                                ],
+                                              ),
+                                              subtitle:
+                                              Text(item2.customer.toString()),
+                                            ));
+                                      },
+                                    ),
                                   ),
                                 ],
                               );
@@ -271,5 +283,57 @@ class _TimesheetPageState extends State<TimesheetPage> {
     final jsonResponse = json.decode(jsonString);
     BillingWeek belist = new BillingWeek.fromJson(jsonResponse);
     return belist;
+  }
+
+  Color _colorCoordinate(String dayofweek) {
+    print(dayofweek);
+
+    switch (dayofweek) {
+      case 'Monday':
+        {
+          return Colors.red;
+        }
+        break;
+
+      case 'Tuesday':
+        {
+          return Colors.yellow;
+        }
+        break;
+
+      case 'Wednesday':
+        {
+          return Colors.green;
+        }
+        break;
+
+      case 'Thursday':
+        {
+          return Colors.blue;
+        }
+        break;
+
+      case 'Friday':
+        {
+          return Colors.indigo;
+        }
+        break;
+
+      case 'Saturday':
+        {
+          return Colors.purple;
+        }
+        break;
+
+      case 'Sunday':
+        {
+          return Colors.pink;
+        }
+        break;
+
+      default:
+        {}
+        break;
+    }
   }
 }

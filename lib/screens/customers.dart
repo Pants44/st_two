@@ -16,7 +16,7 @@ class CustomersPage extends StatefulWidget {
 }
 
 class _CustomersPageState extends State<CustomersPage> {
-  String _statusSelection = 'Select All';
+  String _statusSelection = 'Status / All';
   List<DropdownMenuItem<String>> statusdropdown = [];
 
   TextEditingController tecSearch = TextEditingController();
@@ -201,7 +201,7 @@ class _CustomersPageState extends State<CustomersPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               DropdownButton<String>(
-                isDense: true,
+                isExpanded: true,
                 value: _statusSelection,
                 onChanged: (String newValue) {
                   setState(() {

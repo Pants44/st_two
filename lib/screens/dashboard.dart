@@ -17,7 +17,6 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-
   String _resourceSelection = '0';
   String _statusSelection = '0';
   String _customerSelection = '0';
@@ -70,13 +69,14 @@ class _DashboardPageState extends State<DashboardPage> {
           Hero(
             tag: 'logoappbar',
             child: Padding(
-                padding: EdgeInsets.only(left: 5, top: 5, right: 20, bottom: 5),
-                child: GestureDetector(
-                  child: Icon(Icons.filter_list),
-                  onTap: () {
-                    _asyncConfirmDialog(context);
-                  },
-                ),),
+              padding: EdgeInsets.only(left: 5, top: 5, right: 20, bottom: 5),
+              child: GestureDetector(
+                child: Icon(Icons.filter_list),
+                onTap: () {
+                  _asyncConfirmDialog(context);
+                },
+              ),
+            ),
           )
         ],
       ),
@@ -100,10 +100,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TicketPage(
-                                          title: 'View Ticket',
-                                          ticket: snapshot.data.tickets[index],
-                                          readonly: true,),),
+                                    builder: (context) => TicketPage(
+                                      title: 'View Ticket',
+                                      ticket: snapshot.data.tickets[index],
+                                      readonly: true,
+                                    ),
+                                  ),
                                 );
                               },
                               child: Card(
@@ -237,7 +239,7 @@ class _DashboardPageState extends State<DashboardPage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               DropdownButton<String>(
-                isDense: true,
+                isExpanded: true,
                 value: _customerSelection,
                 onChanged: (String newValue) {
                   setState(() {
@@ -249,29 +251,29 @@ class _DashboardPageState extends State<DashboardPage> {
                 items: customerdropdown,
               ),
               DropdownButton<String>(
-                isDense: true,
-                value: _resourceSelection,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _resourceSelection = newValue;
-                  });
+                isExpanded: true,
+                      value: _resourceSelection,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _resourceSelection = newValue;
+                        });
 
-                  print(_resourceSelection);
-                },
-                items: resourcedropdown,
-              ),
+                        print(_resourceSelection);
+                      },
+                      items: resourcedropdown,
+                    ),
               DropdownButton<String>(
-                isDense: true,
-                value: _statusSelection,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _statusSelection = newValue;
-                  });
+                isExpanded: true,
+                      value: _statusSelection,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          _statusSelection = newValue;
+                        });
 
-                  print(_statusSelection);
-                },
-                items: statusdropdown,
-              ),
+                        print(_statusSelection);
+                      },
+                      items: statusdropdown,
+                    ),
             ],
           ),
           actions: <Widget>[

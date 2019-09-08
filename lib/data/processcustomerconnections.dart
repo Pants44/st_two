@@ -16,7 +16,7 @@ class ConnectionList{
 }
 
 class CustomerConnection {
-  final String customerid, customername, notes, vpnname, vpnip, vpnserver,
+  final String customerid, customerinactive, customername, notes, vpnname, vpnip, vpnserver,
       vpndownload, vpnpsk, vpnuser, vpnpassword, connectiontype, rdplink,
       rdpuser, rdppass, miscuser, miscpass, windowsuser, windowspass, domain, connections, erpsystem, erpversion, siteid, devenv,
       dbtype, erpuser, erppass, crpath, ssrsreportserver, mngstudiouser,
@@ -28,6 +28,7 @@ class CustomerConnection {
 
   CustomerConnection({
     this.customerid,
+    this.customerinactive,
     this.customername,
     this.notes,
     this.vpnname,
@@ -89,6 +90,7 @@ class CustomerConnection {
 
     return CustomerConnection(
       customerid: parsedJson['customerid'],
+      customerinactive: parsedJson['customerinactive'],
       customername: parsedJson['customername'],
       notes: parsedJson['notes'],
       vpnname: parsedJson['vpnname'],
