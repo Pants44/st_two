@@ -243,6 +243,13 @@
 				"resourcename": "Jeremy",
 				"email": "<jeremy.chance@practicaltek.com>",
 				"extension": "102"
+			},
+			{
+				"resourceid": "5",
+				"inactive": "false",
+				"resourcename": "Jarrad",
+				"email": "<jarrad.layne@practicaltek.com>",
+				"extension": "104"
 			}
 		],
 		"quoterequired": "true",

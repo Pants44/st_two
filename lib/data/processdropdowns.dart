@@ -16,17 +16,17 @@ class CustomerListdd {
 }
 
 class Customerdd {
-  final String customerid, customername;
+  final String id, selection;
 
   Customerdd({
-    this.customerid,
-    this.customername
+    this.id,
+    this.selection
   });
 
   factory Customerdd.fromJson(Map<String, dynamic> parsedJson){
     return Customerdd(
-      customerid: parsedJson['id'],
-      customername: parsedJson['selection'],
+      id: parsedJson['id'],
+      selection: parsedJson['selection'],
     );
   }
 }
@@ -80,17 +80,17 @@ class ResourcesListdd {
 }
 
 class Resourcedd {
-  final String resourceid, resourcename;
+  final String id, selection;
 
   Resourcedd({
-    this.resourceid,
-    this.resourcename
+    this.id,
+    this.selection
   });
 
   factory Resourcedd.fromJson(Map<String, dynamic> parsedJson){
     return Resourcedd(
-      resourceid: parsedJson['id'],
-      resourcename: parsedJson['selection'],
+      id: parsedJson['id'],
+      selection: parsedJson['selection'],
     );
   }
 }
@@ -113,17 +113,17 @@ class StatusListdd {
 }
 
 class Statusdd {
-  final String statusid, status;
+  final String id, selection;
 
   Statusdd({
-    this.statusid,
-    this.status
+    this.id,
+    this.selection
   });
 
   factory Statusdd.fromJson(Map<String, dynamic> parsedJson){
     return Statusdd(
-      statusid: parsedJson['id'],
-      status: parsedJson['selection'],
+      id: parsedJson['id'],
+      selection: parsedJson['selection'],
     );
   }
 }

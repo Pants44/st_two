@@ -318,7 +318,6 @@ class _MyDialogState extends State<MyDialog> {
                 onPressed: () {
                   Navigator.of(context).pop(ConfirmAction.ACCEPT);
                   versionfilter = _versionSelection;
-                  setState((){});
                   print('Filter Accepted: '+_versionSelection);
                 },
               )
