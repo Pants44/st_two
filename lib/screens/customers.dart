@@ -7,8 +7,11 @@ import 'package:st_two/data/processdropdowns.dart';
 
 enum ConfirmAction { CANCEL, ACCEPT }
 
+String statusfilter;
+
 class CustomersPage extends StatefulWidget {
   CustomersPage({Key key, this.title}) : super(key: key);
+
   final title;
 
   @override
@@ -195,40 +198,7 @@ class _CustomersPageState extends State<CustomersPage> {
       context: context,
       barrierDismissible: false, // user must tap button for close dialog!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Filters'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButton<String>(
-                isExpanded: true,
-                value: _statusSelection,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _statusSelection = newValue;
-                  });
-
-                  print(_statusSelection);
-                },
-                items: statusdropdown,
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.of(context).pop(ConfirmAction.CANCEL);
-              },
-            ),
-            FlatButton(
-              child: const Text('ACCEPT'),
-              onPressed: () {
-                Navigator.of(context).pop(ConfirmAction.ACCEPT);
-              },
-            )
-          ],
-        );
+        return MyDialog();
       },
     );
   }
@@ -254,7 +224,104 @@ class _CustomersPageState extends State<CustomersPage> {
         .loadString("assets/customerdata.json");
     final jsonResponse = json.decode(jsonString);
     CustomerList customerlist = new CustomerList.fromJson(jsonResponse);
+
+    // TODO Complicated because you chose a weird way to look at a bunch of booleans
+
+    /*if(statusfilter != null){
+      customerlist.customers.removeWhere((item) => item.erpversion != versionfilter);
+    }*/
+
     print('Customers list loaded for Customer List Screen');
     return customerlist;
+  }
+}
+
+class MyDialog extends StatefulWidget {
+  @override
+  _MyDialogState createState() => new _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+
+  String _statusSelection = 'Status / All';
+  List<DropdownMenuItem<String>> statusdropdown = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<List<DropdownMenuItem<String>>> loadFilterDropdowns() async {
+
+    if(statusdropdown.length < 1){
+      String jsonString = await DefaultAssetBundle.of(context)
+          .loadString("assets/customerstatusdropdowndata.json");
+      final jsonResponse = json.decode(jsonString);
+      VersionListdd versionlist = new VersionListdd.fromJson(jsonResponse);
+
+      for (var i = 0; i < versionlist.versions.length; i++) {
+        statusdropdown.add(DropdownMenuItem(
+          value: versionlist.versions[i].id.toString(),
+          child: Text(versionlist.versions[i].id.toString()),
+        ));
+      }
+    }
+
+    return statusdropdown;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<DropdownMenuItem<String>>>(
+      future: loadFilterDropdowns(),
+      builder: (context, snapshot){
+        if(snapshot.connectionState == ConnectionState.done){
+          if(snapshot.hasError){
+            print(snapshot.error.toString());
+          }
+          return snapshot.hasData ?
+          AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                DropdownButton<String>(
+                  isExpanded: true,
+                  value: _statusSelection,
+                  onChanged: (String newValue) {
+                    setState((){
+                      print(newValue.toString());
+                      _statusSelection = newValue;
+
+                    });
+                  },
+                  items: snapshot.data,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(ConfirmAction.CANCEL);
+                },
+              ),
+              FlatButton(
+                child: const Text('ACCEPT'),
+                onPressed: () {
+                  Navigator.of(context).pop(ConfirmAction.ACCEPT);
+                  statusfilter = _statusSelection;
+                  print('Filter Accepted: '+_statusSelection);
+                },
+              )
+            ],
+          )
+              :
+          Center(child: Container());
+        } else {
+          return Center(child:Container());
+        }
+      },
+    );
   }
 }
