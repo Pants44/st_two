@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/screens/ticket.dart';
@@ -277,6 +278,13 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return ticketlist;
   }
+
+  /*Future<TicketsList> loadTicketsList() async {
+    var jsonString = await http.get("http://192.168.0.113:8888/tickets");
+    final jsonResponse = json.decode(jsonString.body.toString());
+    TicketsList ticketslist = new TicketsList.fromJson(jsonResponse);
+    return ticketslist;
+  }*/
 
   String _whosAssigned(List resourcelist) {
     String resources = "";
