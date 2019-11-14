@@ -15,46 +15,52 @@ import 'package:st_two/screens/chat.dart';
 import 'package:st_two/screens/search.dart';
 import 'package:st_two/screens/billingentry.dart';
 import 'package:st_two/theme/colors.dart';
+import 'package:st_two/theme/themebloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ThemeSwitcher());
 
-class MyApp extends StatelessWidget {
+class ThemeSwitcher extends StatelessWidget {
   // This widget is the root of your application.
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Solution Tracker 2',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        buttonColor: colorSTBlue,
-        accentColor: colorSTBlue,
-        backgroundColor: colorSTbg,
-        canvasColor: colorSTbg,
-        primaryColor: colorSTother,
-        bottomAppBarColor: colorSTother,
+    return BlocProvider<ThemeBloc>(
+      builder: (context) => ThemeBloc(),
+      child: MyApp(),
+    );
+  }
+}
 
-
-      ),
-      routes: <String, WidgetBuilder> {
-        '/home': (BuildContext context) => new MyHomePage(),
-        '/dashboard': (BuildContext context) => new DashboardPage(),
-        '/ticket': (BuildContext context) => new TicketPage(),
-        '/customers': (BuildContext context) => new CustomersPage(),
-        '/customerentry': (BuildContext context) => new CustomerEntry(),
-        '/connectionlist': (BuildContext context) => new CustomerConnectionList(),
-        '/connect': (BuildContext context) => new ConnectionPage(),
-        '/analytics': (BuildContext context) => new AnalyticsPage(),
-        '/tools': (BuildContext context) => new ToolsPage(),
-        '/timesheet': (BuildContext context) => new TimesheetPage(),
-        '/chat': (BuildContext context) => new ChatPage(),
-        '/search': (BuildContext context) => new SearchPage(),
-        '/billingentry': (BuildContext context) => new BillingEntryPage(),
-
-
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ThemeBloc, ThemeData>(
+      builder: (builder, snapshot) {
+        return MaterialApp(
+          title: 'Solution Tracker 2',
+          debugShowCheckedModeBanner: false,
+          theme: snapshot,
+          routes: <String, WidgetBuilder>{
+            '/home': (BuildContext context) => new MyHomePage(),
+            '/dashboard': (BuildContext context) => new DashboardPage(),
+            '/ticket': (BuildContext context) => new TicketPage(),
+            '/customers': (BuildContext context) => new CustomersPage(),
+            '/customerentry': (BuildContext context) => new CustomerEntry(),
+            '/connectionlist': (BuildContext context) =>
+                new CustomerConnectionList(),
+            '/connect': (BuildContext context) => new ConnectionPage(),
+            '/analytics': (BuildContext context) => new AnalyticsPage(),
+            '/tools': (BuildContext context) => new ToolsPage(),
+            '/timesheet': (BuildContext context) => new TimesheetPage(),
+            '/chat': (BuildContext context) => new ChatPage(),
+            '/search': (BuildContext context) => new SearchPage(),
+            '/billingentry': (BuildContext context) => new BillingEntryPage(),
+          },
+          home: LoginPage(
+            title: 'Solution Tracker Two',
+          ),
+        );
       },
-      home: LoginPage(title: 'Solution Tracker Two'),
     );
   }
 }
@@ -76,31 +82,122 @@ class _LoginPageState extends State<LoginPage> {
     SizeConfig().init(context);
     var orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-        body: Form(
-            child: (orientation == Orientation.portrait)
-                ? Center(
-                    child: ListView(
+      body: Form(
+        child: (orientation == Orientation.portrait)
+            ? Center(
+                child: ListView(
+                  children: <Widget>[
+                    Container(
+                        height: SizeConfig.safeBlockVertical * 50,
+                        width: SizeConfig.safeBlockHorizontal * 80,
+                        child: Hero(
+                          tag: 'logoappbar',
+                          child: Center(
+                            child: Image(
+                              image: AssetImage('assets/st22000.png'),
+                            ),
+                          ),
+                        )),
+                    Container(
+                      height: SizeConfig.safeBlockVertical * 50,
+                      width: SizeConfig.safeBlockHorizontal * 80,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: SizeConfig.safeBlockHorizontal * 80,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[800]),
+                                    hintText: "Username",
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16, bottom: 16),
+                            ),
+                            Container(
+                              width: SizeConfig.safeBlockHorizontal * 80,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[800]),
+                                    hintText: "Password",
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16, bottom: 16),
+                            ),
+                            RaisedButton(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              onPressed: () => Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 500),
+                                      pageBuilder: (context, __, ___) =>
+                                          MyHomePage(
+                                            title: 'Solution Tracker Two',
+                                          ))),
+                              color: colorSTBlue,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              padding: EdgeInsets.only(
+                                  top: 16, bottom: 16, left: 32, right: 32),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Center(
+                child: ListView(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                            height: SizeConfig.safeBlockVertical * 50,
-                            width: SizeConfig.safeBlockHorizontal * 80,
+                            height: SizeConfig.safeBlockVertical * 80,
+                            width: SizeConfig.safeBlockHorizontal * 50,
                             child: Hero(
                               tag: 'logoappbar',
                               child: Center(
+                                  child: Container(
+                                width: SizeConfig.safeBlockHorizontal * 40,
                                 child: Image(
                                   image: AssetImage('assets/st22000.png'),
                                 ),
-                              ),
+                              )),
                             )),
                         Container(
-                          height: SizeConfig.safeBlockVertical * 50,
-                          width: SizeConfig.safeBlockHorizontal * 80,
+                          height: SizeConfig.safeBlockVertical * 100,
+                          width: SizeConfig.safeBlockHorizontal * 50,
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                  width: SizeConfig.safeBlockHorizontal * 80,
+                                  width: SizeConfig.safeBlockHorizontal * 40,
                                   child: TextField(
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -119,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                                   padding: EdgeInsets.only(top: 16, bottom: 16),
                                 ),
                                 Container(
-                                  width: SizeConfig.safeBlockHorizontal * 80,
+                                  width: SizeConfig.safeBlockHorizontal * 40,
                                   child: TextField(
                                     decoration: InputDecoration(
                                         border: OutlineInputBorder(
@@ -142,11 +239,15 @@ class _LoginPageState extends State<LoginPage> {
                                     'Login',
                                     style: TextStyle(fontSize: 18),
                                   ),
-                                  onPressed: () => Navigator.pushReplacement(
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
                                       context,
-                                      PageRouteBuilder(
-                                          transitionDuration: Duration(milliseconds: 500),
-                                          pageBuilder: (_, __, ___) => MyHomePage(title: 'Solution Tracker Two',))),
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage(
+                                                title: 'Solution Tracker Two',
+                                              )),
+                                    );
+                                  },
                                   color: colorSTBlue,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -157,110 +258,13 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  )
-                : Center(
-              child: ListView(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: SizeConfig.safeBlockVertical * 80,
-                        width: SizeConfig.safeBlockHorizontal * 50,
-                        child: Hero(
-                          tag: 'logoappbar',
-                          child: Center(
-                              child: Container(
-                                width: SizeConfig.safeBlockHorizontal * 40,
-                                child: Image(
-                                  image: AssetImage('assets/st22000.png'),
-                                ),
-                              )
-                          ),
-                        )
-                      ),
-                      Container(
-                        height: SizeConfig.safeBlockVertical * 100,
-                        width: SizeConfig.safeBlockHorizontal * 50,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                width: SizeConfig.safeBlockHorizontal * 40,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey[800]),
-                                      hintText: "Username",
-                                      fillColor: Colors.white),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                EdgeInsets.only(top: 16, bottom: 16),
-                              ),
-                              Container(
-                                width: SizeConfig.safeBlockHorizontal * 40,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey[800]),
-                                      hintText: "Password",
-                                      fillColor: Colors.white),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                EdgeInsets.only(top: 16, bottom: 16),
-                              ),
-                              RaisedButton(
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyHomePage(
-                                          title: 'Solution Tracker Two',
-                                        )),
-                                  );
-                                },
-                                color: colorSTBlue,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10.0)),
-                                padding: EdgeInsets.only(
-                                    top: 16,
-                                    bottom: 16,
-                                    left: 32,
-                                    right: 32),
-                              )
-                            ],
-                          ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               ),
-            )));
+      ),
+    );
   }
 }

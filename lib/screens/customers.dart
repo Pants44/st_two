@@ -149,6 +149,12 @@ class _CustomersPageState extends State<CustomersPage> {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: (){
+
+        },
+      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
         onTap: _onItemTapped,

@@ -9,6 +9,8 @@ import 'package:st_two/screens/timesheet.dart';
 import 'package:st_two/screens/chat.dart';
 import 'package:st_two/screens/search.dart';
 import 'package:st_two/screens/settings.dart';
+import 'package:st_two/theme/themebloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -42,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsPage(title: 'User Settings'),
+                    builder: (context) => SettingsPage(title: 'User Settings',),
                   ),
                 );
               },

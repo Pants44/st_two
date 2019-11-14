@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:st_two/size_config.dart';
+import 'package:st_two/theme/themebloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 bool dm=true, pn=true, tdc=true, cn=true, efl=true;
 
@@ -15,7 +17,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final themeBloc = BlocProvider.of<ThemeBloc>(context);
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +58,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   title: Text('Dark Mode'),
                   subtitle: Text('Give your eyes a break.'),
                   value: dm,
-                  onChanged: (value){dm=value;setState((){});},
+                  onChanged: (value){
+                    value ? themeBloc.add(ThemeEvent.da) : themeBloc.add(ThemeEvent.li);
+                    dm=value;
+                    setState((){});
+                    },
                 ),
               ),
               Card(

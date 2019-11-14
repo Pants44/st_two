@@ -26,9 +26,9 @@
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "8",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "8",
 		"developerlog": "5/30/19 (Chance) Waiting on User Feedback. ",
 		"pocs": [
 			{
@@ -58,11 +58,11 @@
 		"skills": [
 			{
 				"skillid": "7",
-				"skill": "Customizations"
+				"skillname": "Customizations"
 			},
 			{
 				"skillid": "2",
-				"skill": "BAQ"
+				"skillname": "BAQ"
 			}
 		]
 	},
@@ -86,9 +86,9 @@
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "8",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "8",
 		"developerlog": "5/30/19 (Jarrad) Sent for UT on this day.",
 		"pocs": [
 			{
@@ -118,11 +118,11 @@
 		"skills": [
 			{
 				"skillid": "1",
-				"skill": "SSRS"
+				"skillname": "SSRS"
 			},
 			{
 				"skillid": "2",
-				"skill": "BAQ"
+				"skillname": "BAQ"
 			}
 		]
 	},
@@ -146,9 +146,9 @@
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "16",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "16",
 		"developerlog": "",
 		"pocs": [
 			{
@@ -172,7 +172,7 @@
 		"skills": [
 			{
 				"skillid": "7",
-				"skill": "Customizations"
+				"skillname": "Customizations"
 			}
 		]
 	},
@@ -196,9 +196,9 @@
 			}
 		],
 		"quoterequired": "true",
-		"min": "8",
-		"max": "10",
-		"projected": "10",
+		"minhrs": "8",
+		"maxhrs": "10",
+		"projectedhrs": "10",
 		"developerlog": "6/23/19 (Jarrad) Began on this day",
 		"pocs": [
 			{
@@ -222,7 +222,7 @@
 		"skills": [
 			{
 				"skillid": "19",
-				"skill": "EDI"
+				"skillname": "EDI"
 			}
 		]
 	},
@@ -253,9 +253,9 @@
 			}
 		],
 		"quoterequired": "true",
-		"min": "8",
-		"max": "8",
-		"projected": "8",
+		"minhrs": "8",
+		"maxhrs": "8",
+		"projectedhrs": "8",
 		"developerlog": "7/1/19 (Jeremy) POC marked as complete",
 		"pocs": [
 			{
@@ -279,8 +279,8 @@
 		"skills": [
 			{
 				"skillid": "18",
-				"skill": "Unassigned"
+				"skillname": "Unassigned"
 			}
 		]
 	}
-]
+]w

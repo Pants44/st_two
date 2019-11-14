@@ -17,7 +17,8 @@ class TicketsList {
 
 class Ticket {
   final String ticketname, ticketdescription, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructionsdesc, deadlinedate, erpsystem;
-  final int ticketid, customerid, priorityid, priority, statusid, min, max, projected, totalbilled;
+  final int ticketid, customerid, priorityid, priority, statusid;
+  final double min, max, projected, totalbilled;
   final bool quoterequired, premium, stopbilling, deadline, specialinstructions;
   final List<Resource> resources;
   final List<POC> pocs;
@@ -83,10 +84,10 @@ class Ticket {
       status: parsedJson['status'],
       resources: resourceList,
       quoterequired: qrbool,
-      min: int.parse(parsedJson['min']),
-      max: int.parse(parsedJson['max']),
-      projected: int.parse(parsedJson['projected']),
-      developerlog: parsedJson['developerlog'],
+      min: double.parse(parsedJson['minhrs']),
+      max: double.parse(parsedJson['maxhrs']),
+      projected: double.parse(parsedJson['projectedhrs']),
+      developerlog: parsedJson['ticketlog'],
       //This one needs changed
       pocs: pocList,
       premium: prbool,
@@ -96,7 +97,7 @@ class Ticket {
       specialinstructionsdesc: parsedJson['specialinstructionsdesc'],
       specialinstructions: sibool,
       stopbilling: sbbool,
-      totalbilled: int.parse(parsedJson['totalbilled']),
+      totalbilled: double.parse(parsedJson['totalbilled']),
       deadlinedate: parsedJson['deadlinedate'],
       deadline: dlbool,
       erpsystem: parsedJson['erpsystem'],
@@ -172,7 +173,7 @@ class Skill {
 
     return new Skill(
         skillid: int.parse(parsedJson['skillid']),
-        skill: parsedJson['skill']
+        skill: parsedJson['skillname']
     );
   }
 }
