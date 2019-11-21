@@ -108,6 +108,23 @@ class Ticket {
 
 }
 
+class ResourcesList {
+  final List<Resource> resources;
+
+  ResourcesList({
+    this.resources,
+  });
+
+  factory ResourcesList.fromJson(List<dynamic> parsedJson) {
+    List<Resource> resources = new List<Resource>();
+    resources = parsedJson.map((i)=>Resource.fromJson(i)).toList();
+
+    return new ResourcesList(
+        resources: resources
+    );
+  }
+}
+
 class Resource {
   final String resourcename, email, extension;
   final int resourceid;
