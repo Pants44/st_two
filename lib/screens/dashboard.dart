@@ -245,6 +245,38 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  Future<TicketsList> loadTicketsList() async {
+    var jsonString = await http.get("http://192.168.0.114:8888/tickets");
+    final jsonResponse = json.decode(jsonString.body.toString());
+    TicketsList ticketslist = new TicketsList.fromJson(jsonResponse);
+
+    //  removes customer not selected by filter
+    if (customerfilter != null && customerfilter != '0') {
+      print('cust filter fired');
+      ticketslist.tickets
+          .removeWhere((item) => item.customerid.toString() != customerfilter);
+    }
+
+    //  removes resources not selected by filter
+    //  code is different because there can be multiple resources per ticket.
+    //  Normal logic would remove to much if another developer was on the ticket
+    if (resourcefilter != null && resourcefilter != '0') {
+      ticketslist.tickets.removeWhere((item) => item.resources
+          .toList()
+          .any((test) => test.resourceid.toString() == resourcefilter)
+          ? false
+          : true);
+    }
+
+    // remove ticket's with status not selected by filter
+    if (statusfilter != null && statusfilter != '0') {
+      ticketslist.tickets
+          .removeWhere((item) => item.statusid.toString() != statusfilter);
+    }
+
+    return ticketslist;
+  }
+
   /*Future<TicketsList> loadTicketsList() async {
     String jsonString = await DefaultAssetBundle.of(context)
         .loadString("assets/ticketdata.json");
@@ -278,38 +310,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return ticketlist;
   }*/
-
-  Future<TicketsList> loadTicketsList() async {
-    var jsonString = await http.get("http://192.168.0.108:8888/tickets");
-    final jsonResponse = json.decode(jsonString.body.toString());
-    TicketsList ticketslist = new TicketsList.fromJson(jsonResponse);
-
-    //  removes customer not selected by filter
-    if (customerfilter != null && customerfilter != '0') {
-      print('cust filter fired');
-      ticketslist.tickets
-          .removeWhere((item) => item.customerid.toString() != customerfilter);
-    }
-
-    //  removes resources not selected by filter
-    //  code is different because there can be multiple resources per ticket.
-    //  Normal logic would remove to much if another developer was on the ticket
-    if (resourcefilter != null && resourcefilter != '0') {
-      ticketslist.tickets.removeWhere((item) => item.resources
-          .toList()
-          .any((test) => test.resourceid.toString() == resourcefilter)
-          ? false
-          : true);
-    }
-
-    // remove ticket's with status not selected by filter
-    if (statusfilter != null && statusfilter != '0') {
-      ticketslist.tickets
-          .removeWhere((item) => item.statusid.toString() != statusfilter);
-    }
-
-    return ticketslist;
-  }
 
   String _whosAssigned(List resourcelist) {
     String resources = "";

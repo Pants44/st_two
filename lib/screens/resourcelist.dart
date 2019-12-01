@@ -1,112 +1,170 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/bloc/resourcelistbloc.dart';
+import 'package:st_two/screens/resource.dart';
 import 'package:st_two/data/processtickets.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-class ResourceListPage extends StatelessWidget {
+class ResourceListPage extends StatefulWidget {
+  ResourceListPage({Key key, this.title}) : super(key: key);
+
+  final title;
+
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ResourceBloc>(
-      builder: (context) =>
-          ResourceBloc(httpClient: http.Client())..add(Fetch()),
-      child: RLPageBody(),
-    );
-  }
+  _ResourceListPageState createState() => _ResourceListPageState();
 }
 
-class RLPageBody extends StatelessWidget{
+class _ResourceListPageState extends State<ResourceListPage> {
+  TextEditingController tecSearch = TextEditingController();
+
+  String filter;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tecSearch.addListener(() {
+      setState(() {
+        filter = tecSearch.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    filter = null;
+    tecSearch.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final ResourceBloc resourceBloc = BlocProvider.of<ResourceBloc>(context);
-
+    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: TextField(
+          controller: tecSearch,
           decoration: InputDecoration(
             icon: Icon(Icons.search),
             hintText: 'Resources',
           ),
-          onChanged: (text) {
-            resourceBloc.add(FilterList(filtervalue: text));
-          },
+          onChanged: (text) {},
         ),
       ),
-      body: BlocBuilder<ResourceBloc, ResourceState>(
-        builder: (context, state) {
-          if (state is ResourceUninitialized) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is ResourceError) {
-            return Center(
-              child: Text('failed to fetch Resources'),
-            );
-          } else if (state is ResourceLoaded) {
-            if (state.resourcesList.resources.isEmpty) {
-              return Center(
-                child: Text('no resources'),
-              );
+      body: FutureBuilder(
+        future: fetchResources(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
             }
-            return ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return index >= state.resourcesList.resources.length
-                    ? BottomLoader()
-                    : ResourceWidget(
-                    resource: state.resourcesList.resources[index]);
-              },
-              itemCount: state.resourcesList.resources.length,
-              //controller: _scrollController,
-            );
+            return snapshot.hasData
+                ? ListView.builder(
+                    itemCount: snapshot.data.resources.length,
+                    itemBuilder: (context, index) {
+                      return filter == null || filter == ""
+                          ? GestureDetector(
+                              onTap: () {
+                                print('Open Resource ' +
+                                    snapshot.data.resources[index].resourceid
+                                        .toString());
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+
+                                    builder: (context) => ResourcePage(
+                                      mode: 'edit',
+                                      ronly: true,
+                                      title: 'View Resource',
+                                      resource: snapshot.data.resources[index],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 5,
+                                child: ListTile(
+                                  title: Text(snapshot
+                                      .data.resources[index].resourcename
+                                      .toString()),
+                                  subtitle: Text(snapshot
+                                      .data.resources[index].email
+                                      .toString()),
+                                ),
+                              ),
+                            )
+                          : snapshot.data.resources[index].resourcename
+                                      .contains(filter.toLowerCase()) ||
+                                  snapshot.data.resources[index].email
+                                      .toString()
+                                      .contains(filter.toLowerCase())
+                              ? GestureDetector(
+                                  onTap: () {
+                                    print('Open Resource ' +
+                                        snapshot
+                                            .data.resources[index].resourcename
+                                            .toString());
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ResourcePage(
+                                            mode: 'edit',
+                                            ronly: true,
+                                            title: 'Resource ' +
+                                                snapshot.data.resources[index]
+                                                    .resourcename
+                                                    .toString(),
+                                            resource:
+                                                snapshot.data.resources[index]),
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    child: ListTile(
+                                      title: Text(snapshot
+                                          .data.resources[index].resourcename
+                                          .toString()),
+                                      subtitle: Text(snapshot
+                                          .data.resources[index].email
+                                          .toString()),
+                                    ),
+                                  ),
+                                )
+                              : Container();
+                    },
+                  )
+                : Center(child: CircularProgressIndicator());
           } else {
-            return Container(
-              child: Center(
-                child: Text('the abyss, nothing here'),
-              ),
-            );
+            return Center(child: CircularProgressIndicator());
           }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResourcePage(
+                mode: 'add',
+                title: 'Add Resource',
+              ),
+            ),
+          );
         },
       ),
     );
   }
 }
 
-class BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Center(
-        child: SizedBox(
-          width: 33,
-          height: 33,
-          child: CircularProgressIndicator(
-            strokeWidth: 1.5,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ResourceWidget extends StatelessWidget {
-  final Resource resource;
-
-  const ResourceWidget({Key key, @required this.resource}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Text(
-        '${resource.resourceid}',
-        style: TextStyle(fontSize: 10.0),
-      ),
-      title: Text(resource.resourcename),
-      isThreeLine: true,
-      subtitle: Text(resource.email),
-      dense: true,
-    );
-  }
+Future<ResourcesList> fetchResources() async {
+  var jsonString = await http.get("http://192.168.0.110:8888/resources");
+  final jsonResponse = json.decode(jsonString.body.toString());
+  ResourcesList resources = new ResourcesList.fromJson(jsonResponse);
+  return resources;
 }
