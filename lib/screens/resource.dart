@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import 'package:st_two/data/connect.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/size_config.dart';
 
@@ -11,8 +12,10 @@ TextEditingController _resourceid = TextEditingController();
 TextEditingController _resourcename = TextEditingController();
 TextEditingController _email = TextEditingController();
 TextEditingController _extension = TextEditingController();
-bool inbool = false;
-bool ronly = false;
+bool vinbool = false;
+bool vronly = false;
+String vmode = '';
+String vtitle = '';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -35,41 +38,26 @@ class ResourcePage extends StatefulWidget {
   final String title;
   final Resource resource;
 
-
-  asdfasdf(){
-
-  }
-
   @override
   _ResourcePageState createState() => _ResourcePageState();
 }
 
 class _ResourcePageState extends State<ResourcePage> {
-  //State Values
-
-  String mode;
-  bool ronly;
-  String title;
-  Resource resource;
-
-
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    mode = widget.mode;
-    ronly = widget.ronly;
-    title = widget.title;
-    resource = widget.resource;
+    vmode = widget.mode;
+    vronly = widget.ronly;
+    vtitle = widget.title;
 
-    if (mode == 'edit') {
-      _loadData(resource);
-    } else if (mode == 'add') {
+    if (vmode == 'edit') {
+      _loadData(widget.resource);
+    } else if (vmode == 'add') {
       _resourceid.text = '';
       _resourcename.text = '';
-      inbool = false;
+      vinbool = false;
       _email.text = '';
       _extension.text = '';
     }
@@ -78,7 +66,7 @@ class _ResourcePageState extends State<ResourcePage> {
   void _loadData(Resource resource) async {
     _resourceid.text = resource.resourceid.toString();
     _resourcename.text = resource.resourcename.toString();
-    inbool = resource.inactive ? true : false;
+    vinbool = resource.inactive ? true : false;
     _email.text = resource.email.toString();
     _extension.text = resource.extension.toString();
   }
@@ -89,7 +77,7 @@ class _ResourcePageState extends State<ResourcePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text(widget.title),
+        title: Text(vtitle),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.favorite_border),
@@ -112,29 +100,24 @@ class _ResourcePageState extends State<ResourcePage> {
         ],
       ),
       body: Container(
+        padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
-              RaisedButton(
-                child: Text('Test Snackbar'),
-                onPressed: () {
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('This is a test')));
-                },
-              ),
               TextFormField(
+                readOnly: true,
                 controller: _resourceid,
                 decoration: InputDecoration(
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if(widget.mode == 'add'){
+                  if (vmode == 'add') {
                     if (value.isEmpty) {
                       return 'Resource needs an ID';
                     }
-                  }else {
-                    if (value == ''){
+                  } else {
+                    if (value == '') {
                       return 'Resource ID cannot be null';
                     }
                   }
@@ -142,57 +125,66 @@ class _ResourcePageState extends State<ResourcePage> {
                 },
               ),
               TextFormField(
+                readOnly: vronly,
                 controller: _resourcename,
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
                 validator: (value) {
-                  if(widget.mode == 'add'){
+                  if (vmode == 'add') {
                     if (value.isEmpty) {
                       return 'Resource needs an Name';
                     }
-                  }else{
-                    if(value == ''){
+                  } else {
+                    if (value == '') {
                       return 'Resource name cannot be blank';
                     }
                   }
                   return null;
                 },
               ),
-              Stack(
+              Row(
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextFormField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: 'Inactive',
-                      ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Inactive', style: TextStyle(
+                      color: vronly ? Colors.grey : Colors.white,
+                    ),
+
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Switch(
-                      value: inbool,
-                      onChanged: (value) {
-                        setState(() {
-                          inbool = value;
-                        });
-                      },
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: vronly
+                          ? Switch(
+                        value: vinbool,
+                        onChanged: null,
+                      )
+                          : Switch(
+                        value: vinbool,
+                        onChanged: (value) {
+                          setState(() {
+                            vinbool = value;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
               TextFormField(
+                readOnly: vronly,
                 controller: _email,
                 decoration: InputDecoration(
                   labelText: 'Email',
                 ),
-                validator: (value){
-                  if(widget.mode == 'add'){
+                validator: (value) {
+                  if (widget.mode == 'add') {
                     return null;
-                  }else {
-                    if(value == ''){
+                  } else {
+                    if (value == '') {
                       return 'Email cannot be removed after it is created';
                     }
                   }
@@ -200,6 +192,7 @@ class _ResourcePageState extends State<ResourcePage> {
                 },
               ),
               TextFormField(
+                readOnly: vronly,
                 controller: _extension,
                 decoration: InputDecoration(
                   labelText: 'Extension',
@@ -209,7 +202,27 @@ class _ResourcePageState extends State<ResourcePage> {
           ),
         ),
       ),
-      floatingActionButton: ResourceFOB(widget.mode, widget.ronly, context),
+      floatingActionButton: (vronly == true)
+          ? FloatingActionButton(
+              child: Icon(Icons.edit),
+              onPressed: () {
+                vronly = !vronly;
+                vtitle = 'Edit Resource';
+                setState(() {});
+              },
+            )
+          : FloatingActionButton(
+              child: Icon(Icons.check),
+              onPressed: () {
+                //update mode
+                if (vmode == 'edit' && vronly == false){
+
+                  updateResource(context);
+                  vtitle = 'View Resource';
+                }
+                vronly = !vronly;
+                setState(() {});
+              }),
     );
   }
 
@@ -224,35 +237,6 @@ class _ResourcePageState extends State<ResourcePage> {
   }
 }
 
-Widget ResourceFOB(String mode, bool readonlymode, BuildContext context) {
-  if (mode == 'add') {
-    return Builder(
-      builder: (BuildContext context) {
-        return FloatingActionButton(
-          child: Icon(Icons.check),
-          onPressed: () {
-            createResource(context);
-          },
-        );
-      },
-    );
-  } else if (mode == 'edit') {
-    if (readonlymode == true) {
-      return FloatingActionButton(
-        child: Icon(Icons.edit),
-        onPressed: (){
-          ronly = false;
-
-        },
-      );
-    } else {
-      return FloatingActionButton(
-        child: Icon(Icons.check),
-      );
-    }
-  }
-}
-
 Future<String> createResource(BuildContext context) async {
   bool resourcecreated;
 
@@ -260,7 +244,7 @@ Future<String> createResource(BuildContext context) async {
     // If the form is valid, display a Snackbar.
     final resid = _resourceid.text.toString() ?? '';
     final resname = _resourcename.text.toString() ?? '';
-    final resinactive = inbool.toString();
+    final resinactive = vinbool.toString();
     final resemail = _email.text.toString() ?? '';
     final resextension = _extension.text.toString() ?? '';
     final resrowrevnum = 1.toString();
@@ -293,7 +277,7 @@ Future<String> createResource(BuildContext context) async {
     var postresource;
     try {
       postresource = await http.post(
-        'http://192.168.0.110:8888/resources',
+        serverreqaddress + '/resources',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -307,7 +291,7 @@ Future<String> createResource(BuildContext context) async {
         content:
             Text('Resource' + _resourcename.text.toString() + ', created.'),
         duration: Duration(seconds: 3),
-      ));
+      ),);
       resourcecreated = true;
     }
   }
@@ -332,11 +316,10 @@ Future<String> updateResource(BuildContext context) async {
     // If the form is valid, display a Snackbar.
     final resid = _resourceid.text.toString();
     final resname = _resourcename.text.toString();
-    final resinactive = inbool.toString();
+    final resinactive = vinbool.toString();
     final resemail = _email.text.toString();
     final resextension = _extension.text.toString();
     final resrowrevnum = 1.toString();
-
 
     ///resid cannot be updated through here
 
@@ -361,7 +344,7 @@ Future<String> updateResource(BuildContext context) async {
     var putresource;
     try {
       putresource = await http.put(
-        'http://192.168.0.110:8888/resources/' + resid,
+        serverreqaddress + '/resources/' + resid,
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -373,9 +356,9 @@ Future<String> updateResource(BuildContext context) async {
       print('Resource: ' + _resourcename.text.toString() + ', updated.');
       Scaffold.of(context).showSnackBar(SnackBar(
         content:
-        Text('Resource' + _resourcename.text.toString() + ', updated.'),
+            Text('Resource' + _resourcename.text.toString() + ', updated.'),
         duration: Duration(seconds: 3),
-      ));
+      ),);
       resourceupdated = true;
     }
   }
@@ -394,7 +377,7 @@ Future<String> updateResource(BuildContext context) async {
 }
 
 Future<void> deleteResource(int resourceid, BuildContext context) async {
-  final url = 'http://192.168.0.110:8888/resources/' + resourceid.toString();
+  final url = serverreqaddress + '/resources/' + resourceid.toString();
 
   var postresource = await http.delete(url);
   print(postresource.statusCode);
@@ -402,7 +385,7 @@ Future<void> deleteResource(int resourceid, BuildContext context) async {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text('Resource deleted'),
-        duration: Duration(seconds: 2 ),
+        duration: Duration(seconds: 2),
       ),
     );
     await Future.delayed(Duration(seconds: 2));

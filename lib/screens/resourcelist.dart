@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
+import 'package:st_two/data/connect.dart';
 import 'package:st_two/screens/resource.dart';
 import 'package:st_two/data/processtickets.dart';
 
@@ -55,7 +56,7 @@ class _ResourceListPageState extends State<ResourceListPage> {
           onChanged: (text) {},
         ),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<ResourcesList>(
         future: fetchResources(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -75,7 +76,6 @@ class _ResourceListPageState extends State<ResourceListPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-
                                     builder: (context) => ResourcePage(
                                       mode: 'edit',
                                       ronly: true,
@@ -152,6 +152,7 @@ class _ResourceListPageState extends State<ResourceListPage> {
             MaterialPageRoute(
               builder: (context) => ResourcePage(
                 mode: 'add',
+                ronly: false,
                 title: 'Add Resource',
               ),
             ),
@@ -163,7 +164,7 @@ class _ResourceListPageState extends State<ResourceListPage> {
 }
 
 Future<ResourcesList> fetchResources() async {
-  var jsonString = await http.get("http://192.168.0.110:8888/resources");
+  var jsonString = await http.get(serverreqaddress + "/resources");
   final jsonResponse = json.decode(jsonString.body.toString());
   ResourcesList resources = new ResourcesList.fromJson(jsonResponse);
   return resources;

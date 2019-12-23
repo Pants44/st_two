@@ -86,3 +86,45 @@ class Customer {
     );
   }
 }
+
+class DiscoveryMethodList {
+  final List<DiscoveryMethod> discoverymethods;
+
+  DiscoveryMethodList({
+    this.discoverymethods,
+  });
+
+  factory DiscoveryMethodList.fromJson(List<dynamic> parsedJson) {
+    List<DiscoveryMethod> discoverymethods = new List<DiscoveryMethod>();
+    discoverymethods = parsedJson.map((i)=>DiscoveryMethod.fromJson(i)).toList();
+
+    return new DiscoveryMethodList(
+        discoverymethods: discoverymethods
+    );
+  }
+}
+
+class DiscoveryMethod {
+  final String discoverymethod;
+  final int dmid;
+  final bool inactive;
+
+  DiscoveryMethod({
+    this.dmid,
+    this.inactive,
+    this.discoverymethod
+  });
+
+  factory DiscoveryMethod.fromJson(Map<String, dynamic> parsedJson){
+
+    var inbool;
+    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+
+    return DiscoveryMethod(
+      dmid: int.parse(parsedJson['dmid']),
+      inactive: inbool,
+      discoverymethod: parsedJson['discoverymethod'],
+    );
+  }
+
+}

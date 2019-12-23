@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:st_two/size_config.dart';
 import 'package:st_two/screens/resourcelist.dart';
-import 'package:st_two/bloc/resourcelistbloc.dart';
+import 'package:st_two/screens/skilllist.dart';
+import 'package:st_two/screens/prioritylist.dart';
+import 'package:st_two/screens/statuslist.dart';
+import 'package:st_two/screens/discoverymethodlist.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -79,7 +81,14 @@ class _ToolsPageState extends State<ToolsPage> {
                   child: ListTile(
                     title: Text('Statuses'),
                     subtitle: Text('Information related to each ticket status'),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StatusListPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -90,7 +99,14 @@ class _ToolsPageState extends State<ToolsPage> {
                     title: Text('Skills'),
                     subtitle: Text(
                         'These identify what resources can handle which tickets'),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SkillListPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -100,7 +116,14 @@ class _ToolsPageState extends State<ToolsPage> {
                   child: ListTile(
                     title: Text('Priorities'),
                     subtitle: Text('Manages how tickets are prioritized'),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PriorityListPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -110,7 +133,14 @@ class _ToolsPageState extends State<ToolsPage> {
                   child: ListTile(
                     title: Text('Discovery Methods'),
                     subtitle: Text('How our customers discovery us'),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DiscoveryMethodListPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
