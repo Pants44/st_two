@@ -208,6 +208,9 @@ class _StatusPageState extends State<StatusPage> {
 Future<String> createStatus(BuildContext context) async {
   bool statuscreated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final staid = _statusid.text.toString() ?? '';
@@ -237,7 +240,7 @@ Future<String> createStatus(BuildContext context) async {
     var poststatus;
     try {
       poststatus = await http.post(
-        serverreqaddress + '/statuses',
+        sci.serverreqaddress + '/statuses',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -272,6 +275,9 @@ Future<String> createStatus(BuildContext context) async {
 Future<String> updateStatus(BuildContext context) async {
   bool statusupdated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final staid = _statusid.text.toString();
@@ -296,7 +302,7 @@ Future<String> updateStatus(BuildContext context) async {
     var putstatus;
     try {
       putstatus = await http.put(
-        serverreqaddress + '/statuses/' + staid,
+        sci.serverreqaddress + '/statuses/' + staid,
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -329,7 +335,10 @@ Future<String> updateStatus(BuildContext context) async {
 }
 
 Future<void> deleteStatus(int statusid, BuildContext context) async {
-  final url = serverreqaddress + '/statuses/' + statusid.toString();
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  final url = sci.serverreqaddress + '/statuses/' + statusid.toString();
 
   var poststatus = await http.delete(url);
   print(poststatus.statusCode);

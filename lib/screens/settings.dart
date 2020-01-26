@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:st_two/size_config.dart';
 import 'package:st_two/theme/themebloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:st_two/screens/serversettings.dart';
 
 bool dm=true, pn=true, tdc=true, cn=true, efl=true;
 
@@ -40,6 +41,21 @@ class _SettingsPageState extends State<SettingsPage> {
           width: SizeConfig.safeBlockHorizontal * 100,
           child: ListView(
             children: <Widget>[
+              Card(
+                child: ListTile(
+                  title: Text('Server Settings'),
+                  subtitle: Text('Make sure you can connect'),
+                  trailing: Icon(Icons.domain),
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ServerSettingsPage(title: 'Server Settings',),
+                      ),
+                    );
+                  },
+                ),
+              ),
               Card(
                 child: ListTile(
                   title: Text('Theme Selection'),

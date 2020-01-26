@@ -112,15 +112,6 @@ class _ResourcePageState extends State<ResourcePage> {
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if (vmode == 'add') {
-                    if (value.isEmpty) {
-                      return 'Resource needs an ID';
-                    }
-                  } else {
-                    if (value == '') {
-                      return 'Resource ID cannot be null';
-                    }
-                  }
                   return null;
                 },
               ),
@@ -219,6 +210,9 @@ class _ResourcePageState extends State<ResourcePage> {
 
                   updateResource(context);
                   vtitle = 'View Resource';
+                }else if (vmode == 'add' && vronly == false){
+                  createResource(context);
+                  vtitle = 'View Resource';
                 }
                 vronly = !vronly;
                 setState(() {});
@@ -240,20 +234,18 @@ class _ResourcePageState extends State<ResourcePage> {
 Future<String> createResource(BuildContext context) async {
   bool resourcecreated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
-    final resid = _resourceid.text.toString() ?? '';
     final resname = _resourcename.text.toString() ?? '';
     final resinactive = vinbool.toString();
     final resemail = _email.text.toString() ?? '';
     final resextension = _extension.text.toString() ?? '';
-    final resrowrevnum = 1.toString();
     final rescompany = 1.toString();
 
-    final str = '{"resourceid":"' +
-        resid.trim() +
-        '",' +
-        '"resourcename":"' +
+    final str = '{"resourcename":"' +
         resname.trim() +
         '",' +
         '"inactive":"' +
@@ -265,9 +257,6 @@ Future<String> createResource(BuildContext context) async {
         '"extension":"' +
         resextension.trim() +
         '",' +
-        '"rowrevnum":"' +
-        resrowrevnum +
-        '",' +
         '"company":"' +
         rescompany +
         '"}';
@@ -277,7 +266,7 @@ Future<String> createResource(BuildContext context) async {
     var postresource;
     try {
       postresource = await http.post(
-        serverreqaddress + '/resources',
+        sci.serverreqaddress + '/resources',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -312,6 +301,9 @@ Future<String> createResource(BuildContext context) async {
 Future<String> updateResource(BuildContext context) async {
   bool resourceupdated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final resid = _resourceid.text.toString();
@@ -344,7 +336,7 @@ Future<String> updateResource(BuildContext context) async {
     var putresource;
     try {
       putresource = await http.put(
-        serverreqaddress + '/resources/' + resid,
+        sci.serverreqaddress + '/resources/' + resid,
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -377,18 +369,21 @@ Future<String> updateResource(BuildContext context) async {
 }
 
 Future<void> deleteResource(int resourceid, BuildContext context) async {
-  final url = serverreqaddress + '/resources/' + resourceid.toString();
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
 
-  var postresource = await http.delete(url);
-  print(postresource.statusCode);
-  if (postresource.statusCode == 200) {
+  final url = sci.serverreqaddress + '/resources/' + resourceid.toString();
+
+  var delresource = await http.delete(url);
+  print(delresource.statusCode);
+  if (delresource.statusCode == 200) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text('Resource deleted'),
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
       ),
     );
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     Navigator.pop(context);
   }
 }

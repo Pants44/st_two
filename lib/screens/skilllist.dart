@@ -155,7 +155,10 @@ class _SkillListPageState extends State<SkillListPage> {
 }
 
 Future<SkillList> fetchSkills() async {
-  var jsonString = await http.get(serverreqaddress + "/skills");
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  var jsonString = await http.get(sci.serverreqaddress + "/skills");
   final jsonResponse = json.decode(jsonString.body.toString());
   SkillList skilllist = new SkillList.fromJson(jsonResponse);
   return skilllist;

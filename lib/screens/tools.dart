@@ -6,7 +6,7 @@ import 'package:st_two/screens/skilllist.dart';
 import 'package:st_two/screens/prioritylist.dart';
 import 'package:st_two/screens/statuslist.dart';
 import 'package:st_two/screens/discoverymethodlist.dart';
-
+import 'package:st_two/screens/industrylist.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -24,23 +24,23 @@ class _ToolsPageState extends State<ToolsPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-        appBar: AppBar(
-          leading: BackButton(),
-          title: Text(widget.title),
-          actions: <Widget>[
-            Hero(
-              tag: 'logoappbar',
-              child: Padding(
-                padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
-                child: Image(
-                  image: AssetImage('assets/st22000.png'),
-                ),
+      appBar: AppBar(
+        leading: BackButton(),
+        title: Text(widget.title),
+        actions: <Widget>[
+          Hero(
+            tag: 'logoappbar',
+            child: Padding(
+              padding: EdgeInsets.only(left: 5, top: 5, right: 10, bottom: 5),
+              child: Image(
+                image: AssetImage('assets/st22000.png'),
               ),
-            )
-          ],
-        ),
-        body: Center(
-            child: Container(
+            ),
+          )
+        ],
+      ),
+      body: Center(
+        child: Container(
           height: SizeConfig.safeBlockVertical * 100,
           width: SizeConfig.safeBlockHorizontal * 100,
           child: ListView(
@@ -144,8 +144,27 @@ class _ToolsPageState extends State<ToolsPage> {
                   ),
                 ),
               ),
+              Card(
+                elevation: 5,
+                child: Container(
+                  child: ListTile(
+                    title: Text('Industries'),
+                    subtitle: Text('Who we do work for'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => IndustryListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 }

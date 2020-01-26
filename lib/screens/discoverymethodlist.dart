@@ -155,7 +155,10 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
 }
 
 Future<DiscoveryMethodList> fetchDiscoveryMethods() async {
-  var jsonString = await http.get(serverreqaddress + "/discoverymethods");
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  var jsonString = await http.get(sci.serverreqaddress + "/discoverymethods");
   final jsonResponse = json.decode(jsonString.body.toString());
   DiscoveryMethodList dmlist = new DiscoveryMethodList.fromJson(jsonResponse);
   return dmlist;

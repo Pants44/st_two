@@ -1,3 +1,36 @@
+class CompanyListdd {
+  final List<Companydd> companies;
+
+  CompanyListdd({
+    this.companies
+  });
+
+  factory CompanyListdd.fromJson(List<dynamic> parseJson){
+    List<Companydd> companies = new List<Companydd>();
+    companies = parseJson.map((i)=>Companydd.fromJson(i)).toList();
+
+    return new CompanyListdd(
+        companies: companies
+    );
+  }
+}
+
+class Companydd {
+  final String id, selection;
+
+  Companydd({
+    this.id,
+    this.selection
+  });
+
+  factory Companydd.fromJson(Map<String, dynamic> parsedJson){
+    return Companydd(
+      id: parsedJson['id'],
+      selection: parsedJson['selection'],
+    );
+  }
+}
+
 class CustomerListdd {
   final List<Customerdd> customers;
 

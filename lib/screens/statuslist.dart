@@ -155,7 +155,10 @@ class _StatusListPageState extends State<StatusListPage> {
 }
 
 Future<StatusList> fetchStatuses() async {
-  var jsonString = await http.get(serverreqaddress + "/statuses");
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  var jsonString = await http.get(sci.serverreqaddress + "/statuses");
   final jsonResponse = json.decode(jsonString.body.toString());
   StatusList statuses = new StatusList.fromJson(jsonResponse);
   return statuses;

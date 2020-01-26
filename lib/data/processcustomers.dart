@@ -16,8 +16,8 @@ class CustomerList{
 }
 
 class Customer {
-  final String customername, mainpocname, mainpocemail, portallogin, portalpassword, specialinstructionsdesc, discoverydescription, referredby, referredbyid, enteredby, entereddate;
-  final int customerid, industryid, discoverymethodid;
+  final String customername, mainpocname, mainpocemail, industryname, portallogin, portalpassword, sidescription, dmdescription, referredby, referredbyid, enteredby, entereddate;
+  final int customerid, industryid, discoverymethodid, rowrevnum, company;
   final bool inactive, specialinstructions, engagementreceived, quotesrequired, connectionsetup, onhold, blacklisted, autoemail, monthlysupport;
 
   Customer({
@@ -25,15 +25,16 @@ class Customer {
     this.mainpocname,
     this.mainpocemail,
     this.industryid,
+    this.industryname,
     this.discoverymethodid,
     this.referredbyid,
     this.referredby,
     this.customername,
     this.portallogin,
     this.portalpassword,
-    this.specialinstructionsdesc,
+    this.sidescription,
     this.specialinstructions,
-    this.discoverydescription,
+    this.dmdescription,
     this.inactive,
     this.engagementreceived,
     this.quotesrequired,
@@ -44,6 +45,8 @@ class Customer {
     this.monthlysupport,
     this.enteredby,
     this.entereddate,
+    this.rowrevnum,
+    this.company,
   });
 
   factory Customer.fromJson(Map<String, dynamic> parsedJson){
@@ -52,7 +55,7 @@ class Customer {
     if(parsedJson['specialinstructions'] == 'true'){sibool = true;}else{sibool = false;}
     if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
     if(parsedJson['engagementreceived'] == 'true'){erbool = true;}else{erbool = false;}
-    if(parsedJson['quoterequired'] == 'true'){qrbool = true;}else{qrbool = false;}
+    if(parsedJson['quotesrequired'] == 'true'){qrbool = true;}else{qrbool = false;}
     if(parsedJson['connectionsetup'] == 'true'){csbool = true;}else{csbool = false;}
     if(parsedJson['onhold'] == 'true'){ohbool = true;}else{ohbool = false;}
     if(parsedJson['blacklisted'] == 'true'){blbool = true;}else{blbool = false;}
@@ -64,15 +67,16 @@ class Customer {
       mainpocname: parsedJson['mainpocname'],
       mainpocemail: parsedJson['mainpocemail'],
       industryid: int.parse(parsedJson['industryid']),
-      discoverymethodid: int.parse(parsedJson['discoverymethodid']),
+      industryname: parsedJson['industryname'],
       referredbyid: parsedJson['referredbyid'],
       referredby: parsedJson['referredby'],
       customername: parsedJson['customername'],
       portallogin: parsedJson['portallogin'],
       portalpassword: parsedJson['portalpassword'],
       specialinstructions: sibool,
-      specialinstructionsdesc: parsedJson['specialinstructionsdesc'],
-      discoverydescription: parsedJson['discoverydescription'],
+      sidescription: parsedJson['sidescription'],
+      discoverymethodid: int.tryParse(parsedJson['dmid']),
+      dmdescription: parsedJson['dmdescription'],
       inactive: inbool,
       engagementreceived: erbool,
       quotesrequired: qrbool,
@@ -83,6 +87,8 @@ class Customer {
       monthlysupport: msbool,
       enteredby: parsedJson['enteredby'],
       entereddate: parsedJson['entereddate'],
+      rowrevnum: int.parse(parsedJson['rowrevnum']),
+      company: int.parse(parsedJson['company']),
     );
   }
 }
@@ -104,25 +110,67 @@ class DiscoveryMethodList {
   }
 }
 
+class IndustryList {
+  final List<Industry> industries;
+
+  IndustryList({
+    this.industries
+  });
+
+  factory IndustryList.fromJson(List<dynamic> parsedJson) {
+    List<Industry> industries = new List<Industry>();
+    industries = parsedJson.map((i)=>Industry.fromJson(i)).toList();
+
+    return new IndustryList(
+        industries: industries
+    );
+  }
+
+}
+
+class Industry {
+  final String industryname;
+  final int industryid, rowrevnum, company;
+  final bool inactive;
+
+  Industry({
+    this.industryid,
+    this.inactive,
+    this.industryname,
+    this.rowrevnum,
+    this.company,
+  });
+
+  factory Industry.fromJson(Map<String, dynamic> parsedJson){
+
+    return Industry(
+      industryid: int.tryParse(parsedJson['industryid']),
+      inactive: bool.fromEnvironment(parsedJson['inactive']),
+      industryname: parsedJson['industryname'],
+      rowrevnum: int.tryParse(parsedJson['rowrevnum']),
+      company: int.tryParse(parsedJson['company']),
+    );
+  }
+}
+
 class DiscoveryMethod {
   final String discoverymethod;
-  final int dmid;
+  final int dmid, rowrevnum, company;
   final bool inactive;
 
   DiscoveryMethod({
     this.dmid,
     this.inactive,
-    this.discoverymethod
+    this.discoverymethod,
+    this.rowrevnum,
+    this.company
   });
 
   factory DiscoveryMethod.fromJson(Map<String, dynamic> parsedJson){
 
-    var inbool;
-    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
-
     return DiscoveryMethod(
       dmid: int.parse(parsedJson['dmid']),
-      inactive: inbool,
+      inactive: bool.fromEnvironment(parsedJson['inactive']),
       discoverymethod: parsedJson['discoverymethod'],
     );
   }

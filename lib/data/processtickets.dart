@@ -7,16 +7,26 @@ class TicketsList {
 
   factory TicketsList.fromJson(List<dynamic> parsedJson) {
     List<Ticket> tickets = new List<Ticket>();
+    tickets = parsedJson.map((i) => Ticket.fromJson(i)).toList();
 
-    return new TicketsList(
-        tickets: tickets
-    );
+    return new TicketsList(tickets: tickets);
   }
 }
 
 class Ticket {
-  final String ticketname, ticketdescription, customername, status, developerlog, entrydate, enteredby, folderpath, specialinstructionsdesc, deadlinedate, erpsystem;
-  final int ticketid, customerid, priorityid, priority, statusid;
+  final String ticketname,
+      ticketdescription,
+      customername,
+      priorityname,
+      status,
+      developerlog,
+      entrydate,
+      enteredby,
+      folderpath,
+      specialinstructionsdesc,
+      deadlinedate,
+      erpsystem;
+  final int ticketid, customerid, priorityid, statusid;
   final double min, max, projected, totalbilled;
   final bool quoterequired, premium, stopbilling, deadline, specialinstructions;
   final List<Resource> resources;
@@ -30,7 +40,7 @@ class Ticket {
     this.customerid,
     this.customername,
     this.priorityid,
-    this.priority,
+    this.priorityname,
     this.statusid,
     this.status,
     this.resources,
@@ -54,22 +64,41 @@ class Ticket {
     this.skills,
   });
 
-  factory Ticket.fromJson(Map<String, dynamic> parsedJson){
-
+  factory Ticket.fromJson(Map<String, dynamic> parsedJson) {
     var rlist = parsedJson['resources'] as List;
     var plist = parsedJson['pocs'] as List;
     var slist = parsedJson['skills'] as List;
-    List<Resource> resourceList = rlist.map((i) => Resource.fromJson(i)).toList();
+    List<Resource> resourceList =
+        rlist.map((i) => Resource.fromJson(i)).toList();
     List<POC> pocList = plist.map((i) => POC.fromJson(i)).toList();
     List<Skill> skillList = slist.map((i) => Skill.fromJson(i)).toList();
 
     var qrbool, prbool, sbbool, dlbool, sibool;
-    if(parsedJson['quoterequired'] == 'true'){qrbool = true;}else{qrbool = false;}
-    if(parsedJson['premium'] == 'true'){prbool = true;}else{prbool = false;}
-    if(parsedJson['stopbilling'] == 'true'){sbbool = true;}else{sbbool = false;}
-    if(parsedJson['deadline'] == 'true'){dlbool = true;}else{dlbool = false;}
-    if(parsedJson['specialinstructions'] == 'true'){sibool = true;}else{sibool = false;}
-
+    if (parsedJson['quoterequired'] == 'true') {
+      qrbool = true;
+    } else {
+      qrbool = false;
+    }
+    if (parsedJson['premium'] == 'true') {
+      prbool = true;
+    } else {
+      prbool = false;
+    }
+    if (parsedJson['stopbilling'] == 'true') {
+      sbbool = true;
+    } else {
+      sbbool = false;
+    }
+    if (parsedJson['deadline'] == 'true') {
+      dlbool = true;
+    } else {
+      dlbool = false;
+    }
+    if (parsedJson['specialinstructions'] == 'true') {
+      sibool = true;
+    } else {
+      sibool = false;
+    }
 
     return Ticket(
       ticketid: int.parse(parsedJson['ticketid']),
@@ -77,11 +106,11 @@ class Ticket {
       ticketdescription: parsedJson['ticketdescription'],
       customerid: int.parse(parsedJson['customerid']),
       customername: parsedJson['customername'],
+      resources: resourceList,
       priorityid: int.parse(parsedJson['priorityid']),
-      priority: int.parse(parsedJson['priority']),
+      priorityname: parsedJson['priorityname'],
       statusid: int.parse(parsedJson['statusid']),
       status: parsedJson['status'],
-      resources: resourceList,
       quoterequired: qrbool,
       min: double.parse(parsedJson['minhrs']),
       max: double.parse(parsedJson['maxhrs']),
@@ -115,37 +144,39 @@ class PriorityList {
 
   factory PriorityList.fromJson(List<dynamic> parsedJson) {
     List<Priority> priorities = new List<Priority>();
-    priorities = parsedJson.map((i)=>Priority.fromJson(i)).toList();
+    priorities = parsedJson.map((i) => Priority.fromJson(i)).toList();
 
-    return new PriorityList(
-        priorities: priorities
-    );
+    return new PriorityList(priorities: priorities);
   }
 }
 
 class Priority {
-  final int priorityid;
+  final int priorityid, rowrevnum, company;
   final bool inactive;
   final String priorityname;
 
-  Priority({
-    this.priorityid,
-    this.inactive,
-    this.priorityname
-  });
+  Priority(
+      {this.priorityid,
+      this.inactive,
+      this.priorityname,
+      this.rowrevnum,
+      this.company});
 
-  factory Priority.fromJson(Map<String, dynamic> parsedJson){
-
+  factory Priority.fromJson(Map<String, dynamic> parsedJson) {
     var inbool;
-    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+    if (parsedJson['inactive'] == 'true') {
+      inbool = true;
+    } else {
+      inbool = false;
+    }
 
     return Priority(
         priorityid: int.parse(parsedJson['priorityid']),
         inactive: inbool,
-        priorityname: parsedJson['priorityname']
-    );
+        priorityname: parsedJson['priorityname'],
+        rowrevnum: int.parse(parsedJson['rowrevnum']),
+        company: int.parse(parsedJson['company']));
   }
-
 }
 
 class ResourcesList {
@@ -157,17 +188,15 @@ class ResourcesList {
 
   factory ResourcesList.fromJson(List<dynamic> parsedJson) {
     List<Resource> resources = new List<Resource>();
-    resources = parsedJson.map((i)=>Resource.fromJson(i)).toList();
+    resources = parsedJson.map((i) => Resource.fromJson(i)).toList();
 
-    return new ResourcesList(
-        resources: resources
-    );
+    return new ResourcesList(resources: resources);
   }
 }
 
 class Resource {
   final String resourcename, email, extension;
-  final int resourceid;
+  final int resourceid, rowrevnum, company;
   final bool inactive;
 
   Resource({
@@ -175,23 +204,29 @@ class Resource {
     this.inactive,
     this.resourcename,
     this.email,
-    this.extension
+    this.extension,
+    this.rowrevnum,
+    this.company,
   });
 
-  factory Resource.fromJson(Map<String, dynamic> parsedJson){
-
+  factory Resource.fromJson(Map<String, dynamic> parsedJson) {
     var inbool;
-    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+    if (parsedJson['inactive'] == 'true') {
+      inbool = true;
+    } else {
+      inbool = false;
+    }
 
     return Resource(
-        resourceid: int.parse(parsedJson['resourceid']),
-        inactive: inbool,
-        resourcename: parsedJson['resourcename'],
-        email: parsedJson['email'],
-        extension: parsedJson['extension']
+      resourceid: int.parse(parsedJson['resourceid']),
+      inactive: inbool,
+      resourcename: parsedJson['resourcename'],
+      email: parsedJson['email'],
+      extension: parsedJson['extension'],
+      rowrevnum: int.parse(parsedJson['rowrevnum']),
+      company: int.parse(parsedJson['company']),
     );
   }
-
 }
 
 class SkillList {
@@ -203,17 +238,15 @@ class SkillList {
 
   factory SkillList.fromJson(List<dynamic> parsedJson) {
     List<Skill> skills = new List<Skill>();
-    skills = parsedJson.map((i)=>Skill.fromJson(i)).toList();
+    skills = parsedJson.map((i) => Skill.fromJson(i)).toList();
 
-    return new SkillList(
-        skills: skills
-    );
+    return new SkillList(skills: skills);
   }
 }
 
 class Skill {
   final String skillname, description;
-  final int skillid;
+  final int skillid, rowrevnum, company;
   final bool inactive;
 
   Skill({
@@ -221,84 +254,92 @@ class Skill {
     this.skillname,
     this.description,
     this.inactive,
+    this.rowrevnum,
+    this.company,
   });
 
-  factory Skill.fromJson(Map<String, dynamic> parsedJson){
-
+  factory Skill.fromJson(Map<String, dynamic> parsedJson) {
     var inbool;
-    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+    if (parsedJson['inactive'] == 'true') {
+      inbool = true;
+    } else {
+      inbool = false;
+    }
 
     return Skill(
-        skillid: int.parse(parsedJson['skillid']),
-        skillname: parsedJson['skillname'],
-        description: parsedJson['desciprition'],
-        inactive: inbool,
+      skillid: int.parse(parsedJson['skillid']),
+      skillname: parsedJson['skillname'],
+      description: parsedJson['description'],
+      inactive: inbool,
+      rowrevnum: int.parse(parsedJson['rowrevnum']),
+      company: int.parse(parsedJson['company']),
     );
   }
-
 }
 
 class StatusList {
   final List<Status> statuslist;
 
-  StatusList({
-    this.statuslist
-  });
+  StatusList({this.statuslist});
 
   factory StatusList.fromJson(List<dynamic> parsedJson) {
     List<Status> statuslist = new List<Status>();
-    statuslist = parsedJson.map((i)=>Status.fromJson(i)).toList();
+    statuslist = parsedJson.map((i) => Status.fromJson(i)).toList();
 
-    return new StatusList(
-        statuslist: statuslist
-    );
+    return new StatusList(statuslist: statuslist);
   }
 }
 
 class Status {
   final String statusname;
-  final int statusid;
+  final int statusid, rowrevnum, company;
   final bool inactive;
 
-  Status({
-    this.statusid,
-    this.inactive,
-    this.statusname
-  });
+  Status(
+      {this.statusid,
+      this.inactive,
+      this.statusname,
+      this.rowrevnum,
+      this.company});
 
-  factory Status.fromJson(Map<String, dynamic> parsedJson){
-
+  factory Status.fromJson(Map<String, dynamic> parsedJson) {
     var inbool;
-    if(parsedJson['inactive'] == 'true'){inbool = true;}else{inbool = false;}
+    if (parsedJson['inactive'] == 'true') {
+      inbool = true;
+    } else {
+      inbool = false;
+    }
 
     return Status(
-        statusid: int.parse(parsedJson['statusid']),
-        inactive: inbool,
-        statusname: parsedJson['statusname']
+      statusid: int.parse(parsedJson['statusid']),
+      inactive: inbool,
+      statusname: parsedJson['statusname'],
+      rowrevnum: int.parse(parsedJson['rowrevnum']),
+      company: int.parse(parsedJson['company']),
     );
   }
-
 }
 
 class POC {
   final String pocname, pocphone, pocemail;
-  final int pocid;
+  final int pocid, rowrevnum, company;
 
-  POC({
-    this.pocid,
-    this.pocname,
-    this.pocphone,
-    this.pocemail
-  });
+  POC(
+      {this.pocid,
+      this.pocname,
+      this.pocphone,
+      this.pocemail,
+      this.rowrevnum,
+      this.company});
 
-  factory POC.fromJson(Map<String, dynamic> parsedJson){
-
+  factory POC.fromJson(Map<String, dynamic> parsedJson) {
     return new POC(
-        pocid: int.parse(parsedJson['pocid']),
-        pocname: parsedJson['pocname'],
-        pocphone: parsedJson['pocphone'],
-        pocemail: parsedJson['pocemail']
+      pocid: int.parse(parsedJson['pocid']),
+      pocname: parsedJson['pocname'],
+      pocphone: parsedJson['pocphone'],
+      pocemail: parsedJson['pocemail'],
+      rowrevnum: int.parse(parsedJson['rowrevnum']),
+      company: int.parse(parsedJson['company']),
     );
   }
-
 }

@@ -119,7 +119,7 @@ class _PriorityPageState extends State<PriorityPage> {
               ),
               TextFormField(
                 readOnly: vronly,
-                controller: _priorityid,
+                controller: _priorityname,
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
@@ -208,6 +208,9 @@ class _PriorityPageState extends State<PriorityPage> {
 Future<String> createStatus(BuildContext context) async {
   bool prioritycreated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final priid = _priorityid.text.toString() ?? '';
@@ -237,7 +240,7 @@ Future<String> createStatus(BuildContext context) async {
     var postpriority;
     try {
       postpriority = await http.post(
-        serverreqaddress + '/priorities',
+        sci.serverreqaddress + '/priorities',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -272,6 +275,9 @@ Future<String> createStatus(BuildContext context) async {
 Future<String> updatePriority(BuildContext context) async {
   bool priorityupdated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final priid = _priorityid.text.toString();
@@ -296,7 +302,7 @@ Future<String> updatePriority(BuildContext context) async {
     var putpriority;
     try {
       putpriority = await http.put(
-        serverreqaddress + '/priorities/' + priid,
+        sci.serverreqaddress + '/priorities/' + priid,
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -329,7 +335,10 @@ Future<String> updatePriority(BuildContext context) async {
 }
 
 Future<void> deletePriority(int priorityid, BuildContext context) async {
-  final url = serverreqaddress + '/priorities/' + priorityid.toString();
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  final url = sci.serverreqaddress + '/priorities/' + priorityid.toString();
 
   var postpriority = await http.delete(url);
   print(postpriority.statusCode);

@@ -4,8 +4,8 @@ import 'package:st_two/size_config.dart';
 import 'package:st_two/screens/home.dart';
 import 'package:st_two/screens/dashboard.dart';
 import 'package:st_two/screens/ticket.dart';
-import 'package:st_two/screens/customers.dart';
-import 'package:st_two/screens/customerentry.dart';
+import 'package:st_two/screens/customerlist.dart';
+import 'package:st_two/screens/customer.dart';
 import 'package:st_two/screens/customerconnectionlist.dart';
 import 'package:st_two/screens/connection.dart';
 import 'package:st_two/screens/analytics.dart';
@@ -16,9 +16,19 @@ import 'package:st_two/screens/search.dart';
 import 'package:st_two/screens/billingentry.dart';
 import 'package:st_two/theme/colors.dart';
 import 'package:st_two/theme/themebloc.dart';
+import 'package:st_two/screens/settings.dart';
+import 'package:st_two/data/processdropdowns.dart';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:st_two/data/connect.dart';
+import 'dart:convert';
 
 void main() => runApp(ThemeSwitcher());
+
+String companyfilter;
+
+String _companySelection = '4';
 
 class ThemeSwitcher extends StatelessWidget {
   // This widget is the root of your application.
@@ -44,8 +54,8 @@ class MyApp extends StatelessWidget {
             '/home': (BuildContext context) => new MyHomePage(),
             '/dashboard': (BuildContext context) => new DashboardPage(),
             '/ticket': (BuildContext context) => new TicketPage(),
-            '/customers': (BuildContext context) => new CustomersPage(),
-            '/customerentry': (BuildContext context) => new CustomerEntry(),
+            '/customers': (BuildContext context) => new CustomerListPage(),
+            '/customerentry': (BuildContext context) => new CustomerPage(),
             '/connectionlist': (BuildContext context) =>
                 new CustomerConnectionList(),
             '/connect': (BuildContext context) => new ConnectionPage(),
@@ -76,6 +86,17 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController tecLogin = TextEditingController();
+
+  final sci = ServerConnectionInfo();
+  final session = Session();
+
+  List<DropdownMenuItem<String>> companydropdown = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,22 +162,52 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 16, bottom: 16),
+                              padding: EdgeInsets.only(top: 16, bottom: 16, left:64, right:64),
+                              child: FutureBuilder<List<DropdownMenuItem<String>>>(
+                                future: loadCompanyDropdown(context),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    if (snapshot.hasError) {
+                                      print(snapshot.error.toString());
+                                    }
+                                    return snapshot.hasData
+                                        ? DropdownButton<String>(
+                                      isExpanded: true,
+                                      value: _companySelection,
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          _companySelection = newValue;
+                                        });
+
+                                        print(_companySelection);
+                                      },
+                                      items: snapshot.data,
+                                    )
+                                        : Center(child: Container());
+                                  } else {
+                                    return Center(child: Container());
+                                  }
+                                },
+                              ),
                             ),
                             RaisedButton(
                               child: Text(
                                 'Login',
                                 style: TextStyle(fontSize: 18),
                               ),
-                              onPressed: () => Navigator.pushReplacement(
-                                  context,
-                                  PageRouteBuilder(
-                                      transitionDuration:
-                                          Duration(milliseconds: 500),
-                                      pageBuilder: (context, __, ___) =>
-                                          MyHomePage(
-                                            title: 'Solution Tracker Two',
-                                          ))),
+                              onPressed: (){
+                                session.setCurCompany(int.parse(_companySelection));
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
+                                        transitionDuration:
+                                        Duration(milliseconds: 500),
+                                        pageBuilder: (context, __, ___) =>
+                                            MyHomePage(
+                                              title: 'Solution Tracker Two',
+                                            )));
+                              },
                               color: colorSTBlue,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0)),
@@ -232,7 +283,34 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 16, bottom: 16),
+                                  padding: EdgeInsets.only(top: 16, bottom: 16, left:64, right:64),
+                                  child: FutureBuilder<List<DropdownMenuItem<String>>>(
+                                    future: loadCompanyDropdown(context),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasError) {
+                                          print(snapshot.error.toString());
+                                        }
+                                        return snapshot.hasData
+                                            ? DropdownButton<String>(
+                                          isExpanded: true,
+                                          value: _companySelection,
+                                          onChanged: (String newValue) {
+                                            setState(() {
+                                              _companySelection = newValue;
+                                            });
+
+                                            print(_companySelection);
+                                          },
+                                          items: snapshot.data,
+                                        )
+                                            : Center(child: Container());
+                                      } else {
+                                        return Center(child: Container());
+                                      }
+                                    },
+                                  ),
                                 ),
                                 RaisedButton(
                                   child: Text(
@@ -240,6 +318,7 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   onPressed: () {
+                                    session.setCurCompany(int.parse(_companySelection));
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -260,11 +339,52 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
       ),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(top:124),
+        child: FloatingActionButton(
+          child: Icon(Icons.settings),
+          backgroundColor: Color.fromRGBO(255, 255, 255, 0),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          splashColor: Color.fromRGBO(255, 255, 255, 0),
+          onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsPage(title: 'User Settings',),
+              ),
+            );
+          },
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
+
+  Future<List<DropdownMenuItem<String>>> loadCompanyDropdown(BuildContext context) async {
+    await sci.getServerInfo();
+
+    if (companydropdown.length < 1) {
+      var jsonString = await http.get(sci.serverreqaddress + '/companydrop');
+      final jsonResponse = json.decode(jsonString.body.toString());
+      CompanyListdd companylist = new CompanyListdd.fromJson(jsonResponse);
+
+      for (var i = 0; i < companylist.companies.length; i++) {
+        companydropdown.add(
+          DropdownMenuItem(
+            value: companylist.companies[i].id,
+            child: Text(companylist.companies[i].selection.toString()),
+          ),
+        );
+      }
+    }
+    return companydropdown;
+  }
 }
+
+

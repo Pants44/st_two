@@ -11,7 +11,8 @@ import 'package:http/http.dart' as http;
 
 TextEditingController _dmid = TextEditingController();
 TextEditingController _discoverymethod = TextEditingController();
-//bool vinbool = false;
+int _rowrevnum, _company;
+bool vinbool = false;
 bool vronly = false;
 String vmode = '';
 String vtitle = '';
@@ -37,6 +38,7 @@ class DiscoveryMethodPage extends StatefulWidget {
 }
 
 class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
+
   @override
   void initState() {
     // TODO: implement initState
@@ -58,7 +60,9 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
   void _loadData(DiscoveryMethod dm) async {
     _dmid.text = dm.dmid.toString();
     _discoverymethod.text = dm.discoverymethod.toString();
-    //vinbool = status.inactive ? true : false;
+    vinbool = dm.inactive;
+    _rowrevnum = dm.rowrevnum;
+    _company = dm.company;
   }
 
   @override
@@ -183,7 +187,10 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
                 //update mode
                 if (vmode == 'edit' && vronly == false){
 
-                  updateDiscoveryMethod(context);
+                  updateDiscoveryMethod(int.parse(_dmid.text), _company, context);
+                  vtitle = 'View Discovery Method';
+                } else if (vmode == 'add' && vronly == true){
+                  createDiscoveryMethod(context);
                   vtitle = 'View Discovery Method';
                 }
                 vronly = !vronly;
@@ -205,25 +212,20 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
 Future<String> createDiscoveryMethod(BuildContext context) async {
   bool discoverymethodcreated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
-    final dmid = _dmid.text.toString() ?? '';
     final dmname = _discoverymethod.text.toString() ?? '';
-    //final stainactive = vinbool.toString();
-    final dmrowrevnum = 1.toString();
-    final dmcompany = 1.toString();
+    final stainactive = vinbool.toString();
+    final dmcompany = _company.toString();
 
-    final str = '{"dmid":"' +
-        dmid.trim() +
-        '",' +
-        '"discoverymethod":"' +
+    final str = '{"discoverymethod":"' +
         dmname.trim() +
-        //'",' +
-        //'"inactive":"' +
-        //stainactive +
         '",' +
-        '"rowrevnum":"' +
-        dmrowrevnum +
+        '"inactive":"' +
+        stainactive +
         '",' +
         '"company":"' +
         dmcompany +
@@ -234,7 +236,7 @@ Future<String> createDiscoveryMethod(BuildContext context) async {
     var postdm;
     try {
       postdm = await http.post(
-        serverreqaddress + '/discoverymethods',
+        sci.serverreqaddress + '/discoverymethods',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -266,15 +268,18 @@ Future<String> createDiscoveryMethod(BuildContext context) async {
   }
 }
 
-Future<String> updateDiscoveryMethod(BuildContext context) async {
+Future<String> updateDiscoveryMethod(int dmid, int comp, BuildContext context) async {
   bool dmupdated;
+
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
 
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
-    final dmid = _dmid.text.toString();
     final discoverymethod = _discoverymethod.text.toString();
-    //final stainactive = vinbool.toString();
-    final dmrowrevnum = 1.toString();
+    final stainactive = vinbool.toString();
+    final dmrowrevnum = _rowrevnum.toString();
+    final company = comp;
 
     ///staid cannot be updated through here
 
@@ -282,18 +287,20 @@ Future<String> updateDiscoveryMethod(BuildContext context) async {
         discoverymethod.trim() +
         '",' +
         '"inactive":"' +
-        //stainactive +
+        stainactive +
         '",' +
         '"rowrevnum":"' +
         dmrowrevnum +
-        '"}';
+        '",' +
+        '"company":"' +
+        company.toString() + '"}';
 
     print(str);
 
     var putdm;
     try {
       putdm = await http.put(
-        serverreqaddress + '/discoverymethods/' + dmid,
+        sci.serverreqaddress + '/discoverymethods/' + dmid.toString(),
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -326,7 +333,10 @@ Future<String> updateDiscoveryMethod(BuildContext context) async {
 }
 
 Future<void> deleteDiscoveryMethod(int dmid, BuildContext context) async {
-  final url = serverreqaddress + '/discoverymethods/' + dmid.toString();
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  final url = sci.serverreqaddress + '/discoverymethods/' + dmid.toString();
 
   var postdm = await http.delete(url);
   print(postdm.statusCode);

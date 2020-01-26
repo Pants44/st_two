@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+
+import 'package:st_two/data/connect.dart';
 import 'package:st_two/data/processtickets.dart';
 import 'package:st_two/screens/ticket.dart';
 import 'package:st_two/data/processdropdowns.dart';
@@ -87,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
           )
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<TicketsList>(
         future: loadTicketsList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -118,23 +120,30 @@ class _DashboardPageState extends State<DashboardPage> {
                               child: Card(
                                 elevation: 5,
                                 child: ListTile(
-                                  leading: Text(snapshot
-                                      .data.tickets[index].priority
-                                      .toString()),
-                                  title: Text('Ticket ' +
-                                      snapshot.data.tickets[index].ticketid
-                                          .toString() +
-                                      ' - ' +
-                                      snapshot.data.tickets[index].ticketname
-                                          .toString()),
-                                  subtitle: Text('Assigned to: ' +
-                                      _whosAssigned(snapshot
-                                          .data.tickets[index].resources)),
-                                  trailing: Text(snapshot
-                                      .data.tickets[index].status
-                                      .toString()),
+                                  leading: Text(
+                                    snapshot.data.tickets[index].priorityname
+                                        .toString(),
+                                  ),
+                                  title: Text(
+                                    'Ticket ' +
+                                        snapshot.data.tickets[index].ticketid
+                                            .toString() +
+                                        ' - ' +
+                                        snapshot.data.tickets[index].ticketname
+                                            .toString(),
+                                  ),
+                                  subtitle: Text(
+                                    'Assigned to: ' +
+                                        _whosAssigned(snapshot
+                                            .data.tickets[index].resources),
+                                  ),
+                                  trailing: Text(
+                                    snapshot.data.tickets[index].status
+                                        .toString(),
+                                  ),
                                 ),
-                              ))
+                              ),
+                            )
                           : snapshot.data.tickets[index].ticketname
                                       .contains(filter.toLowerCase()) ||
                                   snapshot.data.tickets[index].ticketid
@@ -142,52 +151,68 @@ class _DashboardPageState extends State<DashboardPage> {
                                       .contains(filter.toLowerCase())
                               ? GestureDetector(
                                   onTap: () {
-                                    print('Open Ticket ' +
-                                        snapshot.data.tickets[index].ticketid
-                                            .toString());
+                                    print(
+                                      'Open Ticket ' +
+                                          snapshot.data.tickets[index].ticketid
+                                              .toString(),
+                                    );
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => TicketPage(
-                                              title: 'Ticket ' +
-                                                  snapshot.data.tickets[index]
-                                                      .ticketid
-                                                      .toString() +
-                                                  ' - ' +
-                                                  snapshot.data.tickets[index]
-                                                      .ticketname
-                                                      .toString(),
-                                              ticket: snapshot
-                                                  .data.tickets[index])),
+                                        builder: (context) => TicketPage(
+                                            title: 'Ticket ' +
+                                                snapshot.data.tickets[index]
+                                                    .ticketid
+                                                    .toString() +
+                                                ' - ' +
+                                                snapshot.data.tickets[index]
+                                                    .ticketname
+                                                    .toString(),
+                                            ticket:
+                                                snapshot.data.tickets[index]),
+                                      ),
                                     );
                                   },
                                   child: Card(
                                     elevation: 5,
                                     child: ListTile(
-                                      leading: Text(snapshot
-                                          .data.tickets[index].priority
-                                          .toString()),
-                                      title: Text('Ticket ' +
-                                          snapshot.data.tickets[index].ticketid
-                                              .toString() +
-                                          ' - ' +
-                                          snapshot
-                                              .data.tickets[index].ticketname
-                                              .toString()),
-                                      subtitle: Text('Assigned to: ' +
-                                          _whosAssigned(snapshot
-                                              .data.tickets[index].resources)),
-                                      trailing: Text(snapshot
-                                          .data.tickets[index].status
-                                          .toString()),
+                                      leading: Text(
+                                        snapshot
+                                            .data.tickets[index].priorityname
+                                            .toString(),
+                                      ),
+                                      title: Text(
+                                        'Ticket ' +
+                                            snapshot
+                                                .data.tickets[index].ticketid
+                                                .toString() +
+                                            ' - ' +
+                                            snapshot
+                                                .data.tickets[index].ticketname
+                                                .toString(),
+                                      ),
+                                      subtitle: Text(
+                                        'Assigned to: ' +
+                                            _whosAssigned(snapshot
+                                                .data.tickets[index].resources),
+                                      ),
+                                      trailing: Text(
+                                        snapshot.data.tickets[index].status
+                                            .toString(),
+                                      ),
                                     ),
-                                  ))
+                                  ),
+                                )
                               : Container();
                     },
                   )
-                : Center(child: CircularProgressIndicator());
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
@@ -245,12 +270,14 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Future<TicketsList> loadTicketsList() async {
-    var jsonString = await http.get("http://192.168.0.114:8888/tickets");
-    final jsonResponse = json.decode(jsonString.body.toString());
-    TicketsList ticketslist = new TicketsList.fromJson(jsonResponse);
+  Future<void> loadTicket() async {
+    final sci = ServerConnectionInfo();
 
-    //  removes customer not selected by filter
+    var jsonString = await http.get(sci.serverreqaddress + '/tickets/2');
+    final jsonResponse = json.decode(jsonString.body.toString());
+    Ticket ticket = new Ticket.fromJson(jsonResponse);
+
+    /*//  removes customer not selected by filter
     if (customerfilter != null && customerfilter != '0') {
       print('cust filter fired');
       ticketslist.tickets
@@ -272,7 +299,41 @@ class _DashboardPageState extends State<DashboardPage> {
     if (statusfilter != null && statusfilter != '0') {
       ticketslist.tickets
           .removeWhere((item) => item.statusid.toString() != statusfilter);
+    }*/
+
+    return ticket;
+  }
+
+  Future<TicketsList> loadTicketsList() async {
+    final sci = ServerConnectionInfo();
+
+    var jsonString = await http.get(sci.serverreqaddress + '/tickets');
+    final jsonResponse = json.decode(jsonString.body.toString());
+    TicketsList ticketslist = new TicketsList.fromJson(jsonResponse);
+
+    /*//  removes customer not selected by filter
+    if (customerfilter != null && customerfilter != '0') {
+      print('cust filter fired');
+      ticketslist.tickets
+          .removeWhere((item) => item.customerid.toString() != customerfilter);
     }
+
+    //  removes resources not selected by filter
+    //  code is different because there can be multiple resources per ticket.
+    //  Normal logic would remove to much if another developer was on the ticket
+    if (resourcefilter != null && resourcefilter != '0') {
+      ticketslist.tickets.removeWhere((item) => item.resources
+          .toList()
+          .any((test) => test.resourceid.toString() == resourcefilter)
+          ? false
+          : true);
+    }
+
+    // remove ticket's with status not selected by filter
+    if (statusfilter != null && statusfilter != '0') {
+      ticketslist.tickets
+          .removeWhere((item) => item.statusid.toString() != statusfilter);
+    }*/
 
     return ticketslist;
   }

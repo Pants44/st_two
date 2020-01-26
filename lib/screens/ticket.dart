@@ -343,7 +343,7 @@ class _TicketPageState extends State<TicketPage> {
     tecCustomerName.text = ticket.customername.toString();
     tecPOCs.text = _whosThePOCs(ticket.pocs);
     tecPriorityID.text = ticket.priorityid.toString();
-    tecPriority.text = ticket.priority.toString();
+    tecPriority.text = ticket.priorityname.toString();
     tecStatusID.text = ticket.statusid.toString();
     tecStatus.text = ticket.status.toString();
     lstResources = ticket.resources;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:st_two/login.dart';
 import 'package:st_two/screens/dashboard.dart';
-import 'package:st_two/screens/customers.dart';
+import 'package:st_two/screens/customerlist.dart';
 import 'package:st_two/screens/customerconnectionlist.dart';
 import 'package:st_two/screens/analytics.dart';
 import 'package:st_two/screens/tools.dart';
@@ -9,6 +9,7 @@ import 'package:st_two/screens/timesheet.dart';
 import 'package:st_two/screens/chat.dart';
 import 'package:st_two/screens/search.dart';
 import 'package:st_two/screens/settings.dart';
+import 'package:st_two/data/connect.dart';
 import 'package:st_two/theme/themebloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,19 +23,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final session = Session();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getComp();
+  }
+
+  void getComp() async{
+    await session.getCompany();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Hero(
           tag: 'logoappbar',
-          child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Image(
-              image: AssetImage('assets/st22000.png'),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: 50
+            ),
+              child: Container(
+              padding: EdgeInsets.all(5),
+              child: Image(
+                image: AssetImage('assets/st22000.png'),
+              ),
             ),
           ),
-        ),
+          ),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 5, right: 10, bottom: 5),
@@ -101,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                CustomersPage(title: 'Customers'),
+                                CustomerListPage(title: 'Customers'),
                           ),
                         );
                       },
@@ -243,11 +263,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ),
                       /*onPressed: () {
+                        print(session.company.toString());
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   SearchPage(title: 'Search')),
+
                         );
                       },*/
                     ),

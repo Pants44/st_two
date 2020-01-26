@@ -164,7 +164,10 @@ class _ResourceListPageState extends State<ResourceListPage> {
 }
 
 Future<ResourcesList> fetchResources() async {
-  var jsonString = await http.get(serverreqaddress + "/resources");
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  var jsonString = await http.get(sci.serverreqaddress + "/resources");
   final jsonResponse = json.decode(jsonString.body.toString());
   ResourcesList resources = new ResourcesList.fromJson(jsonResponse);
   return resources;

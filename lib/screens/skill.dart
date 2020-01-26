@@ -38,6 +38,7 @@ class SkillPage extends StatefulWidget {
 }
 
 class _SkillPageState extends State<SkillPage> {
+
   @override
   void initState() {
     // TODO: implement initState
@@ -57,11 +58,21 @@ class _SkillPageState extends State<SkillPage> {
     }
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _skillid.text = '';
+    _skillname.text = '';
+    _description.text = '';
+    vinbool = false;
+    super.dispose();
+  }
+
   void _loadData(Skill skill) async {
     _skillid.text = skill.skillid.toString();
     _skillname.text = skill.skillname.toString();
     _description.text = skill.description.toString();
-    vinbool = skill.inactive ? true : false;
+    vinbool = skill.inactive;
   }
 
   @override
@@ -204,20 +215,13 @@ class _SkillPageState extends State<SkillPage> {
               }),
     );
   }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _skillid.text = '';
-    _skillname.text = '';
-    _description.text = '';
-    vinbool = false;
-    super.dispose();
-  }
 }
 
 Future<String> createSkill(BuildContext context) async {
   bool skillcreated;
+
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
 
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
@@ -252,7 +256,7 @@ Future<String> createSkill(BuildContext context) async {
     var postskill;
     try {
       postskill = await http.post(
-        serverreqaddress + '/skills',
+        sci.serverreqaddress + '/skills',
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -287,6 +291,9 @@ Future<String> createSkill(BuildContext context) async {
 Future<String> updateSkill(BuildContext context) async {
   bool skillupdated;
 
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
   if (_formKey.currentState.validate()) {
     // If the form is valid, display a Snackbar.
     final skillid = _skillid.text.toString();
@@ -315,7 +322,7 @@ Future<String> updateSkill(BuildContext context) async {
     var putskill;
     try {
       putskill = await http.put(
-        serverreqaddress + '/skills/' + skillid,
+        sci.serverreqaddress + '/skills/' + skillid,
         headers: {'Content-type': 'application/json'},
         body: str,
       );
@@ -348,7 +355,10 @@ Future<String> updateSkill(BuildContext context) async {
 }
 
 Future<void> deleteSkill(int skillid, BuildContext context) async {
-  final url = serverreqaddress + '/skills/' + skillid.toString();
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  final url = sci.serverreqaddress + '/skills/' + skillid.toString();
 
   var postskill = await http.delete(url);
   print(postskill.statusCode);

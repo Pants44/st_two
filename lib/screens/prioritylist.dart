@@ -155,7 +155,10 @@ class _PriorityListPageState extends State<PriorityListPage> {
 }
 
 Future<PriorityList> fetchPriorities() async {
-  var jsonString = await http.get(serverreqaddress + "/priorities");
+  final sci = ServerConnectionInfo();
+  await sci.getServerInfo();
+
+  var jsonString = await http.get(sci.serverreqaddress + "/priorities");
   final jsonResponse = json.decode(jsonString.body.toString());
   PriorityList priorities = new PriorityList.fromJson(jsonResponse);
   return priorities;
