@@ -14,53 +14,55 @@
 				"resourceid": "8",
 				"inactive": "false",
 				"resourcename": "Chance",
-				"email": "chance.finley@practicaltek.com",
+				"email": "<chance.finley@practicaltek.com>",
 				"extension": "110"
 			},
 			{
 				"resourceid": "9",
 				"inactive": "false",
 				"resourcename": "Josh",
-				"email": "josh.scheffler@practicaltek.com",
+				"email": "<josh.scheffler@practicaltek.com>",
 				"extension": "109"
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "8",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "8",
 		"developerlog": "5/30/19 (Chance) Waiting on User Feedback. ",
 		"pocs": [
 			{
 				"pocid": "300",
 				"pocname": "Bob Smith",
-				"phone": "419-557-2225",
-				"email": "bsmith@machineshop.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<bsmith@machineshop.com>"
 			},
 			{
 				"pocid": "301",
 				"pocname": "Laura Smith",
-				"phone": "419-557-2225",
-				"email": "lsmith@machineshop.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<lsmith@machineshop.com>"
 			}
 		],
 		"premium": "false",
 		"entrydate": "07/04/2019",
 		"enteredby": "Mel",
 		"folderpath": "P:\\__Active_PTS_Clients\\Bob's Machine Shop (Ashland, OH)\\Tickets\\Ticket 4321 - Purchase Order Entry Customization",
-		"specialinstructions": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructionsdesc": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructions": "true",
 		"stopbilling": "false",
 		"totalbilled": "0",
 		"deadlinedate": "",
+		"deadline": "false",
 		"erpsystem": "Epicor",
 		"skills": [
 			{
 				"skillid": "7",
-				"skilldescription": "Customizations"
+				"skillname": "Customizations"
 			},
 			{
 				"skillid": "2",
-				"skilldescription": "BAQ"
+				"skillname": "BAQ"
 			}
 		]
 	},
@@ -79,46 +81,48 @@
 				"resourceid": "5",
 				"inactive": "false",
 				"resourcename": "Jarrad",
-				"email": "jarrad.layne@practicaltek.com",
+				"email": "<jarrad.layne@practicaltek.com>",
 				"extension": "104"
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "8",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "8",
 		"developerlog": "5/30/19 (Jarrad) Sent for UT on this day.",
 		"pocs": [
 			{
 				"pocid": "300",
 				"pocname": "Bob Smith",
-				"phone": "419-557-2225",
-				"email": "bsmith@machineshop.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<bsmith@machineshop.com>"
 			},
 			{
 				"pocid": "301",
 				"pocname": "Laura Smith",
-				"phone": "419-557-2225",
-				"email": "lsmith@machineshop.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<lsmith@machineshop.com>"
 			}
 		],
 		"premium": "false",
 		"entrydate": "07/04/2019",
 		"enteredby": "Mel",
 		"folderpath": "P:\\__Active_PTS_Clients\\Bob's Machine Shop (Ashland, OH)\\Tickets\\Ticket 4322 - AP Aging Report",
-		"specialinstructions": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructionsdesc": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructions": "true",
 		"stopbilling": "false",
 		"totalbilled": "0",
 		"deadlinedate": "",
+		"deadline": "false",
 		"erpsystem": "Epicor",
 		"skills": [
 			{
 				"skillid": "1",
-				"skilldescription": "SSRS"
+				"skillname": "SSRS"
 			},
 			{
 				"skillid": "2",
-				"skilldescription": "BAQ"
+				"skillname": "BAQ"
 			}
 		]
 	},
@@ -137,36 +141,38 @@
 				"resourceid": "5",
 				"inactive": "false",
 				"resourcename": "Jarrad",
-				"email": "jarrad.layne@practicaltek.com",
+				"email": "<jarrad.layne@practicaltek.com>",
 				"extension": "104"
 			}
 		],
 		"quoterequired": "false",
-		"min": "0",
-		"max": "0",
-		"projected": "16",
+		"minhrs": "0",
+		"maxhrs": "0",
+		"projectedhrs": "16",
 		"developerlog": "",
 		"pocs": [
 			{
 				"pocid": "302",
 				"pocname": "Frank Tolly",
-				"phone": "419-557-2225",
-				"email": "ftolly@franklinmfg.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "ftolly@franklinmfg.com>"
 			}
 		],
 		"premium": "false",
 		"entrydate": "07/21/2019",
 		"enteredby": "Dena",
 		"folderpath": "P:\\__Active_PTS_Clients\\Franlin Manufacturing (Ashland, OH)\\Tickets\\Ticket 4323 - Franklin Manufacturing",
-		"specialinstructions": "",
+		"specialinstructionsdesc": "",
+		"specialinstructions": "false",
 		"stopbilling": "false",
 		"totalbilled": "0",
 		"deadlinedate": "",
+		"deadline": "false",
 		"erpsystem": "SYSPRO",
 		"skills": [
 			{
 				"skillid": "7",
-				"skilldescription": "Customizations"
+				"skillname": "Customizations"
 			}
 		]
 	},
@@ -185,36 +191,38 @@
 				"resourceid": "5",
 				"inactive": "false",
 				"resourcename": "Jarrad",
-				"email": "jarrad.layne@practicaltek.com",
+				"email": "<jarrad.layne@practicaltek.com>",
 				"extension": "104"
 			}
 		],
 		"quoterequired": "true",
-		"min": "8",
-		"max": "10",
-		"projected": "10",
+		"minhrs": "8",
+		"maxhrs": "10",
+		"projectedhrs": "10",
 		"developerlog": "6/23/19 (Jarrad) Began on this day",
 		"pocs": [
 			{
 				"pocid": "302",
 				"pocname": "Frank Tolly",
-				"phone": "419-557-2225",
-				"email": "ftolly@franklinmfg.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<ftolly@franklinmfg.com>"
 			}
 		],
 		"premium": "false",
 		"entrydate": "07/04/2019",
 		"enteredby": "Jarrad",
 		"folderpath": "P:\\__Active_PTS_Clients\\Franklin Manufacturing (Ashland, OH)\\Tickets\\Ticket 4324 - EDI Integration",
-		"specialinstructions": "",
+		"specialinstructionsdesc": "",
+		"specialinstructions": "false",
 		"stopbilling": "false",
 		"totalbilled": "0",
 		"deadlinedate": "",
+		"deadline": "false",
 		"erpsystem": "SYSPRO",
 		"skills": [
 			{
 				"skillid": "19",
-				"skilldescription": "EDI"
+				"skillname": "EDI"
 			}
 		]
 	},
@@ -233,37 +241,46 @@
 				"resourceid": "4",
 				"inactive": "false",
 				"resourcename": "Jeremy",
-				"email": "jeremy.chance@practicaltek.com",
+				"email": "<jeremy.chance@practicaltek.com>",
 				"extension": "102"
+			},
+			{
+				"resourceid": "5",
+				"inactive": "false",
+				"resourcename": "Jarrad",
+				"email": "<jarrad.layne@practicaltek.com>",
+				"extension": "104"
 			}
 		],
 		"quoterequired": "true",
-		"min": "8",
-		"max": "8",
-		"projected": "8",
+		"minhrs": "8",
+		"maxhrs": "8",
+		"projectedhrs": "8",
 		"developerlog": "7/1/19 (Jeremy) POC marked as complete",
 		"pocs": [
 			{
 				"pocid": "300",
 				"pocname": "Bob Smith",
-				"phone": "419-557-2225",
-				"email": "bsmith@machineshop.com"
+				"pocphone": "419-557-2225",
+				"pocemail": "<bsmith@machineshop.com>"
 			}
 		],
 		"premium": "false",
 		"entrydate": "07/01/2019",
 		"enteredby": "Mel",
 		"folderpath": "P:\\__Active_PTS_Clients\\Bob's Machine Shop (Ashland, OH)\\Tickets\\Ticket 4322 - AP Aging Report",
-		"specialinstructions": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructionsdesc": "These guys are small, so be extra delecate when communicating with them. Very passionate about what they are doing.",
+		"specialinstructions": "true",
 		"stopbilling": "false",
 		"totalbilled": "8",
 		"deadlinedate": "",
+		"deadline": "false",
 		"erpsystem": "Epicor",
 		"skills": [
 			{
 				"skillid": "18",
-				"skilldescription": "Unassigned"
+				"skillname": "Unassigned"
 			}
 		]
 	}
-]
+]w

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:st_two/data/data.dart';
+
+import 'package:st_two/data/connect.dart';
+import 'package:st_two/data/industry.dart';
+
 import 'package:st_two/screens/industry.dart';
+
+final industrylist = IndustryList();
+final session = Session();
 
 class IndustryListPage extends StatefulWidget {
   IndustryListPage({Key key, this.title}) : super(key: key);
@@ -14,7 +20,7 @@ class IndustryListPage extends StatefulWidget {
 class _IndustryListPageState extends State<IndustryListPage> {
   TextEditingController tecSearch = TextEditingController();
 
-  String filter;
+  String curfilter, filterindname;
 
   @override
   void initState() {
@@ -22,7 +28,8 @@ class _IndustryListPageState extends State<IndustryListPage> {
     super.initState();
     tecSearch.addListener(() {
       setState(() {
-        filter = tecSearch.text;
+        curfilter = tecSearch.text.toLowerCase();
+        print('filter: ' + curfilter);
       });
     });
   }
@@ -30,7 +37,7 @@ class _IndustryListPageState extends State<IndustryListPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    filter = null;
+    curfilter = null;
     tecSearch.dispose();
     super.dispose();
   }
@@ -51,7 +58,7 @@ class _IndustryListPageState extends State<IndustryListPage> {
         ),
       ),
       body: FutureBuilder<IndustryList>(
-        future: IndustryList().fetch(),
+        future: industrylist.fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -61,11 +68,16 @@ class _IndustryListPageState extends State<IndustryListPage> {
                 ? ListView.builder(
                     itemCount: snapshot.data.industries.length,
                     itemBuilder: (context, index) {
-                      return filter == null || filter == ""
+                      filterindname = snapshot
+                          .data.industries[index].industryname
+                          .toLowerCase();
+
+                      return curfilter == null || curfilter == ""
                           ? GestureDetector(
                               onTap: () {
                                 print('Open Industry ' +
-                                    snapshot.data.industries[index].industryid
+                                    snapshot
+                                        .data.industries[index].industryid
                                         .toString());
                                 Navigator.push(
                                   context,
@@ -74,7 +86,8 @@ class _IndustryListPageState extends State<IndustryListPage> {
                                       mode: 'edit',
                                       ronly: true,
                                       title: 'View Industry',
-                                      industry: snapshot.data.industries[index],
+                                      industryid: snapshot
+                                          .data.industries[index].industryid,
                                     ),
                                   ),
                                 );
@@ -88,8 +101,7 @@ class _IndustryListPageState extends State<IndustryListPage> {
                                 ),
                               ),
                             )
-                          : snapshot.data.industries[index].industryname
-                                      .contains(filter.toLowerCase())
+                          : filterindname.contains(curfilter)
                               ? GestureDetector(
                                   onTap: () {
                                     print('Open Industry ' +
@@ -99,16 +111,20 @@ class _IndustryListPageState extends State<IndustryListPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => IndustryPage(
-                                            mode: 'edit',
-                                            ronly: true,
-                                            title: 'Industry ' +
-                                                snapshot.data.industries[index]
-                                                    .industryname
-                                                    .toString(),
-                                            industry:
-                                                snapshot.data.industries[index]),
-                                      ),
+                                          builder: (context) => IndustryPage(
+                                                mode: 'edit',
+                                                ronly: true,
+                                                title: 'Industry ' +
+                                                    snapshot
+                                                        .data
+                                                        .industries[index]
+                                                        .industryname
+                                                        .toString(),
+                                                industryid: snapshot
+                                                    .data
+                                                    .industries[index]
+                                                    .industryid,
+                                              )),
                                     );
                                   },
                                   child: Card(
@@ -123,9 +139,13 @@ class _IndustryListPageState extends State<IndustryListPage> {
                               : Container();
                     },
                   )
-                : Center(child: CircularProgressIndicator());
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),

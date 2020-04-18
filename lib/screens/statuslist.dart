@@ -1,12 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/screens/status.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/status.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/status.dart';
 
 class StatusListPage extends StatefulWidget {
   StatusListPage({Key key, this.title}) : super(key: key);
@@ -57,7 +53,7 @@ class _StatusListPageState extends State<StatusListPage> {
         ),
       ),
       body: FutureBuilder<StatusList>(
-        future: fetchStatuses(),
+        future: StatusList().fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -80,7 +76,8 @@ class _StatusListPageState extends State<StatusListPage> {
                                       mode: 'edit',
                                       ronly: true,
                                       title: 'View Status',
-                                      status: snapshot.data.statuslist[index],
+                                      statusid: snapshot
+                                          .data.statuslist[index].statusid,
                                     ),
                                   ),
                                 );
@@ -95,7 +92,7 @@ class _StatusListPageState extends State<StatusListPage> {
                               ),
                             )
                           : snapshot.data.statuslist[index].statusname
-                                      .contains(filter.toLowerCase())
+                                  .contains(filter.toLowerCase())
                               ? GestureDetector(
                                   onTap: () {
                                     print('Open Status ' +
@@ -109,11 +106,13 @@ class _StatusListPageState extends State<StatusListPage> {
                                             mode: 'edit',
                                             ronly: true,
                                             title: 'Status ' +
-                                                snapshot.data.statuslist[index]
+                                                snapshot
+                                                    .data
+                                                    .statuslist[index]
                                                     .statusname
                                                     .toString(),
-                                            status:
-                                                snapshot.data.statuslist[index]),
+                                            statusid: snapshot.data
+                                                .statuslist[index].statusid),
                                       ),
                                     );
                                   },
@@ -152,14 +151,4 @@ class _StatusListPageState extends State<StatusListPage> {
       ),
     );
   }
-}
-
-Future<StatusList> fetchStatuses() async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  var jsonString = await http.get(sci.serverreqaddress + "/statuses");
-  final jsonResponse = json.decode(jsonString.body.toString());
-  StatusList statuses = new StatusList.fromJson(jsonResponse);
-  return statuses;
 }

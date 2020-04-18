@@ -1,39 +1,39 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/priority.dart';
 import 'package:st_two/size_config.dart';
 
-import 'package:http/http.dart' as http;
 
-TextEditingController _priorityid = TextEditingController();
-TextEditingController _priorityname = TextEditingController();
-//TextEditingController _email = TextEditingController();
-//TextEditingController _extension = TextEditingController();
-//bool vinbool = false;
+//For screen
 bool vronly = false;
+bool vchanged = false;
 String vmode = '';
 String vtitle = '';
+
+//Objects
+
+//Data
+TextEditingController _priorityid = TextEditingController();
+TextEditingController _priorityname = TextEditingController();
+int _rowrevnum;
+bool _vinbool = false;
+bool _vdefbool = false;
 
 final _formKey = GlobalKey<FormState>();
 
 class PriorityPage extends StatefulWidget {
-  final String mode;
+  final String mode, title;
   final bool ronly;
-  final String title;
-  final Priority priority;
+  final int priorityid;
 
   PriorityPage(
       {Key key,
       @required this.mode,
       @required this.ronly,
       this.title,
-      this.priority})
+      this.priorityid})
       : super(key: key);
-
-
 
   @override
   _PriorityPageState createState() => _PriorityPageState();
@@ -50,18 +50,33 @@ class _PriorityPageState extends State<PriorityPage> {
     vtitle = widget.title;
 
     if (vmode == 'edit') {
-      _loadData(widget.priority);
+      _loadData(widget.priorityid);
     } else if (vmode == 'add') {
-      _priorityid.text = '';
-      _priorityname.text = '';
-      //vinbool = false;
+      _loadData();
     }
   }
 
-  void _loadData(Priority priority) async {
-    _priorityid.text = priority.priorityid.toString();
-    _priorityname.text = priority.priorityname.toString();
-    //vinbool = status.inactive ? true : false;
+  Future<void> _loadData([int priid = 0]) async {
+
+    if (priid == 0) {
+      _priorityid.text = '';
+      _priorityname.text = '';
+      _vinbool = false;
+      _vdefbool = false;
+      vchanged = false;
+      setState((){});
+
+    } else {
+      Priority pri = await Priority().fetch(priid);
+      _priorityid.text = pri.priorityid.toString();
+      _priorityname.text = pri.priorityname.toString();
+      _vinbool = pri.inactive;
+      _vdefbool = pri.defaultoption;
+      _rowrevnum = pri.rowrevnum;
+      vchanged = false;
+      setState((){});
+
+    }
   }
 
   @override
@@ -85,7 +100,7 @@ class _PriorityPageState extends State<PriorityPage> {
               return IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  deletePriority(widget.priority.priorityid, context);
+                  Priority().delete(int.parse(_priorityid.text), context);
                 },
               );
             },
@@ -105,15 +120,6 @@ class _PriorityPageState extends State<PriorityPage> {
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if (vmode == 'add') {
-                    if (value.isEmpty) {
-                      return 'Priority needs an ID';
-                    }
-                  } else {
-                    if (value == '') {
-                      return 'Priority ID cannot be null';
-                    }
-                  }
                   return null;
                 },
               ),
@@ -123,10 +129,13 @@ class _PriorityPageState extends State<PriorityPage> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
                 validator: (value) {
                   if (vmode == 'add') {
                     if (value.isEmpty) {
-                      return 'Priority needs an Name';
+                      return 'Priority needs an name';
                     }
                   } else {
                     if (value == '') {
@@ -136,62 +145,97 @@ class _PriorityPageState extends State<PriorityPage> {
                   return null;
                 },
               ),
-              /*Row(
+              Row(
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Text('Inactive', style: TextStyle(
-                      color: vronly ? Colors.grey : Colors.white,
-                    ),
-
+                    child: Text(
+                      'Inactive',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: vronly
-                          ? Switch(
-                        value: vinbool,
-                        onChanged: null,
-                      )
-                          : Switch(
-                        value: vinbool,
-                        onChanged: (value) {
+                      child: Switch(
+                        value: _vinbool,
+                        onChanged: vronly ? null : (v){
                           setState(() {
-                            vinbool = value;
+                            _vinbool = v == true;
+                            vchanged = true;
+
                           });
                         },
                       ),
                     ),
                   ),
                 ],
-              ),*/
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Default',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Switch(
+                        value: _vdefbool,
+                        onChanged: vronly ? null : (v){
+                          setState(() {
+                            _vdefbool = v == true;
+                            vchanged = true;
+
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
       floatingActionButton: (vronly == true)
           ? FloatingActionButton(
-              child: Icon(Icons.edit),
-              onPressed: () {
-                vronly = !vronly;
-                vtitle = 'Edit Priority';
-                setState(() {});
-              },
-            )
+        child: Icon(Icons.edit),
+        onPressed: () {
+          vronly = !vronly;
+          vtitle = 'Edit Priority';
+          setState(() {});
+        },
+      )
           : FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                //update mode
-                if (vmode == 'edit' && vronly == false){
+          child: Icon(Icons.check),
+          onPressed: () {
+            //update mode
+            if (vmode == 'edit' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Future(()=>Priority().update(int.parse(_priorityid.text), _priorityname.text.trim(), _vinbool, _vdefbool, _rowrevnum, vchanged, context)).then((v)=> _loadData(int.parse(_priorityid.text)));
+                vtitle = 'View Priority';
 
-                  updatePriority(context);
-                  vtitle = 'View Priority';
-                }
-                vronly = !vronly;
-                setState(() {});
-              }),
+              }
+            } else if (vmode == 'add' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Priority().create(_priorityname.text.trim(),
+                    _vinbool, _vdefbool, context);
+                vtitle = 'View Priority';
+              }
+            }
+            vronly = !vronly;
+            setState(() {});
+          }),
     );
   }
 
@@ -200,156 +244,8 @@ class _PriorityPageState extends State<PriorityPage> {
     // TODO: implement dispose
     _priorityid.text = '';
     _priorityname.text = '';
-    //vinbool = '';
+    _vinbool = false;
+    _vdefbool = false;
     super.dispose();
-  }
-}
-
-Future<String> createStatus(BuildContext context) async {
-  bool prioritycreated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final priid = _priorityid.text.toString() ?? '';
-    final priname = _priorityname.text.toString() ?? '';
-    //final priinactive = vinbool.toString();
-    final prirowrevnum = 1.toString();
-    final pricompany = 1.toString();
-
-    final str = '{"priorityid":"' +
-        priid.trim() +
-        '",' +
-        '"priorityname":"' +
-        priname.trim() +
-        //'",' +
-        //'"inactive":"' +
-        //priinactive +
-        '",' +
-        '"rowrevnum":"' +
-        prirowrevnum +
-        '",' +
-        '"company":"' +
-        pricompany +
-        '"}';
-
-    print(str);
-
-    var postpriority;
-    try {
-      postpriority = await http.post(
-        sci.serverreqaddress + '/priorities',
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (postpriority?.statusCode == 200) {
-      print('Priority: ' + _priorityname.text.toString() + ', created');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Priority' + _priorityname.text.toString() + ', created.'),
-        duration: Duration(seconds: 3),
-      ),);
-      prioritycreated = true;
-    }
-  }
-
-  if (prioritycreated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<String> updatePriority(BuildContext context) async {
-  bool priorityupdated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final priid = _priorityid.text.toString();
-    final priname = _priorityname.text.toString();
-    //final priinactive = vinbool.toString();
-    final prirowrevnum = 1.toString();
-
-    ///staid cannot be updated through here
-
-    final str = '{"priorityname":"' +
-        priname.trim() +
-        '",' +
-        '"inactive":"' +
-        //priinactive +
-        '",' +
-        '"rowrevnum":"' +
-        prirowrevnum +
-        '"}';
-
-    print(str);
-
-    var putpriority;
-    try {
-      putpriority = await http.put(
-        sci.serverreqaddress + '/priorities/' + priid,
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (putpriority?.statusCode == 200) {
-      print('Priority: ' + _priorityname.text.toString() + ', updated.');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Priority' + _priorityname.text.toString() + ', updated.'),
-        duration: Duration(seconds: 3),
-      ),);
-      priorityupdated = true;
-    }
-  }
-
-  if (priorityupdated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<void> deletePriority(int priorityid, BuildContext context) async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  final url = sci.serverreqaddress + '/priorities/' + priorityid.toString();
-
-  var postpriority = await http.delete(url);
-  print(postpriority.statusCode);
-  if (postpriority.statusCode == 200) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Priority deleted'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
   }
 }

@@ -11,8 +11,8 @@ class ServerConnectionInfo
 
   Future getServerInfo() async{
     final SharedPreferences prefs = await _sPrefs;
-    serverip = prefs.get('serverip') ?? '';
-    serverport = prefs.get('serverport') ?? '';
+    serverip = prefs.get('serverip') ?? '192.168.5.247';
+    serverport = prefs.get('serverport') ?? '8888';
     serverreqaddress = 'http://$serverip:$serverport';
   }
 
@@ -33,7 +33,7 @@ class Session
 
   Session({this.company});
 
-  Future getCompany() async {
+  Future<int> getCompany() async {
     final SharedPreferences prefs = await _sPrefs;
     company = prefs.getInt('company') ?? 0;
     return company;

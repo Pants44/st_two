@@ -1,21 +1,25 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/resource.dart';
 import 'package:st_two/size_config.dart';
 
-import 'package:http/http.dart' as http;
+//For screen
+bool vronly = false;
+bool vchanged = false;
+String vmode = '';
+String vtitle = '';
 
+//Objects
+
+//Data
 TextEditingController _resourceid = TextEditingController();
 TextEditingController _resourcename = TextEditingController();
 TextEditingController _email = TextEditingController();
-TextEditingController _extension = TextEditingController();
-bool vinbool = false;
-bool vronly = false;
-String vmode = '';
-String vtitle = '';
+TextEditingController _phoneext = TextEditingController();
+int _rowrevnum;
+bool _vinbool = false;
+bool _vdefbool = false;
 
 final _formKey = GlobalKey<FormState>();
 
@@ -25,7 +29,7 @@ class ResourcePage extends StatefulWidget {
       @required this.mode,
       @required this.ronly,
       this.title,
-      this.resource})
+      this.resourceid})
       : super(key: key);
 
   ///modes are as follows
@@ -36,13 +40,14 @@ class ResourcePage extends StatefulWidget {
   final String mode;
   final bool ronly;
   final String title;
-  final Resource resource;
+  final int resourceid;
 
   @override
   _ResourcePageState createState() => _ResourcePageState();
 }
 
 class _ResourcePageState extends State<ResourcePage> {
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,22 +58,49 @@ class _ResourcePageState extends State<ResourcePage> {
     vtitle = widget.title;
 
     if (vmode == 'edit') {
-      _loadData(widget.resource);
+      _loadData(widget.resourceid);
     } else if (vmode == 'add') {
-      _resourceid.text = '';
-      _resourcename.text = '';
-      vinbool = false;
-      _email.text = '';
-      _extension.text = '';
+      _loadData();
     }
   }
 
-  void _loadData(Resource resource) async {
-    _resourceid.text = resource.resourceid.toString();
-    _resourcename.text = resource.resourcename.toString();
-    vinbool = resource.inactive ? true : false;
-    _email.text = resource.email.toString();
-    _extension.text = resource.extension.toString();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _resourceid.text = '';
+    _resourcename.text = '';
+    _vinbool = false;
+    _vdefbool = false;
+    _email.text = '';
+    _phoneext.text = '';
+    super.dispose();
+  }
+
+  Future<void> _loadData([int resid = 0]) async {
+
+    if (resid == 0) {
+      _resourceid.text = '';
+      _resourcename.text = '';
+      _email.text = '';
+      _phoneext.text = '';
+      _vinbool = false;
+      _vdefbool = false;
+      vchanged = false;
+      setState((){});
+
+    } else {
+      Resource res = await Resource().fetch(resid);
+      _resourceid.text = res.resourceid.toString();
+      _resourcename.text = res.resourcename.toString();
+      _email.text = res.email.toString();
+      _phoneext.text = res.phoneext.toString();
+      _vinbool = res.inactive;
+      _vdefbool = res.defaultoption;
+      _rowrevnum = res.rowrevnum;
+      vchanged = false;
+      setState((){});
+
+    }
   }
 
   @override
@@ -92,7 +124,7 @@ class _ResourcePageState extends State<ResourcePage> {
               return IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  deleteResource(widget.resource.resourceid, context);
+                  Resource().delete(int.parse(_resourceid.text), context);
                 },
               );
             },
@@ -121,10 +153,13 @@ class _ResourcePageState extends State<ResourcePage> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
+                onChanged: (value){
+                 vchanged = true;
+                },
                 validator: (value) {
                   if (vmode == 'add') {
                     if (value.isEmpty) {
-                      return 'Resource needs an Name';
+                      return 'Resource needs an name';
                     }
                   } else {
                     if (value == '') {
@@ -138,26 +173,53 @@ class _ResourcePageState extends State<ResourcePage> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Text('Inactive', style: TextStyle(
-                      color: vronly ? Colors.grey : Colors.white,
-                    ),
-
+                    child: Text(
+                      'Inactive',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: vronly
-                          ? Switch(
-                        value: vinbool,
-                        onChanged: null,
-                      )
-                          : Switch(
-                        value: vinbool,
-                        onChanged: (value) {
+                      child: Switch(
+                        value: _vinbool,
+                        onChanged: vronly ? null : (v){
                           setState(() {
-                            vinbool = value;
+                            _vinbool = v == true;
+                            vchanged = true;
+
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Default',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Switch(
+                        value: _vdefbool,
+                        onChanged: vronly ? null : (v){
+                          setState(() {
+                            _vdefbool = v == true;
+                            vchanged = true;
+
                           });
                         },
                       ),
@@ -171,23 +233,25 @@ class _ResourcePageState extends State<ResourcePage> {
                 decoration: InputDecoration(
                   labelText: 'Email',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
                 validator: (value) {
-                  if (widget.mode == 'add') {
-                    return null;
-                  } else {
-                    if (value == '') {
-                      return 'Email cannot be removed after it is created';
-                    }
-                  }
                   return null;
                 },
               ),
               TextFormField(
                 readOnly: vronly,
-                controller: _extension,
+                controller: _phoneext,
                 decoration: InputDecoration(
                   labelText: 'Extension',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
+                validator: (value){
+                  return null;
+                },
               ),
             ],
           ),
@@ -195,195 +259,35 @@ class _ResourcePageState extends State<ResourcePage> {
       ),
       floatingActionButton: (vronly == true)
           ? FloatingActionButton(
-              child: Icon(Icons.edit),
-              onPressed: () {
-                vronly = !vronly;
-                vtitle = 'Edit Resource';
-                setState(() {});
-              },
-            )
+        child: Icon(Icons.edit),
+        onPressed: () {
+          if(_formKey.currentState.validate()){
+            vronly = !vronly;
+            vtitle = 'Edit Status';
+          }
+
+          setState(() {});
+        },
+      )
           : FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                //update mode
-                if (vmode == 'edit' && vronly == false){
-
-                  updateResource(context);
-                  vtitle = 'View Resource';
-                }else if (vmode == 'add' && vronly == false){
-                  createResource(context);
-                  vtitle = 'View Resource';
-                }
+          child: Icon(Icons.check),
+          onPressed: () {
+            //update mode
+            if (vmode == 'edit' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Future(()=>Resource().update(int.parse(_resourceid.text), _resourcename.text.trim(), _vinbool, _vdefbool, _email.text.trim(), _phoneext.text.trim(), _rowrevnum, vchanged, context)).then((v)=> _loadData(int.parse(_resourceid.text)));
+                vtitle = 'View Resource';
                 vronly = !vronly;
-                setState(() {});
-              }),
+              }
+            } else if (vmode == 'add' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Resource().create(_resourcename.text.trim(), _vinbool, _vdefbool, _email.text.trim(), _phoneext.text.trim(), context);
+                vtitle = 'View Resource';
+                vronly = !vronly;
+              }
+            }
+            setState(() {});
+          }),
     );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _resourceid.text = '';
-    _resourcename.text = '';
-    _email.text = '';
-    _extension.text = '';
-    super.dispose();
-  }
-}
-
-Future<String> createResource(BuildContext context) async {
-  bool resourcecreated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final resname = _resourcename.text.toString() ?? '';
-    final resinactive = vinbool.toString();
-    final resemail = _email.text.toString() ?? '';
-    final resextension = _extension.text.toString() ?? '';
-    final rescompany = 1.toString();
-
-    final str = '{"resourcename":"' +
-        resname.trim() +
-        '",' +
-        '"inactive":"' +
-        resinactive +
-        '",' +
-        '"email":"' +
-        resemail.trim() +
-        '",' +
-        '"extension":"' +
-        resextension.trim() +
-        '",' +
-        '"company":"' +
-        rescompany +
-        '"}';
-
-    print(str);
-
-    var postresource;
-    try {
-      postresource = await http.post(
-        sci.serverreqaddress + '/resources',
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (postresource?.statusCode == 200) {
-      print('Resource: ' + _resourcename.text.toString() + ', created');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Resource' + _resourcename.text.toString() + ', created.'),
-        duration: Duration(seconds: 3),
-      ),);
-      resourcecreated = true;
-    }
-  }
-
-  if (resourcecreated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<String> updateResource(BuildContext context) async {
-  bool resourceupdated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final resid = _resourceid.text.toString();
-    final resname = _resourcename.text.toString();
-    final resinactive = vinbool.toString();
-    final resemail = _email.text.toString();
-    final resextension = _extension.text.toString();
-    final resrowrevnum = 1.toString();
-
-    ///resid cannot be updated through here
-
-    final str = '{"resourcename":"' +
-        resname.trim() +
-        '",' +
-        '"inactive":"' +
-        resinactive +
-        '",' +
-        '"email":"' +
-        resemail.trim() +
-        '",' +
-        '"extension":"' +
-        resextension.trim() +
-        '",' +
-        '"rowrevnum":"' +
-        resrowrevnum +
-        '"}';
-
-    print(str);
-
-    var putresource;
-    try {
-      putresource = await http.put(
-        sci.serverreqaddress + '/resources/' + resid,
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (putresource?.statusCode == 200) {
-      print('Resource: ' + _resourcename.text.toString() + ', updated.');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Resource' + _resourcename.text.toString() + ', updated.'),
-        duration: Duration(seconds: 3),
-      ),);
-      resourceupdated = true;
-    }
-  }
-
-  if (resourceupdated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<void> deleteResource(int resourceid, BuildContext context) async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  final url = sci.serverreqaddress + '/resources/' + resourceid.toString();
-
-  var delresource = await http.delete(url);
-  print(delresource.statusCode);
-  if (delresource.statusCode == 200) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Resource deleted'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.pop(context);
   }
 }

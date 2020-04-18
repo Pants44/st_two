@@ -1,21 +1,25 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/status.dart';
 import 'package:st_two/size_config.dart';
 
-import 'package:http/http.dart' as http;
 
-TextEditingController _statusid = TextEditingController();
-TextEditingController _statusname = TextEditingController();
-//TextEditingController _email = TextEditingController();
-//TextEditingController _extension = TextEditingController();
-//bool vinbool = false;
+//For screen
 bool vronly = false;
+bool vchanged = false;
 String vmode = '';
 String vtitle = '';
+
+//Objects
+
+//Data
+TextEditingController _statusid = TextEditingController();
+TextEditingController _statusname = TextEditingController();
+int _rowrevnum;
+bool _vinbool = false;
+bool _vdefbool = false;
+
 
 final _formKey = GlobalKey<FormState>();
 
@@ -23,16 +27,15 @@ class StatusPage extends StatefulWidget {
   final String mode;
   final bool ronly;
   final String title;
-  final Status status;
+  final int statusid;
 
   StatusPage(
       {Key key,
       @required this.mode,
       @required this.ronly,
       this.title,
-      this.status})
+      this.statusid})
       : super(key: key);
-
 
 
   @override
@@ -40,6 +43,7 @@ class StatusPage extends StatefulWidget {
 }
 
 class _StatusPageState extends State<StatusPage> {
+
   @override
   void initState() {
     // TODO: implement initState
@@ -48,20 +52,44 @@ class _StatusPageState extends State<StatusPage> {
     vmode = widget.mode;
     vronly = widget.ronly;
     vtitle = widget.title;
-
     if (vmode == 'edit') {
-      _loadData(widget.status);
+      _loadData(widget.statusid);
     } else if (vmode == 'add') {
-      _statusid.text = '';
-      _statusname.text = '';
-      //vinbool = false;
+      _loadData();
     }
   }
 
-  void _loadData(Status status) async {
-    _statusid.text = status.statusid.toString();
-    _statusname.text = status.statusname.toString();
-    //vinbool = status.inactive ? true : false;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _statusid.text = '';
+    _statusname.text = '';
+    _vinbool = false;
+    _vdefbool = false;
+    super.dispose();
+  }
+
+  Future<void> _loadData([int staid = 0]) async {
+
+    if (staid == 0) {
+      _statusid.text = '';
+      _statusname.text = '';
+      _vinbool = false;
+      _vdefbool = false;
+      vchanged = false;
+      setState((){});
+
+    } else {
+      Status sta = await Status().fetch(staid);
+      _statusid.text = sta.statusid.toString();
+      _statusname.text = sta.statusname.toString();
+      _vinbool = sta.inactive;
+      _vdefbool = sta.defaultoption;
+      _rowrevnum = sta.rowrevnum;
+      vchanged = false;
+      setState((){});
+
+    }
   }
 
   @override
@@ -85,7 +113,7 @@ class _StatusPageState extends State<StatusPage> {
               return IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  deleteStatus(widget.status.statusid, context);
+                  Status().delete(int.parse(_statusid.text), context);
                 },
               );
             },
@@ -105,15 +133,6 @@ class _StatusPageState extends State<StatusPage> {
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if (vmode == 'add') {
-                    if (value.isEmpty) {
-                      return 'Status needs an ID';
-                    }
-                  } else {
-                    if (value == '') {
-                      return 'Status ID cannot be null';
-                    }
-                  }
                   return null;
                 },
               ),
@@ -123,10 +142,13 @@ class _StatusPageState extends State<StatusPage> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
                 validator: (value) {
                   if (vmode == 'add') {
                     if (value.isEmpty) {
-                      return 'Status needs an Name';
+                      return 'Status needs an name';
                     }
                   } else {
                     if (value == '') {
@@ -136,220 +158,100 @@ class _StatusPageState extends State<StatusPage> {
                   return null;
                 },
               ),
-              /*Row(
+              Row(
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Text('Inactive', style: TextStyle(
-                      color: vronly ? Colors.grey : Colors.white,
-                    ),
-
+                    child: Text(
+                      'Inactive',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: vronly
-                          ? Switch(
-                        value: vinbool,
-                        onChanged: null,
-                      )
-                          : Switch(
-                        value: vinbool,
-                        onChanged: (value) {
+                      child: Switch(
+                        value: _vinbool,
+                        onChanged: vronly ? null : (v){
                           setState(() {
-                            vinbool = value;
+                            _vinbool = v == true;
+                            vchanged = true;
+
                           });
                         },
                       ),
                     ),
                   ),
                 ],
-              ),*/
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Default',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Switch(
+                        value: _vdefbool,
+                        onChanged: vronly ? null : (v){
+                          setState(() {
+                            _vdefbool = v == true;
+                            vchanged = true;
+
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
       floatingActionButton: (vronly == true)
           ? FloatingActionButton(
-              child: Icon(Icons.edit),
-              onPressed: () {
-                vronly = !vronly;
-                vtitle = 'Edit Status';
-                setState(() {});
-              },
-            )
+        child: Icon(Icons.edit),
+        onPressed: () {
+          if(_formKey.currentState.validate()){
+            vronly = !vronly;
+            vtitle = 'Edit Status';
+          }
+
+          setState(() {});
+        },
+      )
           : FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                //update mode
-                if (vmode == 'edit' && vronly == false){
-
-                  updateStatus(context);
-                  vtitle = 'View Status';
-                }
+          child: Icon(Icons.check),
+          onPressed: () {
+            //update mode
+            if (vmode == 'edit' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Future(()=>Status().update(int.parse(_statusid.text), _statusname.text.trim(), _vinbool, _vdefbool, _rowrevnum, vchanged, context)).then((v)=> _loadData(int.parse(_statusid.text)));
+                vtitle = 'View Status';
                 vronly = !vronly;
-                setState(() {});
-              }),
+              }
+            } else if (vmode == 'add' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Status().create(_statusname.text.trim(),
+                    _vinbool, _vdefbool, context);
+                vtitle = 'View Status';
+                vronly = !vronly;
+              }
+            }
+            setState(() {});
+          }),
     );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    _statusid.text = '';
-    _statusname.text = '';
-    //vinbool = '';
-    super.dispose();
-  }
-}
-
-Future<String> createStatus(BuildContext context) async {
-  bool statuscreated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final staid = _statusid.text.toString() ?? '';
-    final staname = _statusname.text.toString() ?? '';
-    //final stainactive = vinbool.toString();
-    final starowrevnum = 1.toString();
-    final stacompany = 1.toString();
-
-    final str = '{"statusid":"' +
-        staid.trim() +
-        '",' +
-        '"statusname":"' +
-        staname.trim() +
-        //'",' +
-        //'"inactive":"' +
-        //stainactive +
-        '",' +
-        '"rowrevnum":"' +
-        starowrevnum +
-        '",' +
-        '"company":"' +
-        stacompany +
-        '"}';
-
-    print(str);
-
-    var poststatus;
-    try {
-      poststatus = await http.post(
-        sci.serverreqaddress + '/statuses',
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (poststatus?.statusCode == 200) {
-      print('Status: ' + _statusname.text.toString() + ', created');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Status' + _statusname.text.toString() + ', created.'),
-        duration: Duration(seconds: 3),
-      ),);
-      statuscreated = true;
-    }
-  }
-
-  if (statuscreated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<String> updateStatus(BuildContext context) async {
-  bool statusupdated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final staid = _statusid.text.toString();
-    final staname = _statusname.text.toString();
-    //final stainactive = vinbool.toString();
-    final starowrevnum = 1.toString();
-
-    ///staid cannot be updated through here
-
-    final str = '{"statusname":"' +
-        staname.trim() +
-        '",' +
-        '"inactive":"' +
-        //stainactive +
-        '",' +
-        '"rowrevnum":"' +
-        starowrevnum +
-        '"}';
-
-    print(str);
-
-    var putstatus;
-    try {
-      putstatus = await http.put(
-        sci.serverreqaddress + '/statuses/' + staid,
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (putstatus?.statusCode == 200) {
-      print('Status: ' + _statusname.text.toString() + ', updated.');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Status' + _statusname.text.toString() + ', updated.'),
-        duration: Duration(seconds: 3),
-      ),);
-      statusupdated = true;
-    }
-  }
-
-  if (statusupdated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<void> deleteStatus(int statusid, BuildContext context) async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  final url = sci.serverreqaddress + '/statuses/' + statusid.toString();
-
-  var poststatus = await http.delete(url);
-  print(poststatus.statusCode);
-  if (poststatus.statusCode == 200) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Status deleted'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
   }
 }

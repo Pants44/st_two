@@ -1,12 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
-import 'package:st_two/screens/skill.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/skill.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/skill.dart';
 
 class SkillListPage extends StatefulWidget {
   SkillListPage({Key key, this.title}) : super(key: key);
@@ -56,81 +53,93 @@ class _SkillListPageState extends State<SkillListPage> {
           onChanged: (text) {},
         ),
       ),
-      body: FutureBuilder<SkillList>(
-        future: fetchSkills(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
+      body: FutureBuilder<int>(
+        future: Session().getCompany(),
+        builder: (context, snapshot){
+          if(snapshot.connectionState == ConnectionState.done){
+            if(snapshot.hasError){
               print(snapshot.error);
             }
-            return snapshot.hasData
-                ? ListView.builder(
-                    itemCount: snapshot.data.skills.length,
+            return snapshot.hasData ? FutureBuilder<SkillList>(
+              future: SkillList().fetch(snapshot.data),
+              builder: (context, snapshottwo) {
+                if (snapshottwo.connectionState == ConnectionState.done) {
+                  if (snapshottwo.hasError) {
+                    print(snapshottwo.error);
+                  }
+                  return snapshottwo.hasData
+                      ? ListView.builder(
+                    itemCount: snapshottwo.data.skills.length,
                     itemBuilder: (context, index) {
                       return filter == null || filter == ""
                           ? GestureDetector(
-                              onTap: () {
-                                print('Open Skill ' +
-                                    snapshot.data.skills[index].skillid
-                                        .toString());
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SkillPage(
-                                      mode: 'edit',
-                                      ronly: true,
-                                      title: 'View Skill',
-                                      skill: snapshot.data.skills[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                elevation: 5,
-                                child: ListTile(
-                                  title: Text(snapshot
-                                      .data.skills[index].skillname
-                                      .toString()),
-                                ),
+                        onTap: () {
+                          print('Open Skill ' +
+                              snapshottwo.data.skills[index].skillid
+                                  .toString());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SkillPage(
+                                mode: 'edit',
+                                ronly: true,
+                                title: 'View Skill',
+                                skillid: snapshottwo.data.skills[index].skillid,
                               ),
-                            )
-                          : snapshot.data.skills[index].skillname
-                                      .contains(filter.toLowerCase())
-                              ? GestureDetector(
-                                  onTap: () {
-                                    print('Open Skill ' +
-                                        snapshot
-                                            .data.skills[index].skillname
-                                            .toString());
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SkillPage(
-                                            mode: 'edit',
-                                            ronly: true,
-                                            title: 'Skill ' +
-                                                snapshot.data.skills[index]
-                                                    .skillname
-                                                    .toString(),
-                                            skill:
-                                                snapshot.data.skills[index]),
-                                      ),
-                                    );
-                                  },
-                                  child: Card(
-                                    elevation: 5,
-                                    child: ListTile(
-                                      title: Text(snapshot
-                                          .data.skills[index].skillname
-                                          .toString()),
-                                    ),
-                                  ),
-                                )
-                              : Container();
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 5,
+                          child: ListTile(
+                            title: Text(snapshottwo
+                                .data.skills[index].skillname
+                                .toString()),
+                          ),
+                        ),
+                      )
+                          : snapshottwo.data.skills[index].skillname
+                          .contains(filter.toLowerCase())
+                          ? GestureDetector(
+                        onTap: () {
+                          print('Open Skill ' +
+                              snapshottwo
+                                  .data.skills[index].skillname
+                                  .toString());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SkillPage(
+                                  mode: 'edit',
+                                  ronly: true,
+                                  title: 'Skill ' +
+                                      snapshottwo.data.skills[index]
+                                          .skillname
+                                          .toString(),
+                                  skillid:
+                                  snapshottwo.data.skills[index].skillid),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 5,
+                          child: ListTile(
+                            title: Text(snapshottwo
+                                .data.skills[index].skillname
+                                .toString()),
+                          ),
+                        ),
+                      )
+                          : Container();
                     },
                   )
-                : Center(child: CircularProgressIndicator());
-          } else {
+                      : Center(child: CircularProgressIndicator());
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ) : Center(child: CircularProgressIndicator());
+          }else{
             return Center(child: CircularProgressIndicator());
           }
         },
@@ -152,14 +161,4 @@ class _SkillListPageState extends State<SkillListPage> {
       ),
     );
   }
-}
-
-Future<SkillList> fetchSkills() async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  var jsonString = await http.get(sci.serverreqaddress + "/skills");
-  final jsonResponse = json.decode(jsonString.body.toString());
-  SkillList skilllist = new SkillList.fromJson(jsonResponse);
-  return skilllist;
 }

@@ -1,21 +1,24 @@
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processtickets.dart';
-import 'package:st_two/data/processcustomers.dart';
+import 'package:st_two/data/discoverymethod.dart';
+
 import 'package:st_two/size_config.dart';
 
-import 'package:http/http.dart' as http;
-
-TextEditingController _dmid = TextEditingController();
-TextEditingController _discoverymethod = TextEditingController();
-int _rowrevnum, _company;
-bool vinbool = false;
+//Screen
 bool vronly = false;
+bool vchanged = false;
 String vmode = '';
 String vtitle = '';
+
+//Objects
+
+//Data
+TextEditingController _dmid = TextEditingController();
+TextEditingController _discoverymethod = TextEditingController();
+int _rowrevnum;
+bool _vinbool = false;
+bool _vdefbool = false;
 
 final _formKey = GlobalKey<FormState>();
 
@@ -23,14 +26,14 @@ class DiscoveryMethodPage extends StatefulWidget {
   final String mode;
   final bool ronly;
   final String title;
-  final DiscoveryMethod dm;
+  final int dmid;
 
   DiscoveryMethodPage(
       {Key key,
       @required this.mode,
       @required this.ronly,
       this.title,
-      this.dm})
+      this.dmid})
       : super(key: key);
 
   @override
@@ -49,25 +52,38 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
     vtitle = widget.title;
 
     if (vmode == 'edit') {
-      _loadData(widget.dm);
+      _loadData(widget.dmid);
     } else if (vmode == 'add') {
-      _dmid.text = '';
-      _discoverymethod.text = '';
-      //vinbool = false;
+      _loadData();
     }
   }
 
-  void _loadData(DiscoveryMethod dm) async {
-    _dmid.text = dm.dmid.toString();
-    _discoverymethod.text = dm.discoverymethod.toString();
-    vinbool = dm.inactive;
-    _rowrevnum = dm.rowrevnum;
-    _company = dm.company;
+  Future<void> _loadData([int dmid = 0]) async {
+
+    if (dmid == 0) {
+      _dmid.text = '';
+      _discoverymethod.text = '';
+      _vinbool = false;
+      _vdefbool = false;
+      vchanged = false;
+      setState((){});
+
+    } else {
+      DiscoveryMethod dm = await DiscoveryMethod().fetch(dmid);
+      _dmid.text = dm.dmid.toString();
+      _discoverymethod.text = dm.discoverymethod;
+      _vinbool = dm.inactive;
+      _vdefbool = dm.defaultoption;
+      _rowrevnum = dm.rowrevnum;
+      vchanged = false;
+      setState((){});
+
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    //SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -86,7 +102,7 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
               return IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  deleteDiscoveryMethod(widget.dm.dmid, context);
+                  DiscoveryMethod().delete(int.parse(_dmid.text), context);
                 },
               );
             },
@@ -106,15 +122,6 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if (vmode == 'add') {
-                    if (value.isEmpty) {
-                      return 'Discovery Method needs an ID';
-                    }
-                  } else {
-                    if (value == '') {
-                      return 'Discovery Method name cannot be blank';
-                    }
-                  }
                   return null;
                 },
               ),
@@ -124,10 +131,13 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
                 validator: (value) {
                   if (vmode == 'add') {
                     if (value.isEmpty) {
-                      return 'Discovery Method needs an Name';
+                      return 'Discovery Method needs an name';
                     }
                   } else {
                     if (value == '') {
@@ -137,65 +147,102 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
                   return null;
                 },
               ),
-              /*Row(
+              Row(
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Text('Inactive', style: TextStyle(
-                      color: vronly ? Colors.grey : Colors.white,
-                    ),
-
+                    child: Text(
+                      'Inactive',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: vronly
-                          ? Switch(
-                        value: vinbool,
-                        onChanged: null,
-                      )
-                          : Switch(
-                        value: vinbool,
-                        onChanged: (value) {
+                      child: Switch(
+                        value: _vinbool,
+                        onChanged: vronly ? null : (v){
                           setState(() {
-                            vinbool = value;
+                            _vinbool = v == true;
+                            vchanged = true;
+
                           });
                         },
                       ),
                     ),
                   ),
                 ],
-              ),*/
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Default',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Switch(
+                        value: _vdefbool,
+                        onChanged: vronly ? null : (v){
+                          setState(() {
+                            _vdefbool = v == true;
+                            vchanged = true;
+
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
       floatingActionButton: (vronly == true)
           ? FloatingActionButton(
-              child: Icon(Icons.edit),
-              onPressed: () {
-                vronly = !vronly;
-                vtitle = 'Edit Discovery Method';
-                setState(() {});
-              },
-            )
+        child: Icon(Icons.edit),
+        onPressed: () {
+          vronly = !vronly;
+          vtitle = 'Edit Industry';
+          setState(() {});
+        },
+      )
           : FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                //update mode
-                if (vmode == 'edit' && vronly == false){
+          child: Icon(Icons.check),
+          onPressed: () {
+            //update mode
+            if (vmode == 'edit' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                print(_dmid.text);
+                print(_discoverymethod.text);
+                print(_vinbool.toString());
+                print(_rowrevnum.toString());
+                print(vchanged.toString());
+                Future(()=>DiscoveryMethod().update(int.parse(_dmid.text), _discoverymethod.text.trim(), _vinbool, _vdefbool, _rowrevnum, vchanged, context)).then((v)=> _loadData(int.parse(_dmid.text)));
+                vtitle = 'View Discovery Method';
 
-                  updateDiscoveryMethod(int.parse(_dmid.text), _company, context);
-                  vtitle = 'View Discovery Method';
-                } else if (vmode == 'add' && vronly == true){
-                  createDiscoveryMethod(context);
-                  vtitle = 'View Discovery Method';
-                }
-                vronly = !vronly;
-                setState(() {});
-              }),
+              }
+            } else if (vmode == 'add' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                DiscoveryMethod().create(_discoverymethod.text.trim(),
+                    _vinbool, _vdefbool, context);
+                vtitle = 'View Discovery Method';
+              }
+            }
+            vronly = !vronly;
+            setState(() {});
+          }),
     );
   }
 
@@ -204,150 +251,8 @@ class _DiscoveryMethodPageState extends State<DiscoveryMethodPage> {
     // TODO: implement dispose
     _dmid.text = '';
     _discoverymethod.text = '';
-    //vinbool = '';
+    _vinbool = false;
+    _vdefbool = false;
     super.dispose();
-  }
-}
-
-Future<String> createDiscoveryMethod(BuildContext context) async {
-  bool discoverymethodcreated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final dmname = _discoverymethod.text.toString() ?? '';
-    final stainactive = vinbool.toString();
-    final dmcompany = _company.toString();
-
-    final str = '{"discoverymethod":"' +
-        dmname.trim() +
-        '",' +
-        '"inactive":"' +
-        stainactive +
-        '",' +
-        '"company":"' +
-        dmcompany +
-        '"}';
-
-    print(str);
-
-    var postdm;
-    try {
-      postdm = await http.post(
-        sci.serverreqaddress + '/discoverymethods',
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (postdm?.statusCode == 200) {
-      print('Discovery Method: ' + _discoverymethod.text.toString() + ', created');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Discovery Method' + _discoverymethod.text.toString() + ', created.'),
-        duration: Duration(seconds: 3),
-      ),);
-      discoverymethodcreated = true;
-    }
-  }
-
-  if (discoverymethodcreated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<String> updateDiscoveryMethod(int dmid, int comp, BuildContext context) async {
-  bool dmupdated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final discoverymethod = _discoverymethod.text.toString();
-    final stainactive = vinbool.toString();
-    final dmrowrevnum = _rowrevnum.toString();
-    final company = comp;
-
-    ///staid cannot be updated through here
-
-    final str = '{"discoverymethod":"' +
-        discoverymethod.trim() +
-        '",' +
-        '"inactive":"' +
-        stainactive +
-        '",' +
-        '"rowrevnum":"' +
-        dmrowrevnum +
-        '",' +
-        '"company":"' +
-        company.toString() + '"}';
-
-    print(str);
-
-    var putdm;
-    try {
-      putdm = await http.put(
-        sci.serverreqaddress + '/discoverymethods/' + dmid.toString(),
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (putdm?.statusCode == 200) {
-      print('Discovery Method: ' + _discoverymethod.text.toString() + ', updated.');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Discovery Method' + _discoverymethod.text.toString() + ', updated.'),
-        duration: Duration(seconds: 3),
-      ),);
-      dmupdated = true;
-    }
-  }
-
-  if (dmupdated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<void> deleteDiscoveryMethod(int dmid, BuildContext context) async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  final url = sci.serverreqaddress + '/discoverymethods/' + dmid.toString();
-
-  var postdm = await http.delete(url);
-  print(postdm.statusCode);
-  if (postdm.statusCode == 200) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Discovery Method deleted'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
   }
 }

@@ -26,9 +26,9 @@ import 'dart:convert';
 
 void main() => runApp(ThemeSwitcher());
 
-String companyfilter;
+final sci = ServerConnectionInfo();
 
-String _companySelection = '4';
+String _companySelection = '1';
 
 class ThemeSwitcher extends StatelessWidget {
   // This widget is the root of your application.
@@ -87,15 +87,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController tecLogin = TextEditingController();
 
-  final sci = ServerConnectionInfo();
-  final session = Session();
-
   List<DropdownMenuItem<String>> companydropdown = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    sci.getServerInfo();
   }
 
   @override
@@ -197,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(fontSize: 18),
                               ),
                               onPressed: (){
-                                session.setCurCompany(int.parse(_companySelection));
+                                Session().setCurCompany(int.parse(_companySelection));
                                 Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(
@@ -318,7 +316,7 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   onPressed: () {
-                                    session.setCurCompany(int.parse(_companySelection));
+                                    Session().setCurCompany(int.parse(_companySelection));
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -367,22 +365,30 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<List<DropdownMenuItem<String>>> loadCompanyDropdown(BuildContext context) async {
+
     await sci.getServerInfo();
+    print('loadcompanydrop' + sci.serverreqaddress);
 
-    if (companydropdown.length < 1) {
-      var jsonString = await http.get(sci.serverreqaddress + '/companydrop');
-      final jsonResponse = json.decode(jsonString.body.toString());
-      CompanyListdd companylist = new CompanyListdd.fromJson(jsonResponse);
+    try{
+      if (companydropdown.length < 1) {
+        companydropdown.clear();
+        var jsonString = await http.get(sci.serverreqaddress + '/companydrop');
+        final jsonResponse = json.decode(jsonString.body.toString());
+        CompanyListdd companylist = new CompanyListdd.fromJson(jsonResponse);
 
-      for (var i = 0; i < companylist.companies.length; i++) {
-        companydropdown.add(
-          DropdownMenuItem(
-            value: companylist.companies[i].id,
-            child: Text(companylist.companies[i].selection.toString()),
-          ),
-        );
+        for (var i = 0; i < companylist.companies.length; i++) {
+          companydropdown.add(
+            DropdownMenuItem(
+              value: companylist.companies[i].id,
+              child: Text(companylist.companies[i].selection.toString()),
+            ),
+          );
+        }
       }
+    }catch(e){
+      print(e);
     }
+    print(companydropdown.length);
     return companydropdown;
   }
 }

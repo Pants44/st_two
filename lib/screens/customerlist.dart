@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processcustomers.dart';
-import 'package:st_two/screens/customer.dart';
+import 'package:st_two/data/customer.dart';
 import 'package:st_two/data/processdropdowns.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/customer.dart';
 
 enum ConfirmAction { CANCEL, ACCEPT }
 
@@ -80,7 +78,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
         ],
       ),
       body: FutureBuilder<CustomerList>(
-        future: loadCustomerList(),
+        future: CustomerList().fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -99,7 +97,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     builder: (context) => CustomerPage(
                                       mode: 'edit',
                                       title: 'View Customer',
-                                      customer: snapshot.data.customers[index],
+                                      customerid: snapshot.data.customers[index].customerid,
                                       ronly: true,
                                     ),
                                   ),
@@ -127,8 +125,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                         builder: (context) => CustomerPage(
                                           mode: 'edit',
                                           title: 'View Customer',
-                                          customer:
-                                              snapshot.data.customers[index],
+                                          customerid:
+                                              snapshot.data.customers[index].customerid,
                                           ronly: true,
                                         ),
                                       ),
@@ -157,7 +155,18 @@ class _CustomerListPageState extends State<CustomerListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerPage(
+                mode: 'add',
+                ronly: false,
+                title: 'Add Customer',
+              ),
+            ),
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -226,24 +235,6 @@ class _CustomerListPageState extends State<CustomerListPage> {
         child: Text(customerstatus.customerstatusi[i].id.toString()),
       ));
     }
-  }
-
-  Future<CustomerList> loadCustomerList() async {
-    final sci = ServerConnectionInfo();
-    await sci.getServerInfo();
-
-    var jsonString = await http.get(sci.serverreqaddress + '/customers');
-    final jsonResponse = json.decode(jsonString.body.toString());
-    CustomerList customerlist = new CustomerList.fromJson(jsonResponse);
-
-    // TODO Complicated because you chose a weird way to look at a bunch of booleans
-
-    /*if(statusfilter != null){
-      customerlist.customers.removeWhere((item) => item.erpversion != versionfilter);
-    }*/
-
-    print('Customers list loaded for Customer List Screen');
-    return customerlist;
   }
 }
 

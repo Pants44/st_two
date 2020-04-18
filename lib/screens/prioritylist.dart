@@ -1,12 +1,13 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
-import 'package:st_two/screens/priority.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/priority.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/priority.dart';
+
+int comp;
+final prioritylist = PriorityList();
+final session = Session();
 
 class PriorityListPage extends StatefulWidget {
   PriorityListPage({Key key, this.title}) : super(key: key);
@@ -57,7 +58,7 @@ class _PriorityListPageState extends State<PriorityListPage> {
         ),
       ),
       body: FutureBuilder<PriorityList>(
-        future: fetchPriorities(),
+        future: PriorityList().fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -71,7 +72,8 @@ class _PriorityListPageState extends State<PriorityListPage> {
                           ? GestureDetector(
                               onTap: () {
                                 print('Open Priority ' +
-                                    snapshot.data.priorities[index].priorityid
+                                    snapshot
+                                        .data.priorities[index].priorityid
                                         .toString());
                                 Navigator.push(
                                   context,
@@ -80,7 +82,8 @@ class _PriorityListPageState extends State<PriorityListPage> {
                                       mode: 'edit',
                                       ronly: true,
                                       title: 'View Priority',
-                                      priority: snapshot.data.priorities[index],
+                                      priorityid: snapshot
+                                          .data.priorities[index].priorityid,
                                     ),
                                   ),
                                 );
@@ -95,7 +98,7 @@ class _PriorityListPageState extends State<PriorityListPage> {
                               ),
                             )
                           : snapshot.data.priorities[index].priorityname
-                                      .contains(filter.toLowerCase())
+                                  .contains(filter.toLowerCase())
                               ? GestureDetector(
                                   onTap: () {
                                     print('Open Priority ' +
@@ -109,11 +112,13 @@ class _PriorityListPageState extends State<PriorityListPage> {
                                             mode: 'edit',
                                             ronly: true,
                                             title: 'Priority ' +
-                                                snapshot.data.priorities[index]
+                                                snapshot
+                                                    .data
+                                                    .priorities[index]
                                                     .priorityname
                                                     .toString(),
-                                            priority:
-                                                snapshot.data.priorities[index]),
+                                            priorityid: snapshot.data
+                                                .priorities[index].priorityid),
                                       ),
                                     );
                                   },
@@ -152,14 +157,4 @@ class _PriorityListPageState extends State<PriorityListPage> {
       ),
     );
   }
-}
-
-Future<PriorityList> fetchPriorities() async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  var jsonString = await http.get(sci.serverreqaddress + "/priorities");
-  final jsonResponse = json.decode(jsonString.body.toString());
-  PriorityList priorities = new PriorityList.fromJson(jsonResponse);
-  return priorities;
 }

@@ -1,12 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:st_two/data/connect.dart';
-import 'package:st_two/screens/resource.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/resource.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/resource.dart';
 
 class ResourceListPage extends StatefulWidget {
   ResourceListPage({Key key, this.title}) : super(key: key);
@@ -56,8 +52,8 @@ class _ResourceListPageState extends State<ResourceListPage> {
           onChanged: (text) {},
         ),
       ),
-      body: FutureBuilder<ResourcesList>(
-        future: fetchResources(),
+      body: FutureBuilder<ResourceList>(
+        future: ResourceList().fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -80,7 +76,8 @@ class _ResourceListPageState extends State<ResourceListPage> {
                                       mode: 'edit',
                                       ronly: true,
                                       title: 'View Resource',
-                                      resource: snapshot.data.resources[index],
+                                      resourceid: snapshot
+                                          .data.resources[index].resourceid,
                                     ),
                                   ),
                                 );
@@ -115,11 +112,13 @@ class _ResourceListPageState extends State<ResourceListPage> {
                                             mode: 'edit',
                                             ronly: true,
                                             title: 'Resource ' +
-                                                snapshot.data.resources[index]
+                                                snapshot
+                                                    .data
+                                                    .resources[index]
                                                     .resourcename
                                                     .toString(),
-                                            resource:
-                                                snapshot.data.resources[index]),
+                                            resourceid: snapshot.data
+                                                .resources[index].resourceid),
                                       ),
                                     );
                                   },
@@ -161,14 +160,4 @@ class _ResourceListPageState extends State<ResourceListPage> {
       ),
     );
   }
-}
-
-Future<ResourcesList> fetchResources() async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  var jsonString = await http.get(sci.serverreqaddress + "/resources");
-  final jsonResponse = json.decode(jsonString.body.toString());
-  ResourcesList resources = new ResourcesList.fromJson(jsonResponse);
-  return resources;
 }

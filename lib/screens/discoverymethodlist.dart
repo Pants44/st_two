@@ -1,12 +1,12 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
-import 'package:st_two/screens/discoverymethod.dart';
-import 'package:st_two/data/processcustomers.dart';
+import 'package:st_two/data/discoverymethod.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:st_two/screens/discoverymethod.dart';
+
+final dmlist = DiscoveryMethodList();
+final session = Session();
 
 class DiscoveryMethodListPage extends StatefulWidget {
   DiscoveryMethodListPage({Key key, this.title}) : super(key: key);
@@ -14,7 +14,8 @@ class DiscoveryMethodListPage extends StatefulWidget {
   final title;
 
   @override
-  _DiscoveryMethodListPageState createState() => _DiscoveryMethodListPageState();
+  _DiscoveryMethodListPageState createState() =>
+      _DiscoveryMethodListPageState();
 }
 
 class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
@@ -57,7 +58,7 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
         ),
       ),
       body: FutureBuilder<DiscoveryMethodList>(
-        future: fetchDiscoveryMethods(),
+        future: dmlist.fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -71,7 +72,8 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
                           ? GestureDetector(
                               onTap: () {
                                 print('Open Discovery Method ' +
-                                    snapshot.data.discoverymethods[index].dmid
+                                    snapshot
+                                        .data.discoverymethods[index].dmid
                                         .toString());
                                 Navigator.push(
                                   context,
@@ -80,7 +82,8 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
                                       mode: 'edit',
                                       ronly: true,
                                       title: 'View Discovery Method',
-                                      dm: snapshot.data.discoverymethods[index],
+                                      dmid: snapshot
+                                          .data.discoverymethods[index].dmid,
                                     ),
                                   ),
                                 );
@@ -88,32 +91,38 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
                               child: Card(
                                 elevation: 5,
                                 child: ListTile(
-                                  title: Text(snapshot
-                                      .data.discoverymethods[index].discoverymethod
+                                  title: Text(snapshot.data
+                                      .discoverymethods[index].discoverymethod
                                       .toString()),
                                 ),
                               ),
                             )
-                          : snapshot.data.discoverymethods[index].discoverymethod
-                                      .contains(filter.toLowerCase())
+                          : snapshot
+                                  .data.discoverymethods[index].discoverymethod
+                                  .contains(filter.toLowerCase())
                               ? GestureDetector(
                                   onTap: () {
                                     print('Open Discovery Method ' +
-                                        snapshot
-                                            .data.discoverymethods[index].discoverymethod
+                                        snapshot.data.discoverymethods[index]
+                                            .discoverymethod
                                             .toString());
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => DiscoveryMethodPage(
-                                            mode: 'edit',
-                                            ronly: true,
-                                            title: 'Discovery Method ' +
-                                                snapshot.data.discoverymethods[index]
-                                                    .discoverymethod
-                                                    .toString(),
-                                            dm:
-                                                snapshot.data.discoverymethods[index]),
+                                        builder: (context) =>
+                                            DiscoveryMethodPage(
+                                                mode: 'edit',
+                                                ronly: true,
+                                                title: 'Discovery Method ' +
+                                                    snapshot
+                                                        .data
+                                                        .discoverymethods[index]
+                                                        .discoverymethod
+                                                        .toString(),
+                                                dmid: snapshot
+                                                    .data
+                                                    .discoverymethods[index]
+                                                    .dmid),
                                       ),
                                     );
                                   },
@@ -121,7 +130,9 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
                                     elevation: 5,
                                     child: ListTile(
                                       title: Text(snapshot
-                                          .data.discoverymethods[index].discoverymethod
+                                          .data
+                                          .discoverymethods[index]
+                                          .discoverymethod
                                           .toString()),
                                     ),
                                   ),
@@ -152,14 +163,4 @@ class _DiscoveryMethodListPageState extends State<DiscoveryMethodListPage> {
       ),
     );
   }
-}
-
-Future<DiscoveryMethodList> fetchDiscoveryMethods() async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  var jsonString = await http.get(sci.serverreqaddress + "/discoverymethods");
-  final jsonResponse = json.decode(jsonString.body.toString());
-  DiscoveryMethodList dmlist = new DiscoveryMethodList.fromJson(jsonResponse);
-  return dmlist;
 }

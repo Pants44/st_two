@@ -1,3 +1,38 @@
+class DDList {
+  final List<DD> list;
+
+  DDList({
+    this.list
+  });
+
+  factory DDList.fromJson(List<dynamic> parseJson){
+    List<DD> list = new List<DD>();
+    list = parseJson.map((i)=>DD.fromJson(i)).toList();
+
+    return new DDList(
+        list: list
+    );
+  }
+}
+
+class DD {
+  final String id, selection, defaultoption;
+
+  DD({
+    this.id,
+    this.selection,
+    this.defaultoption,
+  });
+
+  factory DD.fromJson(Map<String, dynamic> parsedJson){
+    return DD(
+      id: parsedJson['id'],
+      selection: parsedJson['selection'],
+      defaultoption: parsedJson['defaultoption'],
+    );
+  }
+}
+
 class CompanyListdd {
   final List<Companydd> companies;
 

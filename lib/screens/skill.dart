@@ -1,21 +1,25 @@
-import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
-import 'package:st_two/data/processtickets.dart';
-import 'package:st_two/data/processcustomers.dart';
+import 'package:st_two/data/skill.dart';
 import 'package:st_two/size_config.dart';
 
-import 'package:http/http.dart' as http;
+//For screen
+bool vronly = false;
+bool vchanged = false;
+String vmode = '';
+String vtitle = '';
 
+//Objects
+final session = Session();
+
+//Data
 TextEditingController _skillid = TextEditingController();
 TextEditingController _skillname = TextEditingController();
 TextEditingController _description = TextEditingController();
-bool vinbool = false;
-bool vronly = false;
-String vmode = '';
-String vtitle = '';
+int _rowrevnum, _company;
+bool _vinbool = false;
 
 final _formKey = GlobalKey<FormState>();
 
@@ -23,14 +27,14 @@ class SkillPage extends StatefulWidget {
   final String mode;
   final bool ronly;
   final String title;
-  final Skill skill;
+  final int skillid;
 
   SkillPage(
       {Key key,
       @required this.mode,
       @required this.ronly,
       this.title,
-      this.skill})
+      this.skillid})
       : super(key: key);
 
   @override
@@ -49,12 +53,9 @@ class _SkillPageState extends State<SkillPage> {
     vtitle = widget.title;
 
     if (vmode == 'edit') {
-      _loadData(widget.skill);
+      _loadData(widget.skillid);
     } else if (vmode == 'add') {
-      _skillid.text = '';
-      _skillname.text = '';
-      _description.text = '';
-      vinbool = false;
+      _loadData();
     }
   }
 
@@ -64,15 +65,35 @@ class _SkillPageState extends State<SkillPage> {
     _skillid.text = '';
     _skillname.text = '';
     _description.text = '';
-    vinbool = false;
+    _vinbool = false;
     super.dispose();
   }
 
-  void _loadData(Skill skill) async {
-    _skillid.text = skill.skillid.toString();
-    _skillname.text = skill.skillname.toString();
-    _description.text = skill.description.toString();
-    vinbool = skill.inactive;
+  Future<void> _loadData([int skiid = 0]) async {
+
+    int comp = await session.getCompany();
+
+    if (skiid == 0) {
+      _skillid.text = '';
+      _skillname.text = '';
+      _description.text = '';
+      _vinbool = false;
+      _company = comp;
+      vchanged = false;
+      setState((){});
+
+    } else {
+      Skill ski = await Skill().fetch(comp, skiid);
+      _skillid.text = ski.skillid.toString();
+      _skillname.text = ski.skillname.toString();
+      _description.text = ski.description.toString();
+      _vinbool = ski.inactive;
+      _rowrevnum = ski.rowrevnum;
+      _company = ski.company;
+      vchanged = false;
+      setState((){});
+
+    }
   }
 
   @override
@@ -96,7 +117,7 @@ class _SkillPageState extends State<SkillPage> {
               return IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  deleteSkill(widget.skill.skillid, context);
+                  Skill().delete(_company, int.parse(_skillid.text), context);
                 },
               );
             },
@@ -116,15 +137,6 @@ class _SkillPageState extends State<SkillPage> {
                   labelText: 'ID',
                 ),
                 validator: (value) {
-                  if (vmode == 'add') {
-                    if (value.isEmpty) {
-                      return 'Skill needs an ID';
-                    }
-                  } else {
-                    if (value == '') {
-                      return 'Skill name cannot be blank';
-                    }
-                  }
                   return null;
                 },
               ),
@@ -134,10 +146,13 @@ class _SkillPageState extends State<SkillPage> {
                 decoration: InputDecoration(
                   labelText: 'Name',
                 ),
+                onChanged: (v){
+                  vchanged = true;
+                },
                 validator: (value) {
                   if (vmode == 'add') {
                     if (value.isEmpty) {
-                      return 'Skill needs an Name';
+                      return 'Skill needs an name';
                     }
                   } else {
                     if (value == '') {
@@ -153,6 +168,9 @@ class _SkillPageState extends State<SkillPage> {
                 decoration: InputDecoration(
                   labelText: 'Description',
                 ),
+                onChanged: (value){
+                  vchanged = true;
+                },
                 validator: (value) {
                   return null;
                 },
@@ -161,26 +179,24 @@ class _SkillPageState extends State<SkillPage> {
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Text('Inactive', style: TextStyle(
-                      color: vronly ? Colors.grey : Colors.white,
-                    ),
-
+                    child: Text(
+                      'Inactive',
+                      style: TextStyle(
+                        color: vronly ? Colors.grey : Colors.white,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: vronly
-                          ? Switch(
-                        value: vinbool,
-                        onChanged: null,
-                      )
-                          : Switch(
-                        value: vinbool,
-                        onChanged: (value) {
+                      child: Switch(
+                        value: _vinbool,
+                        onChanged: vronly ? null : (v){
                           setState(() {
-                            vinbool = value;
+                            _vinbool = v == true;
+                            vchanged = true;
+
                           });
                         },
                       ),
@@ -194,182 +210,33 @@ class _SkillPageState extends State<SkillPage> {
       ),
       floatingActionButton: (vronly == true)
           ? FloatingActionButton(
-              child: Icon(Icons.edit),
-              onPressed: () {
-                vronly = !vronly;
-                vtitle = 'Edit Skill';
-                setState(() {});
-              },
-            )
+        child: Icon(Icons.edit),
+        onPressed: () {
+          vronly = !vronly;
+          vtitle = 'Edit Skill';
+          setState(() {});
+        },
+      )
           : FloatingActionButton(
-              child: Icon(Icons.check),
-              onPressed: () {
-                //update mode
-                if (vmode == 'edit' && vronly == false){
+          child: Icon(Icons.check),
+          onPressed: () {
+            //update mode
+            if (vmode == 'edit' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Future(()=>Skill().update(_company, int.parse(_skillid.text), _skillname.text.trim(), _description.text.trim(), _vinbool, _rowrevnum, vchanged, context)).then((v)=> _loadData(int.parse(_skillid.text)));
+                vtitle = 'View Skill';
 
-                  updateSkill(context);
-                  vtitle = 'View Skill';
-                }
-                vronly = !vronly;
-                setState(() {});
-              }),
+              }
+            } else if (vmode == 'add' && vronly == false) {
+              if (_formKey.currentState.validate()) {
+                Skill().create(_company, _skillname.text.trim(), _description.text.trim(),
+                    _vinbool, context);
+                vtitle = 'View Skill';
+              }
+            }
+            vronly = !vronly;
+            setState(() {});
+          }),
     );
-  }
-}
-
-Future<String> createSkill(BuildContext context) async {
-  bool skillcreated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final skillid = _skillid.text.toString() ?? '';
-    final skillname = _skillname.text.toString() ?? '';
-    final description = _description.text.toString() ?? '';
-    final skillinactive = vinbool.toString();
-    final skillrowrevnum = 1.toString();
-    final skillcompany = 1.toString();
-
-    final str = '{"skillid":"' +
-        skillid.trim() +
-        '",' +
-        '"skillname":"' +
-        skillname.trim() +
-        '",' +
-        '"description":"' +
-        description.trim() +
-        '",' +
-        '"inactive":"' +
-        skillinactive +
-        '",' +
-        '"rowrevnum":"' +
-        skillrowrevnum +
-        '",' +
-        '"company":"' +
-        skillcompany +
-        '"}';
-
-    print(str);
-
-    var postskill;
-    try {
-      postskill = await http.post(
-        sci.serverreqaddress + '/skills',
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (postskill?.statusCode == 200) {
-      print('Skill: ' + _skillname.text.toString() + ', created');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Skill: ' + _skillname.text.toString() + ', created.'),
-        duration: Duration(seconds: 3),
-      ),);
-      skillcreated = true;
-    }
-  }
-
-  if (skillcreated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<String> updateSkill(BuildContext context) async {
-  bool skillupdated;
-
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  if (_formKey.currentState.validate()) {
-    // If the form is valid, display a Snackbar.
-    final skillid = _skillid.text.toString();
-    final skillname = _skillname.text.toString();
-    final description = _description.text.toString();
-    final skillinactive = vinbool.toString();
-    final skillrowrevnum = 1.toString();
-
-    ///staid cannot be updated through here
-
-    final str = '{"skillname":"' +
-        skillname.trim() +
-        '",' +
-        '"description":"' +
-        description.trim() +
-        '",' +
-        '"inactive":"' +
-        skillinactive +
-        '",' +
-        '"rowrevnum":"' +
-        skillrowrevnum +
-        '"}';
-
-    print(str);
-
-    var putskill;
-    try {
-      putskill = await http.put(
-        sci.serverreqaddress + '/skills/' + skillid,
-        headers: {'Content-type': 'application/json'},
-        body: str,
-      );
-    } catch (e) {
-      print(e);
-    }
-
-    if (putskill?.statusCode == 200) {
-      print('Skill: ' + _skillname.text.toString() + ', updated.');
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content:
-            Text('Skill' + _skillname.text.toString() + ', updated.'),
-        duration: Duration(seconds: 3),
-      ),);
-      skillupdated = true;
-    }
-  }
-
-  if (skillupdated ?? false) {
-    Navigator.of(context).pop();
-  } else {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Something went wrong'),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    print('Something went wrong');
-  }
-}
-
-Future<void> deleteSkill(int skillid, BuildContext context) async {
-  final sci = ServerConnectionInfo();
-  await sci.getServerInfo();
-
-  final url = sci.serverreqaddress + '/skills/' + skillid.toString();
-
-  var postskill = await http.delete(url);
-  print(postskill.statusCode);
-  if (postskill.statusCode == 200) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Skill deleted'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.pop(context);
   }
 }

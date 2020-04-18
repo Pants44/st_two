@@ -145,7 +145,7 @@ class Industry {
 
     return Industry(
       industryid: int.tryParse(parsedJson['industryid']),
-      inactive: bool.fromEnvironment(parsedJson['inactive']),
+      inactive: parsedJson['inactive'] == 'true',
       industryname: parsedJson['industryname'],
       rowrevnum: int.tryParse(parsedJson['rowrevnum']),
       company: int.tryParse(parsedJson['company']),
@@ -170,7 +170,7 @@ class DiscoveryMethod {
 
     return DiscoveryMethod(
       dmid: int.parse(parsedJson['dmid']),
-      inactive: bool.fromEnvironment(parsedJson['inactive']),
+      inactive: parsedJson['inactive'] == 'true',
       discoverymethod: parsedJson['discoverymethod'],
     );
   }
