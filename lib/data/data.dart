@@ -1,15 +1,12 @@
 import 'dart:async';
 
-import 'package:st_two/data/connect.dart';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 
 class ParseResponse {
   ParseResponse();
 
-  Future<String> parse(http.Response res, [BuildContext context]) async {
+  Future<String> parse(http.Response res, [BuildContext context, bool noexit = false]) async {
     if (res != null) {
       print('');
       print('StatusCode: ' + res.statusCode.toString());
@@ -18,6 +15,7 @@ class ParseResponse {
       print('URL: ' + res.request.url.toString());
       print('Headers: ' + res.request.headers.toString());
       print('ReasonPhrase: ' + res.reasonPhrase);
+      print('No exit: ' + noexit.toString());
       print('');
 
       if (context != null) {
@@ -31,9 +29,17 @@ class ParseResponse {
                   ),
                 ),
               );
-              Future.delayed(Duration(seconds: 1))
-                  .then((v) => Navigator.of(context).pop())
-                  .then((v) => Navigator.of(context).pop());
+              if(noexit){
+                Future.delayed(Duration(seconds: 1))
+                    .then((v) => Navigator.of(context).pop());
+                
+                
+              }else{
+                print('should have popped');
+                Future.delayed(Duration(seconds: 1))
+                    .then((v) => Navigator.of(context).pop())
+                    .then((v) => Navigator.of(context).pop());
+              }
               return 'success';
             break;
           case 500:
