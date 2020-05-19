@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'package:st_two/data/connect.dart';
 import 'package:st_two/data/processtickets.dart';
-import 'package:st_two/screens/ticket.dart';
 import 'package:st_two/data/processdropdowns.dart';
+import 'package:st_two/data/ticket.dart';
+import 'package:st_two/screens/ticket.dart';
 
 enum ConfirmAction { CANCEL, ACCEPT }
 
@@ -37,7 +38,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tecSearch.addListener(() {
       setState(() {
@@ -51,7 +51,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     customerfilter = null;
     resourcefilter = null;
     statusfilter = null;
@@ -62,7 +61,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -89,8 +87,8 @@ class _DashboardPageState extends State<DashboardPage> {
           )
         ],
       ),
-      body: FutureBuilder<TicketsList>(
-        future: loadTicketsList(),
+      body: FutureBuilder<TicketList>(
+        future: TicketList().fetch(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
@@ -111,7 +109,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   MaterialPageRoute(
                                     builder: (context) => TicketPage(
                                       title: 'View Ticket',
-                                      ticket: snapshot.data.tickets[index],
+                                      ticketid: snapshot.data.tickets[index].ticketid,
                                       readonly: true,
                                     ),
                                   ),
@@ -168,8 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                 snapshot.data.tickets[index]
                                                     .ticketname
                                                     .toString(),
-                                            ticket:
-                                                snapshot.data.tickets[index]),
+                                          ticketid: snapshot.data.tickets[index].ticketid,),
                                       ),
                                     );
                                   },
@@ -270,7 +267,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Future<void> loadTicket() async {
+  /*Future<void> loadTicket() async {
     final sci = ServerConnectionInfo();
 
     var jsonString = await http.get(sci.serverreqaddress + '/tickets/2');
@@ -302,7 +299,7 @@ class _DashboardPageState extends State<DashboardPage> {
     }*/
 
     return ticket;
-  }
+  }*/
 
   Future<TicketsList> loadTicketsList() async {
     final sci = ServerConnectionInfo();

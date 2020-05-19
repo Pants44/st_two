@@ -35,7 +35,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
     super.initState();
     tecSearch.addListener(() {
       setState(() {
-        filter = tecSearch.text;
+        filter = tecSearch.text.toLowerCase();
       });
     });
     loadFilterDropdowns();
@@ -97,7 +97,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                     builder: (context) => CustomerPage(
                                       mode: 'edit',
                                       title: 'View Customer',
-                                      customerid: snapshot.data.customers[index].customerid,
+                                      customerid: int.parse(snapshot.data.customers[index].customerid.toString()),
                                       ronly: true,
                                     ),
                                   ),
@@ -115,7 +115,7 @@ class _CustomerListPageState extends State<CustomerListPage> {
                                           .toString()),
                                 ),
                               ))
-                          : snapshot.data.customers[index].customername
+                          : snapshot.data.customers[index].customername.toLowerCase()
                                   .contains(filter)
                               ? GestureDetector(
                                   onTap: () {

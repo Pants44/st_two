@@ -211,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ],
                       ),
-                      onPressed: () {
+                      /*onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -219,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 TimesheetPage(title: 'Billing'),
                           ),
                         );
-                      },
+                      },*/
                     ),
                   ),
                 ],
@@ -240,14 +240,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ],
                       ),
-                      onPressed: () {
+                      /*onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChatPage(title: 'Chat'),
                           ),
                         );
-                      },
+                      },*/
                     ),
                   ),
                   Expanded(

@@ -174,9 +174,8 @@ class _LoginPageState extends State<LoginPage> {
                                       isExpanded: true,
                                       value: _companySelection,
                                       onChanged: (String newValue) {
-                                        setState(() {
-                                          _companySelection = newValue;
-                                        });
+                                        _companySelection = newValue;
+                                        setState(() {});
 
                                         print(_companySelection);
                                       },
@@ -195,16 +194,18 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(fontSize: 18),
                               ),
                               onPressed: (){
-                                Session().setCurCompany(int.parse(_companySelection));
-                                Navigator.pushReplacement(
-                                    context,
-                                    PageRouteBuilder(
-                                        transitionDuration:
-                                        Duration(milliseconds: 500),
-                                        pageBuilder: (context, __, ___) =>
-                                            MyHomePage(
-                                              title: 'Solution Tracker Two',
-                                            )));
+                                if(companydropdown.length != 0){
+                                  Session().setCurCompany(int.parse(_companySelection));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                          transitionDuration:
+                                          Duration(milliseconds: 500),
+                                          pageBuilder: (context, __, ___) =>
+                                              MyHomePage(
+                                                title: 'Solution Tracker Two',
+                                              )));
+                                }
                               },
                               color: colorSTBlue,
                               shape: RoundedRectangleBorder(
@@ -316,14 +317,18 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(fontSize: 18),
                                   ),
                                   onPressed: () {
-                                    Session().setCurCompany(int.parse(_companySelection));
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MyHomePage(
-                                                title: 'Solution Tracker Two',
-                                              )),
-                                    );
+                                    if(companydropdown.length != 0){
+                                      Session().setCurCompany(int.parse(_companySelection));
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MyHomePage(
+                                                  title: 'Solution Tracker Two',
+                                                )),
+                                      );
+                                    } else{
+                                      print('company dropdown not loaded. check your IP in the app server settings');
+                                    }
                                   },
                                   color: colorSTBlue,
                                   shape: RoundedRectangleBorder(
@@ -368,7 +373,7 @@ class _LoginPageState extends State<LoginPage> {
 
     await sci.getServerInfo();
     print('loadcompanydrop' + sci.serverreqaddress);
-
+    companydropdown.clear();
     try{
       if (companydropdown.length < 1) {
         companydropdown.clear();

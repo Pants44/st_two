@@ -1,15 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:st_two/data/processtickets.dart';
+import 'package:st_two/data/ticket.dart';
+import 'package:st_two/data/resource.dart';
+import 'package:st_two/data/poc.dart';
+import 'package:st_two/data/skill.dart';
+import 'package:st_two/screens/ticketpoc.dart';
 import 'package:st_two/size_config.dart';
 
+enum ma {
+  favorite,
+  email,
+  editresources,
+  editpocs,
+  editskills,
+}
+
 bool ronly = false;
+bool vchanged = false;
+String vmode = '';
+String vtitle = '';
+
+TextEditingController tecTicketID = TextEditingController();
+TextEditingController tecTicketName = TextEditingController();
+TextEditingController tecTicketDescription = TextEditingController();
+TextEditingController tecCustomerID = TextEditingController();
+TextEditingController tecCustomerName = TextEditingController();
+TextEditingController tecPOCs = TextEditingController();
+TextEditingController tecPriorityID = TextEditingController();
+TextEditingController tecPriority = TextEditingController();
+TextEditingController tecStatusID = TextEditingController();
+TextEditingController tecStatus = TextEditingController();
+TextEditingController tecResources = TextEditingController();
+TextEditingController tecQuoteRequired = TextEditingController();
+TextEditingController tecMin = TextEditingController();
+TextEditingController tecMax = TextEditingController();
+TextEditingController tecProjected = TextEditingController();
+TextEditingController tecDeveloperLog = TextEditingController();
+TextEditingController tecPremium = TextEditingController();
+TextEditingController tecEntryDate = TextEditingController();
+TextEditingController tecEnteredBy = TextEditingController();
+TextEditingController tecFolderPath = TextEditingController();
+TextEditingController tecSpecialInstructionsDesc = TextEditingController();
+TextEditingController tecStopBilling = TextEditingController();
+TextEditingController tecTotalBilled = TextEditingController();
+TextEditingController tecDeadlineDate = TextEditingController();
+TextEditingController tecErpSystem = TextEditingController();
+TextEditingController tecSkills = TextEditingController();
+
+List lstResources;
+List lstPOCs;
+List lstSkills;
+int countofpocs = 0;
+int _rowrevnum;
+bool _premium, _quoterequired, _stopbilling, _deadline;
+
+final _formKey = GlobalKey<FormState>();
 
 class TicketPage extends StatefulWidget {
-  TicketPage({Key key, this.title, this.ticket, this.readonly})
+  TicketPage({Key key, this.mode, this.title, this.ticketid, this.readonly})
       : super(key: key);
 
+  final String mode;
   final String title;
-  final Ticket ticket;
+  final int ticketid;
   final bool readonly;
 
   @override
@@ -17,44 +69,14 @@ class TicketPage extends StatefulWidget {
 }
 
 class _TicketPageState extends State<TicketPage> {
-  TextEditingController tecTicketID = TextEditingController();
-  TextEditingController tecTicketName = TextEditingController();
-  TextEditingController tecTicketDescription = TextEditingController();
-  TextEditingController tecCustomerID = TextEditingController();
-  TextEditingController tecCustomerName = TextEditingController();
-  TextEditingController tecPOCs = TextEditingController();
-  TextEditingController tecPriorityID = TextEditingController();
-  TextEditingController tecPriority = TextEditingController();
-  TextEditingController tecStatusID = TextEditingController();
-  TextEditingController tecStatus = TextEditingController();
-  TextEditingController tecResources = TextEditingController();
-  TextEditingController tecQuoteRequired = TextEditingController();
-  TextEditingController tecMin = TextEditingController();
-  TextEditingController tecMax = TextEditingController();
-  TextEditingController tecProjected = TextEditingController();
-  TextEditingController tecDeveloperLog = TextEditingController();
-  TextEditingController tecPremium = TextEditingController();
-  TextEditingController tecEntryDate = TextEditingController();
-  TextEditingController tecEnteredBy = TextEditingController();
-  TextEditingController tecFolderPath = TextEditingController();
-  TextEditingController tecSpecialInstructionsDesc = TextEditingController();
-  TextEditingController tecStopBilling = TextEditingController();
-  TextEditingController tecTotalBilled = TextEditingController();
-  TextEditingController tecDeadlineDate = TextEditingController();
-  TextEditingController tecErpSystem = TextEditingController();
-  TextEditingController tecSkills = TextEditingController();
-
-  List lstResources;
-  List lstPOCs;
-  List lstSkills;
-  int countofpocs = 0;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    this._loadData(widget.ticket);
-    this._editTicketState(widget.readonly);
+    this._loadData(widget.ticketid);
+    vmode = widget.mode.toString();
+    vtitle = widget.title.toString();
+    ronly = widget.readonly;
   }
 
   @override
@@ -73,13 +95,71 @@ class _TicketPageState extends State<TicketPage> {
             icon: Icon(Icons.email),
             onPressed: () {},
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {},
-          )
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: ma.editresources,
+                child: Text('Edit Resources'),
+              ),
+              const PopupMenuItem(
+                value: ma.editpocs,
+                child: Text('Edit POCs'),
+              ),
+              const PopupMenuItem(
+                value: ma.editskills,
+                child: Text('Edit Skills'),
+              ),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case ma.editresources:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicketPOCPage(
+                        title: 'Edit POCs',
+                        customerid: int.parse(tecCustomerID.text),
+                        mode: 'edit',
+                        ronly: false,
+                      ),
+                    ),
+                  );
+                  break;
+                case ma.editpocs:
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicketResourcePage(
+                        title: 'Edit POCs',
+                        customerid: int.parse(tecCustomerID.text),
+                        mode: 'edit',
+                        ronly: false,
+                      ),
+                    ),
+                  );*/
+                  break;
+                case ma.editskills:
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicketSkillPage(
+                        title: 'Edit POCs',
+                        customerid: int.parse(tecCustomerID.text),
+                        mode: 'edit',
+                        ronly: false,
+                      ),
+                    ),
+                  );*/
+                  break;
+                default:
+                  print('nothing defined for menu selection');
+              }
+            },
+          ),
         ],
       ),
       body: Form(
+        key: _formKey,
         child: Container(
           padding: EdgeInsets.all(8),
           height: SizeConfig.safeBlockVertical * 100,
@@ -87,66 +167,63 @@ class _TicketPageState extends State<TicketPage> {
           child: ListView(
             children: <Widget>[
               Card(
-                  elevation: 5,
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'General',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Theme.of(context).accentColor,
-                            ),
+                elevation: 5,
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'General',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Theme.of(context).accentColor,
                           ),
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Ticket ID',
-                          ),
-                          controller: tecTicketID,
-                          readOnly: ronly,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Ticket ID',
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Ticket Name',
-                          ),
-                          controller: tecTicketName,
-                          readOnly: ronly,
+                        controller: tecTicketID,
+                        readOnly: ronly,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Ticket Name',
                         ),
-                        Container(
-                          child: _specialInstructions(
-                              widget.ticket.specialinstructions),
+                        controller: tecTicketName,
+                        readOnly: ronly,
+                      ),
+                      TextFormField(
+                        maxLines: countofpocs,
+                        decoration: InputDecoration(
+                          labelText: 'POCs',
                         ),
-                        TextFormField(
-                          maxLines: countofpocs,
-                          decoration: InputDecoration(
-                            labelText: 'POCs',
-                          ),
-                          controller: tecPOCs,
-                          readOnly: ronly,
+                        controller: tecPOCs,
+                        readOnly: ronly,
+                      ),
+                      TextFormField(
+                        minLines: null,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          labelText: 'Description',
                         ),
-                        TextFormField(
-                          minLines: null,
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            labelText: 'Description',
-                          ),
-                          controller: tecTicketDescription,
-                          readOnly: ronly,
+                        controller: tecTicketDescription,
+                        readOnly: ronly,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'ERP System',
                         ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'ERP System',
-                          ),
-                          controller: tecErpSystem,
-                          readOnly: ronly,
-                        )
-                      ],
-                    ),
-                  )),
+                        controller: tecErpSystem,
+                        readOnly: ronly,
+                      )
+                    ],
+                  ),
+                ),
+              ),
               Card(
                 elevation: 5,
                 child: Container(
@@ -203,22 +280,22 @@ class _TicketPageState extends State<TicketPage> {
                         child: Column(
                           children: <Widget>[
                             CheckboxListTile(
-                              value: widget.ticket.premium,
+                              value: _premium,
                               title: Text('Premium?'),
                               onChanged: (value) {},
                             ),
                             CheckboxListTile(
-                              value: widget.ticket.quoterequired,
+                              value: _quoterequired,
                               title: Text('Quote Required?'),
                               onChanged: (value) {},
                             ),
                             CheckboxListTile(
-                              value: widget.ticket.stopbilling,
+                              value: _stopbilling,
                               title: Text('Stop Billing?'),
                               onChanged: (value) {},
                             ),
                             CheckboxListTile(
-                              value: widget.ticket.deadline,
+                              value: _deadline,
                               title: Text('Deadline?'),
                               onChanged: (value) {},
                             ),
@@ -299,9 +376,7 @@ class _TicketPageState extends State<TicketPage> {
                             alignment: Alignment.topRight,
                             child: IconButton(
                               icon: Icon(Icons.add),
-                              onPressed: () {
-
-                              },
+                              onPressed: () {},
                             ),
                           )
                         ],
@@ -326,43 +401,163 @@ class _TicketPageState extends State<TicketPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
+      floatingActionButton: (ronly == true)
+          ? FloatingActionButton(
+              child: Icon(Icons.edit),
+              onPressed: () {
+                ronly = !ronly;
+                vtitle = 'Edit Ticket';
+                setState(() {});
+              },
+            )
+          : FloatingActionButton(
+              child: Icon(Icons.check),
+              onPressed: () {
+                //update mode
+                if (vmode == 'edit' && ronly == false) {
+                  if (_formKey.currentState.validate()) {
+                    //Future(() => Ticket().update(int.parse(tecTicketID.text), tecTicketName.text, tecTicketDescription.text, _quoterequired, double.parse(tecMin.text), double.parse(tecMax.text), double.parse(tecProjected.text), tecDeveloperLog.text, _premium, tecEnteredBy.text, tecFolderPath.text, _stopbilling, double.parse(tecTotalBilled.text), _deadline, tecErpSystem.text, int.parse(tecCustomerID.text), int.parse(tecPriorityID.text), int.parse(tecStatusID.text), pocs, resource, skills, DateTime.parse(tecDeadlineDate.text), context)).then((v) => _loadData(int.parse(tecTicketID.text)));
+                    /*              
 
-        },
-        child: Icon(Icons.edit, color: Colors.white,),
-      ),
+              Future(() => Customer().update(
+                int.parse(_custid.text),
+                _custname.text,
+                _vinbool,
+                _vengagebool,
+                _vquotereqbool,
+                _vconnsetupbool,
+                _vonholdbool,
+                _vblacklistbool,
+                _vautoemailbool,
+                _vmonthsupportbool,
+                _vsibool,
+                _enteredby.text,
+                _industry,
+                _rowrevnum,
+                vchanged,
+                _discoverymethod,
+                _sidesc.text,
+                _portallogin.text,
+                _portalpass.text,
+                _referredby,
+                context,
+              )).then((v) => _loadData(int.parse(_custid.text)));*/
+                    vtitle = 'View Ticket';
+                    ronly = !ronly;
+                    setState(() {});
+                  } else {
+                    setState(() {});
+                  }
+                } else if (vmode == 'add' && ronly == false) {
+                  if (_formKey.currentState.validate()) {
+                    //Ticket().create(tecTicketName.text, tecTicketDescription.text, _quoterequired, double.parse(tecMin.text), double.parse(tecMax.text), double.parse(tecProjected.text), tecDeveloperLog.text, _premium, tecEnteredBy.text, tecFolderPath.text, _stopbilling, double.parse(tecTotalBilled.text), _deadline, tecErpSystem.text, int.parse(tecCustomerID.text), int.parse(tecPriorityID.text), int.parse(tecStatusID.text), pocs, resources, skills, DateTime.parse(tecDeadlineDate.text), context);
+/*              Customer().create(
+                  _custname.text.trim(),
+                  _vinbool,
+                  _vengagebool,
+                  _vquotereqbool,
+                  _vconnsetupbool,
+                  _vonholdbool,
+                  _vblacklistbool,
+                  _vautoemailbool,
+                  _vmonthsupportbool,
+                  _vsibool,
+                  _enteredby.text.trim(),
+                  _industry,
+                  _discoverymethod,
+                  _sidesc.text.trim(),
+                  _portallogin.text.trim(),
+                  _portalpass.text.trim(),
+                  _referredby,
+                  context);*/
+                    vtitle = 'View Customer';
+                    ronly = !ronly;
+                    setState(() {});
+                  } else {
+                    setState(() {});
+                  }
+                }
+              }),
     );
   }
 
-  void _loadData(Ticket ticket) async {
-    tecTicketID.text = ticket.ticketid.toString();
-    tecTicketName.text = ticket.ticketname.toString();
-    tecTicketDescription.text = ticket.ticketdescription.toString();
-    tecCustomerID.text = ticket.customerid.toString();
-    tecCustomerName.text = ticket.customername.toString();
-    tecPOCs.text = _whosThePOCs(ticket.pocs);
-    tecPriorityID.text = ticket.priorityid.toString();
-    tecPriority.text = ticket.priorityname.toString();
-    tecStatusID.text = ticket.statusid.toString();
-    tecStatus.text = ticket.status.toString();
-    lstResources = ticket.resources;
-    tecResources.text = _whosAssigned(ticket.resources);
-    tecQuoteRequired.text = ticket.quoterequired.toString();
-    tecMin.text = ticket.min.toString();
-    tecMax.text = ticket.max.toString();
-    tecProjected.text = ticket.projected.toString();
-    tecDeveloperLog.text = ticket.developerlog.toString();
-    tecPremium.text = ticket.premium.toString();
-    tecEntryDate.text = ticket.entrydate.toString();
-    tecEnteredBy.text = ticket.enteredby.toString();
-    tecFolderPath.text = ticket.folderpath.toString();
-    tecSpecialInstructionsDesc.text = ticket.specialinstructionsdesc.toString();
-    tecStopBilling.text = ticket.stopbilling.toString();
-    tecTotalBilled.text = ticket.totalbilled.toString();
-    tecDeadlineDate.text = ticket.deadlinedate.toString();
-    tecErpSystem.text = ticket.erpsystem.toString();
-    tecSkills.text = _whatSkills(ticket.skills);
+  Future<void> _loadData([int ticketid = 0]) async {
+    if (ticketid == 0) {
+      tecTicketID.text = '';
+      tecTicketName.text = '';
+      tecTicketDescription.text = '';
+      tecCustomerID.text = '';
+      tecCustomerName.text = '';
+      tecPOCs.text = '';
+      tecPriorityID.text = '';
+      tecPriority.text = '';
+      tecStatusID.text = '';
+      tecStatus.text = '';
+      tecResources.text = '';
+      tecQuoteRequired.text = '';
+      tecMin.text = '';
+      tecMax.text = '';
+      tecProjected.text = '';
+      tecDeveloperLog.text = '';
+      tecPremium.text = '';
+      tecEntryDate.text = '';
+      tecEnteredBy.text = '';
+      tecFolderPath.text = '';
+      tecSpecialInstructionsDesc.text = '';
+      tecStopBilling.text = '';
+      tecTotalBilled.text = '';
+      tecDeadlineDate.text = '';
+      tecErpSystem.text = '';
+      tecSkills.text = '';
+      lstPOCs.clear();
+      lstResources.clear();
+      lstSkills.clear();
+      _premium = false;
+      _quoterequired = false;
+      _stopbilling = false;
+      _deadline = false;
+      _rowrevnum = 0;
+      vchanged = false;
+      setState(() {});
+    } else {
+      Ticket t = await Ticket().fetch(ticketid);
+      tecTicketID.text = t.ticketid.toString();
+      tecTicketName.text = t.ticketname.toString();
+      tecTicketDescription.text = t.ticketdescription.toString();
+      tecCustomerID.text = t.customerid.toString();
+      tecCustomerName.text = t.customername.toString();
+      tecPOCs.text = _whosThePOCs(t.pocs);
+      tecPriorityID.text = t.priorityid.toString();
+      tecPriority.text = t.priorityname.toString();
+      tecStatusID.text = t.statusid.toString();
+      tecStatus.text = t.status.toString();
+      tecResources.text = _whosAssigned(t.resources);
+      tecQuoteRequired.text = t.quoterequired.toString();
+      tecMin.text = t.min.toString();
+      tecMax.text = t.max.toString();
+      tecProjected.text = t.projected.toString();
+      tecDeveloperLog.text = t.developerlog.toString();
+      tecPremium.text = t.premium.toString();
+      tecEntryDate.text = t.entrydate.toString();
+      tecEnteredBy.text = t.enteredby.toString();
+      tecFolderPath.text = t.folderpath.toString();
+      tecSpecialInstructionsDesc.text = t.specialinstructionsdesc.toString();
+      tecStopBilling.text = t.stopbilling.toString();
+      tecTotalBilled.text = t.totalbilled.toString();
+      tecDeadlineDate.text = t.deadlinedate.toString();
+      tecErpSystem.text = t.erpsystem.toString();
+      tecSkills.text = _whatSkills(t.skills);
+      lstSkills = t.skills;
+      lstResources = t.resources;
+      lstPOCs = t.pocs;
+      _premium = t.premium;
+      _quoterequired = t.quoterequired;
+      _stopbilling = t.stopbilling;
+      _deadline = t.deadline;
+      _rowrevnum = t.rowrevnum;
+      vchanged = false;
+      setState(() {});
+    }
   }
 
   String _whosAssigned(List resourcelist) {
@@ -397,13 +592,13 @@ class _TicketPageState extends State<TicketPage> {
     return pocs;
   }
 
-  String _whatSkills(List skilllist) {
+  String _whatSkills(List<Skill> skilllist) {
     String skills = "";
     for (var i = 0; i < skilllist.length; i++) {
       if (i == skilllist.length - 1) {
-        skills = skills + ' ' + skilllist[i].skill.toString();
+        skills = skills + ' ' + skilllist[i].skillname.toString();
       } else {
-        skills = skills + skilllist[i].skill.toString() + ', ';
+        skills = skills + skilllist[i].skillname.toString() + ', ';
       }
     }
     return skills;
@@ -447,31 +642,41 @@ class _TicketPageState extends State<TicketPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-    tecTicketID.dispose();
-    tecTicketName.dispose();
-    tecTicketDescription.dispose();
-    tecCustomerID.dispose();
-    tecCustomerName.dispose();
-    tecPriorityID.dispose();
-    tecPriority.dispose();
-    tecStatusID.dispose();
-    tecStatus.dispose();
-    tecResources.dispose();
-    tecQuoteRequired.dispose();
-    tecMin.dispose();
-    tecMax.dispose();
-    tecProjected.dispose();
-    tecDeveloperLog.dispose();
-    tecPremium.dispose();
-    tecEntryDate.dispose();
-    tecEnteredBy.dispose();
-    tecFolderPath.dispose();
-    tecSpecialInstructionsDesc.dispose();
-    tecStopBilling.dispose();
-    tecTotalBilled.dispose();
-    tecDeadlineDate.dispose();
-    tecErpSystem.dispose();
-    tecSkills.dispose();
+    tecTicketID.text = '';
+    tecTicketName.text = '';
+    tecTicketDescription.text = '';
+    tecCustomerID.text = '';
+    tecCustomerName.text = '';
+    tecPOCs.text = '';
+    tecPriorityID.text = '';
+    tecPriority.text = '';
+    tecStatusID.text = '';
+    tecStatus.text = '';
+    tecResources.text = '';
+    tecQuoteRequired.text = '';
+    tecMin.text = '';
+    tecMax.text = '';
+    tecProjected.text = '';
+    tecDeveloperLog.text = '';
+    tecPremium.text = '';
+    tecEntryDate.text = '';
+    tecEnteredBy.text = '';
+    tecFolderPath.text = '';
+    tecSpecialInstructionsDesc.text = '';
+    tecStopBilling.text = '';
+    tecTotalBilled.text = '';
+    tecDeadlineDate.text = '';
+    tecErpSystem.text = '';
+    tecSkills.text = '';
+    lstPOCs.clear();
+    lstResources.clear();
+    lstSkills.clear();
+    _premium = false;
+    _quoterequired = false;
+    _stopbilling = false;
+    _deadline = false;
+    _rowrevnum = 0;
+    vchanged = false;
     super.dispose();
   }
 }

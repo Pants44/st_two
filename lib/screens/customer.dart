@@ -831,7 +831,7 @@ class _CustomerPageState extends State<CustomerPage>
             padding: EdgeInsets.all(8),
             child: Form(
               child: FutureBuilder<POCList>(
-                future: POCList().fetch(int.parse(_custid.text.toString())),
+                future: POCList().fetch(int.parse(_custid.text == "" ? "0" : _custid.text)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {

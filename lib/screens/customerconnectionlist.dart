@@ -19,8 +19,6 @@ class CustomerConnectionList extends StatefulWidget {
 }
 
 class _CustomerConnectionListState extends State<CustomerConnectionList> {
-  StreamController<String> mycontroller = StreamController();
-
   TextEditingController tecSearch = TextEditingController();
   var searchFocusNode = FocusNode();
   String filter;
@@ -32,7 +30,7 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
     super.initState();
     tecSearch.addListener(() {
       setState(() {
-        filter = tecSearch.text;
+        filter = tecSearch.text.toLowerCase();
       });
     });
   }
@@ -76,7 +74,7 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
       ),
       body: Stack(
         children: <Widget>[
-          FutureBuilder(
+          FutureBuilder<ConnectionList>(
             future: loadConnectionList(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
@@ -116,10 +114,10 @@ class _CustomerConnectionListState extends State<CustomerConnectionList> {
                             ),
                           ),
                         ))
-                        : snapshot.data.ccon[index].customername
+                        : snapshot.data.ccon[index].customername.toLowerCase()
                         .contains(filter) ||
                         snapshot.data.ccon[index].erpversion
-                            .toString()
+                            .toString().toLowerCase()
                             .contains(filter)
                         ? GestureDetector(
                       onTap: () => Navigator.push(

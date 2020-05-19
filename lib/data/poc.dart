@@ -115,6 +115,30 @@ class POC{
 
   }
 
+  Future<POCList> fetchall(int customerid) async {
+    final sci = new ServerConnectionInfo();
+    await sci.getServerInfo();
+    final int company = await Session().getCompany();
+    POCList pocs = new POCList();
+
+    http.Response getPOCs;
+
+    try{
+      getPOCs =
+      await http.get(sci.serverreqaddress + '/pocs/$company,$customerid');
+
+      final jsonResponse = json.decode(getPOCs.body.toString());
+      pocs = new POCList.fromJson(jsonResponse);
+
+    }catch(e){
+      print(e);
+    }
+
+    ParseResponse().parse(getPOCs);
+
+    return pocs;
+  }
+
   Future<void> create(String pocname, String pocemail, String pocphone, bool pocinactive, bool mainpoc, bool connectioncontact, bool mandatorycc, bool defaultoption, int customerid,
       [BuildContext context]) async {
     final sci = new ServerConnectionInfo();
@@ -198,5 +222,24 @@ class POC{
     }else{
       return null;
     }
+  }
+
+  Future<void> dropdown(int customerid,
+      [BuildContext context, bool noexit]) async {
+
+    final sci = new ServerConnectionInfo();
+    await sci.getServerInfo();
+    final int company = await Session().getCompany();
+    http.Response deletePOC;
+
+    try {
+      deletePOC =
+      await http.delete(sci.serverreqaddress + '/pocs/$company,$customerid,$pocid');
+    } catch (e) {
+      print(e);
+    }
+
+    ParseResponse().parse(deletePOC, context, noexit);
+
   }
 }
